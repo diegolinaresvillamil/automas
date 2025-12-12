@@ -1,0 +1,807 @@
+/* ===============================
+   HERO CERTIMÁS (versión ajustada definitiva)
+   =============================== */
+.hero-certimas {
+  background: linear-gradient(to bottom, #ececec 0%, #ffffff 100%);
+  padding: 280px 0;
+  border-radius: 0 0 20px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- Contenedor principal --- */
+.hero-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 8%; /* ✅ más margen lateral para que el texto respire */
+  gap: 60px;
+  position: relative;
+}
+
+/* --- Texto --- */
+.hero-text {
+  flex: 1;
+  color: #000;
+  z-index: 2;
+  position: relative;
+  max-width: 620px; /* ✅ más ancho para que el texto se distribuya mejor */
+}
+
+.hero-text h1 {
+  font-size: 3.5rem; /* 56px */
+  font-weight: 800;
+  color: #000;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  white-space: normal; /* ✅ asegura el salto natural */
+}
+
+.hero-text .highlight {
+  color: #000;
+}
+
+.hero-text p {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 400;
+  color: #000;
+  line-height: 1.6;
+  margin-bottom: 45px;
+  max-width: 480px;
+}
+
+/* --- Botón --- */
+.btn-video {
+  background: #fff;
+  color: #ff671f;
+  font-weight: 600;
+  padding: 18px 40px;
+  border-radius: 10px;
+  font-size: 1.56rem; /* 25px */
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.btn-video i {
+  font-size: 1.6rem;
+  color: #ff671f;
+}
+
+.btn-video:hover {
+  background: #ff671f;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255, 103, 31, 0.35);
+}
+
+.btn-video:hover i {
+  color: #fff;
+}
+
+/* --- Imagen del carro --- */
+.hero-image {
+  position: absolute;
+  top: 50%;
+  right: 0; /* ✅ pega el carro al borde derecho de la pantalla */
+  transform: translateY(-50%);
+  width: 55vw; /* ✅ proporcional al viewport */
+  max-width: 950px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  pointer-events: none;
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: right;
+}
+
+/* ===============================
+   RESPONSIVE BREAKPOINTS
+   =============================== */
+
+/* 💡 Tablets grandes */
+@media (max-width: 1100px) {
+  .hero-certimas {
+    padding: 140px 0;
+  }
+
+  .hero-wrap {
+    flex-direction: column;
+    text-align: center;
+    padding: 0 6%;
+  }
+
+  .hero-text {
+    max-width: 90%;
+  }
+
+  .hero-text p {
+    margin: 0 auto 30px;
+  }
+
+  .hero-image {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    width: 90%;
+    max-width: 700px;
+    margin-top: 40px;
+  }
+}
+
+/* 💡 Móviles */
+@media (max-width: 768px) {
+  .hero-certimas {
+    padding: 80px 0;
+  }
+
+  .hero-text h1 {
+    font-size: 2.4rem;
+  }
+
+  .hero-text p {
+    font-size: 1.1rem;
+  }
+
+  .btn-video {
+    font-size: 1.1rem;
+    padding: 12px 24px;
+  }
+
+  .hero-image {
+    width: 100%;
+    max-width: 100%;
+    object-position: center;
+  }
+}
+
+
+
+/* ===============================
+   SECCIÓN: ELIGE Y COMPRA
+   =============================== */
+.elige-compra {
+  text-align: center;
+  padding: 120px 8% 100px;
+  background: #fff;
+}
+
+.elige-compra h2 {
+  font-size: 3rem; /* 48px */
+  font-weight: 700;
+  margin-bottom: 120px;
+  color: #000;
+}
+
+/* --- GRID --- */
+.planes-grid {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* --- Tarjeta base --- */
+.plan-card {
+  background: #f9f9f9;
+  border-radius: 20px;
+  padding: 55px 35px;
+  width: 340px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Etiqueta tipo placa --- */
+.plan-tag {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff671f;
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 1.5rem; /* 28px */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  border: 4px solid #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: fit-content;
+}
+
+.plan-tag::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1.3px solid #fff;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* --- Etiqueta destacada (5 PLACAS) --- */
+.destacado-tag {
+  background: #fff;
+  color: #ff671f;
+  border: 4px solid #ff671f;
+  font-weight: 700;
+  font-size: 1.5rem; /* 28px */
+}
+
+.destacado-tag::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1.3px solid #ff671f;
+  border-radius: 6px;
+}
+
+/* --- Precio --- */
+.price {
+  font-size: 2.9rem; /* 38px */
+  font-weight: 800; /* Extrabold */
+  color: #000;
+  margin: 30px 0 24px;
+}
+
+/* --- Imagen --- */
+.plan-card img {
+  width: 95%; /* más grande */
+  height: auto;
+  margin: 0 auto 22px;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.plan-card:hover img {
+  transform: scale(1.05);
+}
+
+/* --- Título dentro de la tarjeta (1, 3, 5 Certimás) --- */
+.plan-card p strong {
+  font-weight: 600; /* Semibold */
+  font-size: 1.75rem; /* 28px */
+  color: inherit; /* ✅ respeta el color actual (blanco o negro) */
+}
+
+/* --- Descripción --- */
+.plan-card .desc {
+  font-size: 1.375rem; /* 22px */
+  color: #666;
+  margin-bottom: 35px;
+  line-height: 1.5;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+/* --- Botón --- */
+.btn-comprar {
+  background: #ff671f;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 16px 36px;
+  font-size: 1.56rem; /* 25px */
+  font-weight: 700; /* Bold */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-comprar:hover {
+  background: #e55f1e;
+  transform: translateY(-2px);
+}
+
+/* --- Tarjeta destacada (5 PLACAS) --- */
+.destacado {
+  background: #ff671f !important;
+  color: #fff;
+  transform: scale(1.07);
+  z-index: 2;
+  padding: 60px 35px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.destacado .price,
+.destacado p,
+.destacado .desc,
+.destacado p strong {
+  color: #fff !important; /* ✅ mantiene todo en blanco */
+}
+
+.destacado img {
+  filter: none !important;
+}
+
+.destacado .btn-comprar {
+  background: #fff;
+  color: #ff671f;
+}
+
+.destacado .btn-comprar:hover {
+  background: #f7f7f7;
+}
+
+/* --- Responsive --- */
+@media (max-width: 992px) {
+  .planes-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+
+  .plan-card {
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .destacado {
+    transform: none;
+  }
+
+  .plan-tag,
+  .destacado-tag {
+    font-size: 1.5rem;
+    top: -20px;
+    padding: 8px 18px;
+  }
+
+  .plan-card img {
+    width: 85%;
+  }
+}
+
+
+
+
+/* ===============================
+   SECCIÓN: ¿QUÉ VERÁS EN TU CERTIMÁS?
+   =============================== */
+.certimas-info {
+  text-align: center;
+  padding: 140px 8%;
+  background-color: #fff;
+}
+
+.certimas-info h2 {
+  font-size: 3rem; /* 48px */
+  font-weight: 700;
+  margin-bottom: 100px;
+  color: #000;
+}
+
+/* ====== GRID PRINCIPAL ====== */
+.info-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6rem;
+  flex-wrap: wrap;
+}
+
+/* ====== COLUMNAS ====== */
+.info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 380px;
+}
+
+/* ====== IMAGEN CENTRAL ====== */
+.info-image {
+  flex-shrink: 0;
+}
+
+.info-image img {
+  max-width: 400px; /* ✅ imagen más grande */
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.info-image img:hover {
+  transform: scale(1.03);
+}
+
+/* ====== ITEM ====== */
+.info-item {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.info-item:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+}
+
+/* ====== HEADER ====== */
+.info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px;
+  font-weight: 700; /* Bold */
+  font-size: 1.5rem; /* 30px */
+  color: #000;
+  transition: all 0.3s ease;
+}
+
+.info-header i:first-child {
+  font-size: 2rem; /* 32px — ícono más grande */
+  color: #000 !important;
+  margin-right: 14px;
+  transition: color 0.3s ease;
+}
+
+.info-item:hover .info-header i:first-child {
+  color: #ff671f !important;
+}
+
+.info-item:hover .info-header span {
+  color: #ff671f;
+}
+
+/* Flecha */
+.info-header i.bi {
+  font-size: 1.75rem; /* 28px */
+  color: #ff671f;
+  transition: transform 0.3s ease;
+}
+
+.info-item.active .info-header i.bi {
+  transform: rotate(180deg);
+}
+
+/* ====== CONTENIDO ====== */
+.info-content {
+  padding: 0 28px 18px;
+  color: #555;
+  font-size: 1.375rem; /* 22px */
+  line-height: 1.6;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.info-content p {
+  margin: 0;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 1200px) {
+  .info-grid {
+    gap: 4rem;
+  }
+
+  .info-column {
+    width: 320px;
+  }
+
+  .info-image img {
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 992px) {
+  .certimas-info {
+    padding: 100px 5%;
+  }
+
+  .certimas-info h2 {
+    font-size: 2.5rem;
+    margin-bottom: 60px;
+  }
+
+  .info-grid {
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .info-column {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .info-image img {
+    max-width: 300px;
+  }
+
+  .info-header {
+    font-size: 1.5rem;
+    padding: 18px 22px;
+  }
+
+  .info-content {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .certimas-info h2 {
+    font-size: 2rem;
+  }
+
+  .info-header {
+    font-size: 1.3rem;
+  }
+
+  .info-header i:first-child {
+    font-size: 1.7rem;
+  }
+
+  .info-header i.bi {
+    font-size: 1.4rem;
+  }
+
+  .info-content {
+    font-size: 1.1rem;
+  }
+
+  .info-image img {
+    max-width: 260px;
+  }
+}
+
+
+
+/* ============================== */
+/* SECCIÓN CERTIMÁS */
+/* ============================== */
+
+.certimas-section {
+  background-color: #fff;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 120px;
+  font-family: 'Urbanist', sans-serif;
+}
+
+/* === LOGO === */
+.certimas-logo {
+  margin-bottom: 120px; /* ⬆️ Mayor espacio frente al contenedor naranja */
+}
+
+.certimas-logo img {
+  width: 420px;
+  max-width: 95%;
+}
+
+/* === CAJA NARANJA PRINCIPAL === */
+.certimas-box {
+  background-color: #ff671f;
+  border-radius: 25px;
+  max-width: 1300px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+  margin-bottom: 100px;
+  padding: 80px 60px;
+}
+
+/* === IMAGEN CELULARES === */
+.certimas-img {
+  position: absolute;
+  bottom: -200px;
+  right: -100px;
+  transform: rotate(-8deg);
+  z-index: 1;
+  width: 48vw; /* ✅ Se adapta al ancho de la pantalla */
+  max-width: 750px; /* límite máximo para pantallas grandes */
+  min-width: 400px; /* evita que se haga muy pequeña */
+  transition: width 0.4s ease;
+}
+
+/* === TEXTO === */
+.certimas-box h2 {
+  font-size: 3rem; /* 48px */
+  font-weight: 600; /* Semibold */
+  margin-bottom: 15px;
+}
+
+.certimas-box p {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 400; /* Regular */
+  line-height: 1.5;
+  margin-bottom: 35px;
+  max-width: 600px;
+}
+
+/* === BOTONES === */
+.play-btn,
+.compra-btn {
+  font-size: 1.56rem; /* 25px */
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+/* --- Botón play --- */
+.play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  color: #ff671f;
+  border: none;
+  padding: 8px 18px 8px 12px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+
+.play-btn i {
+  font-size: 2.3rem;
+  line-height: 1;
+}
+
+.play-btn:hover {
+  background-color: #ffe8df;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* --- Botón compra --- */
+.compra-btn {
+  background: #fff;
+  color: #ff671f;
+  border: 2px solid #fff;
+  padding: 10px 26px;
+}
+
+.compra-btn:hover {
+  background-color: #fff;
+  color: #ff671f;
+  transform: translateY(-3px);
+}
+
+/* === MODAL VIDEO === */
+.video-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+.video-modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.video-content {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  animation: fadeIn 0.4s ease;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  z-index: 10;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1200px) {
+  .certimas-img {
+    width: 55vw;
+    bottom: -160px;
+    right: -60px;
+  }
+}
+
+@media (max-width: 992px) {
+  .certimas-box {
+    text-align: center;
+    padding: 60px 30px;
+  }
+
+  .certimas-img {
+    position: relative;
+    right: 0;
+    bottom: 0;
+    transform: rotate(0);
+    width: 80vw;
+    max-width: 500px;
+    margin-top: 40px;
+  }
+
+  .play-btn,
+  .compra-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .certimas-logo {
+    margin-bottom: 60px;
+  }
+
+  .certimas-logo img {
+    width: 320px;
+  }
+
+  .certimas-box h2 {
+    font-size: 2.4rem;
+  }
+
+  .certimas-box p {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .certimas-box {
+    padding: 40px 20px;
+  }
+
+  .certimas-box h2 {
+    font-size: 2rem;
+  }
+
+  .certimas-box p {
+    font-size: 1.1rem;
+  }
+
+  .certimas-img {
+    width: 90vw;
+  }
+
+  .play-btn,
+  .compra-btn {
+    font-size: 1.2rem;
+  }
+}

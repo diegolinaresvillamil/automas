@@ -1,0 +1,53 @@
+<!-- 🔘 BOTÓN FLOTANTE -->
+<button class="btn-flotante" (click)="abrirModal()">
+  <i class="bi bi-telephone-fill"></i>
+  <span class="texto-btn">¿Te llamamos?</span>
+</button>
+
+<!-- 💬 MODAL -->
+<div class="popup-overlay" *ngIf="modalVisible">
+  <div class="popup-content">
+    <button class="cerrar-btn" (click)="cerrarModal()">✕</button>
+
+    <div class="popup-body">
+      <!-- 🖼️ Columna con fondo -->
+      <div class="popup-imagen"></div>
+
+      <!-- 🧾 Formulario -->
+      <div class="popup-form-container">
+        <h2>¡Bienvenido a AutoMás!</h2>
+        <p>Déjanos tus datos y un asesor se pondrá en contacto contigo:</p>
+
+        <form (ngSubmit)="onSubmit()" class="popup-form">
+          <label>
+            Nombre y apellido:
+            <input type="text" [(ngModel)]="formData.nombre" name="nombre" required />
+          </label>
+
+          <label>
+            Placa del vehículo:
+            <input type="text" [(ngModel)]="formData.placa" name="placa" required />
+          </label>
+
+          <label>
+            Correo electrónico:
+            <input type="email" [(ngModel)]="formData.correo" name="correo" required />
+          </label>
+
+          <label>
+            Teléfono de contacto:
+            <input type="tel" [(ngModel)]="formData.telefono" name="telefono" required />
+          </label>
+
+          <!-- ✅ Checkbox alineado -->
+          <div class="terminos">
+            <input type="checkbox" [(ngModel)]="formData.acepta" name="acepta" required />
+            <label>Acepto el tratamiento de mis datos personales.</label>
+          </div>
+
+          <button type="submit" class="enviar-btn">Enviar datos</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

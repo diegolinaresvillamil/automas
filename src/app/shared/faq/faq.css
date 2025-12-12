@@ -1,0 +1,109 @@
+.faq-container {
+  max-width: 1100px;
+  margin: 0px auto;
+  padding: 60px 50px; /* ↑ más aire alrededor */
+  font-family: "Urbanist", sans-serif;
+}
+
+/* --- Título general --- */
+.faq-container h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 60px;
+  color: #111;
+}
+
+/* --- Acordeón --- */
+.faq-item {
+  background: #f8f8f8;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+
+.faq-item.open {
+  background: #ff671f;
+  color: #fff;
+}
+
+/* --- Pregunta (título) --- */
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 35px; /* más padding arriba/abajo e izquierda */
+  font-size: 1.8rem; /* ~35px */
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.faq-item.open .faq-question {
+  color: #fff;
+}
+
+/* --- Flecha / Botón circular --- */
+.faq-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #fff; /* círculo blanco */
+  color: #ff671f; /* flecha naranja */
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* estado activo (abierto) */
+.faq-item.open .faq-icon {
+  background: #fff; /* círculo naranja */
+  color: #ff671f; /* flecha blanca */
+  transform: rotate(180deg);
+}
+
+
+/* --- Respuesta (texto) --- */
+.faq-answer {
+  font-size: 1.5rem; /* ~30px */
+  font-weight: 400;
+  color: #333;
+  line-height: 1.6;
+  padding: 0 35px 28px;
+  background: #fff;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.faq-item.open .faq-answer {
+  background: #ff671f;
+  color: #fff;
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 768px) {
+  .faq-container {
+    padding: 40px 25px;
+  }
+  .faq-container h2{
+    font-size: 1.875rem; /* 30px */
+  
+  }
+
+  .faq-question {
+    font-size: 1.5rem;
+    padding: 22px 25px;
+  }
+
+  .faq-answer {
+    font-size: 1.3rem;
+    padding: 0 25px 22px;
+  }
+}
+

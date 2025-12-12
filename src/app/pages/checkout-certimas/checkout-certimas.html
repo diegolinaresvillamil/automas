@@ -1,0 +1,148 @@
+<section class="pago-certimas-section">
+  <div class="container" *ngIf="!mostrarResumen">
+    <h2 class="text-center mb-5">Compra tu CertiMás</h2>
+
+    <form #checkoutForm="ngForm" (ngSubmit)="realizarPedido(checkoutForm)">
+      <!-- Paso 1: Selección de cantidad -->
+      <div class="card-form mb-5">
+        <h4 class="section-title">Selecciona la cantidad de CertiMás</h4>
+        <div class="cantidad-buttons">
+          <button type="button" class="btn-select" [class.active]="cantidadCertimas === 1"
+            (click)="seleccionarCantidad(1)">1 CertiMás</button>
+          <button type="button" class="btn-select" [class.active]="cantidadCertimas === 3"
+            (click)="seleccionarCantidad(3)">3 CertiMás</button>
+          <button type="button" class="btn-select" [class.active]="cantidadCertimas === 5"
+            (click)="seleccionarCantidad(5)">5 CertiMás</button>
+        </div>
+      </div>
+
+      <!-- Paso 2: Información de vehículos -->
+      <div class="card-form mb-5">
+        <h4 class="section-title">Solicitar CertiMás</h4>
+        <p class="text-muted mb-4">Ingresa la(s) placa(s) y kilometraje de los vehículos.</p>
+
+        <div *ngFor="let v of vehiculos; let i = index" class="grid-4 mb-3 vehiculo-item">
+          <div>
+            <label>Placa {{ i + 1 }} *</label>
+            <input type="text" name="placa{{i}}" required [(ngModel)]="v.placa"
+              (blur)="abrirModalPlaca(i)" placeholder="Ej: ABC123" />
+          </div>
+          <div>
+            <label>Kilometraje *</label>
+            <input type="text" name="km{{i}}" required [(ngModel)]="v.kilometraje"
+              placeholder="Ej: 40000" />
+          </div>
+          <div>
+            <label>Departamento *</label>
+            <input type="text" name="dep{{i}}" required [(ngModel)]="v.departamento"
+              placeholder="Departamento" />
+          </div>
+          <div>
+            <label>Ciudad *</label>
+            <input type="text" name="ciudad{{i}}" required [(ngModel)]="v.ciudad"
+              placeholder="Ciudad" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Paso 3: Datos del solicitante -->
+      <div class="card-form mb-5">
+        <h4 class="section-title">Datos del Solicitante</h4>
+        <div class="grid-2">
+          <div><label>Nombres *</label><input name="nomS" required [(ngModel)]="solicitante.nombres" /></div>
+          <div><label>Apellidos *</label><input name="apeS" required [(ngModel)]="solicitante.apellidos" /></div>
+          <div><label>Correo electrónico *</label><input type="email" name="correoS" required
+              [(ngModel)]="solicitante.correo" /></div>
+          <div><label>Teléfono *</label><input name="telS" required [(ngModel)]="solicitante.telefono" /></div>
+          <div>
+            <label>Tipo de identificación *</label>
+            <select name="tipoS" required [(ngModel)]="solicitante.tipoId">
+              <option value="">Seleccione</option>
+              <option>CC</option>
+              <option>CE</option>
+            </select>
+          </div>
+          <div><label>Número de identificación *</label><input name="idS" required
+              [(ngModel)]="solicitante.identificacion" /></div>
+          <div><label>Departamento *</label><input name="depS" required [(ngModel)]="solicitante.departamento" /></div>
+          <div><label>Ciudad *</label><input name="ciuS" required [(ngModel)]="solicitante.ciudad" /></div>
+          <div><label>Dirección *</label><input name="dirS" required [(ngModel)]="solicitante.direccion" /></div>
+          <div><label>Empresa (opcional)</label><input name="empS" [(ngModel)]="solicitante.empresa" /></div>
+        </div>
+
+        <div class="mt-4">
+          <label class="checkbox">
+            <input type="checkbox" [(ngModel)]="mismosDatos" name="mismosDatos" (change)="copiarDatosFacturacion()" />
+            ¿Los datos de facturación son iguales al solicitante?
+          </label>
+        </div>
+      </div>
+
+      <!-- Paso 4: Datos de facturación -->
+      <div class="card-form mb-5">
+        <h4 class="section-title">Datos de Facturación</h4>
+        <div class="grid-2">
+          <div><label>Nombres *</label><input name="nomF" required [(ngModel)]="facturacion.nombres" /></div>
+          <div><label>Apellidos *</label><input name="apeF" required [(ngModel)]="facturacion.apellidos" /></div>
+          <div><label>Correo electrónico *</label><input type="email" name="correoF" required
+              [(ngModel)]="facturacion.correo" /></div>
+          <div><label>Teléfono *</label><input name="telF" required [(ngModel)]="facturacion.telefono" /></div>
+          <div>
+            <label>Tipo de identificación *</label>
+            <select name="tipoF" required [(ngModel)]="facturacion.tipoId">
+              <option value="">Seleccione</option>
+              <option>CC</option>
+              <option>CE</option>
+            </select>
+          </div>
+          <div><label>Número de identificación *</label><input name="idF" required
+              [(ngModel)]="facturacion.identificacion" /></div>
+          <div><label>Departamento *</label><input name="depF" required [(ngModel)]="facturacion.departamento" /></div>
+          <div><label>Ciudad *</label><input name="ciuF" required [(ngModel)]="facturacion.ciudad" /></div>
+          <div><label>Dirección *</label><input name="dirF" required [(ngModel)]="facturacion.direccion" /></div>
+          <div><label>Empresa (opcional)</label><input name="empF" [(ngModel)]="facturacion.empresa" /></div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <button class="btn-principal" type="submit">Realizar Pedido</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 🔹 Resumen final -->
+  <div class="container" *ngIf="mostrarResumen">
+    <div class="card-form mt-5">
+      <h4 class="section-title">Resumen de tu pedido</h4>
+      <p><strong>Cantidad de CertiMás:</strong> {{ cantidadCertimas }}</p>
+
+      <div *ngFor="let v of vehiculos; let i = index" class="resumen-item">
+        <p>
+          <strong>Vehículo {{ i + 1 }}:</strong> {{ v.placa }} -
+          {{ v.kilometraje }} km ({{ v.ciudad }}, {{ v.departamento }})
+        </p>
+      </div>
+
+      <p class="mt-3">
+        <strong>Solicitante:</strong> {{ solicitante.nombres }} {{ solicitante.apellidos }} - {{
+        solicitante.correo }}
+      </p>
+
+      <div class="text-center mt-4">
+        <button class="btn-pagar">Pagar Ahora</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Modal de confirmación de placa -->
+  <div class="modal-overlay" *ngIf="mostrarModalPlaca">
+    <div class="modal-content">
+      <h5>Confirmar placa</h5>
+      <p>La placa que ingresaste es: <strong>{{ placaTemporal }}</strong></p>
+      <div class="modal-buttons">
+        <button class="btn-confirmar" (click)="confirmarPlaca()">Sí, continuar</button>
+        <button class="btn-cancelar" (click)="corregirPlaca()">Corregir</button>
+      </div>
+    </div>
+  </div>
+</section>

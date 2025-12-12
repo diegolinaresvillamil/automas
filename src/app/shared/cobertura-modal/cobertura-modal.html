@@ -1,0 +1,183 @@
+<!-- Backdrop -->
+<div class="cobertura-backdrop" *ngIf="visible" (click)="onBackdrop($event)">
+
+  <!-- Contenedor general con fondo naranja como imagen -->
+  <div class="cobertura-modal" role="dialog" aria-modal="true">
+    <button class="close-btn" (click)="close()">×</button>
+
+    <!-- Rectángulo “sheet” con el contenido -->
+    <div class="sheet">
+      <!-- ===== PASO 1: FILTRO ===== -->
+      <ng-container *ngIf="step === 1">
+        <div class="hero">
+          <h2 class="title">Filtra tu búsqueda</h2>
+          <p class="subtitle">
+            Selecciona ciudad, servicio y tipo de centro para ver sedes disponibles.
+          </p>
+
+          <form [formGroup]="filtroForm" class="filter-grid" (ngSubmit)="consultar()">
+            <div class="campo">
+              <label>Departamento</label>
+              <select formControlName="departamento">
+                <option *ngFor="let d of departamentos" [value]="d">{{ d }}</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label>Ciudad</label>
+              <select formControlName="ciudad">
+                <option *ngFor="let c of ciudades" [value]="c">{{ c }}</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label>Servicio</label>
+              <select formControlName="servicio">
+                <option *ngFor="let s of servicios" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label>Tipo de Centro</label>
+              <select formControlName="tipoCentro">
+                <option *ngFor="let t of tiposCentro" [value]="t">{{ t }}</option>
+              </select>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" type="submit" [disabled]="!filtroForm.valid">
+                Consultar <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+
+          <div class="vehiculo">
+            <img src="/assets/cobertura-auto.png" alt="Vehículo" />
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ===== PASO 2: RESULTADOS ===== -->
+      <ng-container *ngIf="step === 2">
+        <div class="resultados">
+          <h3 class="title-2">Sedes encontradas</h3>
+          <p class="subtitle-2">
+            Las sedes disponibles para <b>{{filtroForm.value.ciudad}}</b>,
+            en el servicio <b>{{filtroForm.value.servicio}}</b> y tipo de centro
+            <b>{{filtroForm.value.tipoCentro}}</b>, son:
+          </p>
+
+          <div class="cards-grid">
+            <div class="sede-card" *ngFor="let s of sedes">
+              <div class="thumb">
+                <img [src]="s.img" [alt]="s.nombre" />
+              </div>
+              <h4>{{ s.nombre }}</h4>
+              <p class="city">{{ s.ciudad }}</p>
+              <p class="phones"><i class="bi bi-telephone"></i> {{ s.telefono }}</p>
+              <button class="btn-outline" (click)="verDetalle(s)">Ver más</button>
+            </div>
+          </div>
+
+          <button class="btn-secondary back" (click)="volver(1)">
+            ← Nueva búsqueda
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- ===== PASO 3: DETALLE ===== -->
+      <ng-container *ngIf="step === 3 && detalle">
+        <div class="detalle">
+          <div class="cabecera">
+            <div class="l">
+              <div class="ciudad"><i class="bi bi-geo-alt"></i> {{ detalle.ciudad }}</div>
+              <h2 class="name">{{ detalle.nombre }}</h2>
+              <div class="direccion" *ngIf="detalle.direccion">{{ detalle.direccion }}</div>
+
+              <div class="phones-row">
+                Llámanos: <span>{{ detalle.telefono }}</span>
+              </div>
+
+              <div class="horarios">
+                <div>
+                  <h5>Horario Revisión<br/>Técnico Mecánica:</h5>
+                  <p [innerHTML]="detalle.horarioRtm"></p>
+                </div>
+                <div>
+                  <h5>Horario<br/>Comercial:</h5>
+                  <p [innerHTML]="detalle.horarioComercial"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="r">
+              <div class="gallery">
+                <img [src]="detalle.img" [alt]="detalle.nombre" />
+              </div>
+              <div class="dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 🟠 NUEVA ESTRUCTURA: 3 COLUMNAS BALANCEADAS -->
+          <div class="grid-3">
+            <!-- Mapa -->
+            <div class="mapa">
+              <h5>Ubicación en mapa:</h5>
+              <div class="mapa-box small">
+<iframe 
+  [src]="sanitizeUrl(getMapsIframeUrl())"
+  width="200"
+  height="200"
+  style="border:0; border-radius:10px;"
+  allowfullscreen=""
+  loading="lazy">
+</iframe>
+              </div>
+            </div>
+
+            <!-- Servicios -->
+            <div class="servicios">
+              <h5>Servicios:</h5>
+              <ul class="servicios-list compact">
+                <li *ngFor="let sv of detalle.servicios">{{ sv }}</li>
+              </ul>
+            </div>
+
+            <!-- Sedes cercanas -->
+            <div class="cercanas">
+              <h5>Sedes Cercanas:</h5>
+              <div class="carousel-wrapper">
+                <button class="arrow left" (click)="carousel.scrollBy({left: -250, behavior: 'smooth'})">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+
+                <div #carousel class="cercanas-carousel">
+                  <div class="mini-card vertical" *ngFor="let c of cercanas">
+                    <div class="thumb-mini"><img [src]="c.img" [alt]="c.nombre"/></div>
+                    <div class="info-mini">
+                      <div class="n">{{ c.nombre }}</div>
+                      <div class="c">{{ c.ciudad }}</div>
+                      <button class="btn-mini" (click)="verDetalle(c)">Ver más</button>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="arrow right" (click)="carousel.scrollBy({left: 250, behavior: 'smooth'})">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-acciones">
+            <button class="btn-secondary back" (click)="volver(2)">← Volver a resultados</button>
+            <button class="btn-primary" (click)="close()">Cerrar</button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

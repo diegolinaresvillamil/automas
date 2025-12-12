@@ -1,0 +1,43 @@
+<section class="blog-wrap">
+  <h2 class="blog-title">{{ heading }}</h2>
+
+  <div class="blog-grid" *ngIf="posts?.length; else empty">
+    <!-- Post destacado -->
+    <div class="featured" *ngIf="posts[0] as p">
+      <div class="featured-img">
+        <img [src]="p.image" [alt]="p.title" />
+      </div>
+
+      <div class="featured-card">
+        <!-- 🔸 Contenedor interno con ancho limitado -->
+        <div class="featured-card-content">
+          <div *ngIf="p.tag" class="chip">{{ p.tag }}</div>
+
+          <h3 class="feat-heading">{{ p.title }}</h3>
+
+          <p *ngIf="p.excerpt" class="feat-excerpt">{{ p.excerpt }}</p>
+
+          <a [routerLink]="p.url" class="btn btn-light feat-btn">Leer más</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 tarjetas inferiores -->
+    <div class="cards">
+      <a class="card" *ngFor="let c of posts.slice(1, 4)" [routerLink]="c.url">
+        <div class="card-img">
+          <img [src]="c.image" [alt]="c.title" />
+          <span class="badge">Leer más</span>
+        </div>
+
+        <div class="card-text">
+          <h4>{{ c.title }}</h4>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <ng-template #empty>
+    <p class="empty">No hay artículos por mostrar.</p>
+  </ng-template>
+</section>

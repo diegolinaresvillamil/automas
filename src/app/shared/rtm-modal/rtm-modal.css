@@ -1,0 +1,334 @@
+/* === BACKDROP === */
+.naranja{
+  color: #FF671F;
+  font-size: 14px;
+  
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 21, 32, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.rtm-modal-container {
+  border-radius: 12px;
+  position: relative;
+  padding: 2.5rem;
+  max-width: 1100px;
+  width: 95%;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+  /* Fondo base naranja */
+  background: linear-gradient(180deg, #ff671f 0%, #f55a13 100%);
+}
+
+/* === IMAGEN DE FONDO ADORNO === */
+.rtm-modal-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/assets/fondo-adorno.png") center center / cover no-repeat;
+  opacity: 0.3; /* Ajusta según qué tan visible quieres el adorno */
+  z-index: 0;
+}
+
+/* === BOTÓN CERRAR === */
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 2;
+}
+.close-btn:hover {
+  opacity: 0.7;
+}
+
+/* === BLOQUE BLUR === */
+.rtm-content {
+  position: relative;
+  z-index: 1; /* sobre el adorno */
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* === HEADER === */
+.rtm-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #111520;
+}
+.rtm-header h2 {
+  font-weight: 700;
+  font-size: 1.9rem;
+  color: #111520;
+}
+.rtm-header p {
+  font-size: 1rem;
+  color: #333;
+  margin-top: 0.4rem;
+}
+
+/* === FORMULARIO === */
+.rtm-form {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.campo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.campo label {
+  font-weight: 600;
+  color: #111520;
+  margin-bottom: 0.4rem;
+}
+.campo input,
+.campo select {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+  color: #111520;
+}
+.campo input:focus,
+.campo select:focus {
+  outline: none;
+  border-color: #fa6119;
+  box-shadow: 0 0 4px rgba(250, 97, 25, 0.4);
+}
+
+.align-end {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+/* === BOTÓN === */
+.btn-consultar {
+  background: #fa6119;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.6rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+.btn-consultar:hover {
+  background: #e55816;
+}
+
+/* === IMAGEN FINAL === */
+.rtm-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+.rtm-footer img {
+  width: 480px;
+  max-width: 100%;
+  margin-bottom: -80px;
+  margin-top: -35px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .rtm-content {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .btn-consultar {
+    width: 100%;
+  }
+
+  .rtm-footer img {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+
+
+/* ======== PASO 2 ======== */
+.btn-sede {
+  background: #fff;
+  color: #111520;
+  border: 1px solid #ccc;
+  padding: 0.8rem 1.4rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+.btn-sede:hover {
+  background: #f1f1f1;
+}
+
+/* Ícono alerta */
+.rtm-header i {
+  color: #fa6119;
+  margin-right: 6px;
+}
+
+
+/* ===============================
+   📱 Ajustes para móviles (RTM Modal)
+   =============================== */
+@media (max-width: 768px) {
+  /* Fondo con scroll */
+  .modal-backdrop {
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto; /* ✅ permite desplazamiento completo */
+    -webkit-overflow-scrolling: touch; /* scroll suave iOS */
+    padding: 1rem 0;
+  }
+
+  /* Contenedor principal */
+  .rtm-modal-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-y: visible;
+  }
+
+  /* Bloque blur con ajuste */
+  .rtm-content {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: 95%;
+    max-width: 400px;
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  /* Header */
+  .rtm-header h2 {
+    font-size: 1.5rem;
+  }
+  .rtm-header p {
+    font-size: 0.95rem;
+  }
+
+  /* Formulario */
+  .rtm-form {
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .campo input,
+  .campo select {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+
+  /* Botón ancho completo */
+  .btn-consultar {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  /* Footer oculto (imagen) */
+  .rtm-footer {
+    display: none !important;
+  }
+
+  /* Scroll interno si el contenido es largo */
+  .rtm-modal-container {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* Scrollbar custom (solo estético) */
+  .rtm-modal-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .rtm-modal-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 102, 0, 0.4);
+    border-radius: 4px;
+  }
+
+  .rtm-modal-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 102, 0, 0.6);
+  }
+}
+
+
+/* ✅ Casilla de aceptación */
+.campo-checkbox {
+  margin-top: 15px;
+  font-size: 0.95rem;
+  color: #333;
+  grid-column: 1 / -1;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+  flex-wrap: wrap;
+}
+
+.checkbox-label input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: #fa6119; /* color institucional */
+}
+
+.checkbox-label a {
+  color: #000;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.checkbox-label a:hover {
+  text-decoration: none;
+}

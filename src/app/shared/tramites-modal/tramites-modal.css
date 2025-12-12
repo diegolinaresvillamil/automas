@@ -1,0 +1,690 @@
+/* Fondo difuminado */
+.tramite-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+/* Modal principal */
+.tramite-modal {
+  background: #ddebf6;
+  border-radius: 25px;
+  width: 95%;
+  max-width: 960px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: fadeIn 0.35s ease;
+}
+
+/* Botón de cierre */
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #333;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.close-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Contenedor */
+.tramite-container {
+  text-align: center;
+}
+
+/* Título principal */
+.tramite-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #111520;
+  margin-bottom: 0.5rem;
+}
+
+/* Subtítulo */
+.tramite-subtitle {
+  font-size: 1.05rem;
+  color: #444;
+  margin-bottom: 1.8rem;
+}
+
+/* Botón principal */
+.tramite-main-btn {
+  background-color: #00a0b6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem 2.5rem;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 2.5rem;
+}
+.tramite-main-btn i {
+  font-size: 1.1rem;
+}
+.tramite-main-btn:hover {
+  background-color: #008da1;
+}
+
+/* Grilla de trámites */
+.tramite-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.2rem;
+  justify-content: center;
+}
+
+/* Tarjetas individuales */
+.tramite-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+.tramite-card:hover {
+  transform: translateY(-3px);
+  border-color: #00a0b6;
+}
+
+/* Ícono */
+.tramite-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.7rem;
+}
+
+/* Texto */
+.tramite-label {
+  display: block;
+  font-weight: 600;
+  color: #111520;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+/* Estado activo */
+.tramite-card.active {
+  background: #00a0b6;
+  border-color: #00a0b6;
+}
+.tramite-card.active .tramite-label {
+  color: #fff;
+}
+.tramite-card.active img {
+  filter: brightness(10);
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .tramite-modal {
+    padding: 2rem;
+  }
+  .tramite-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1rem;
+  }
+  .tramite-title {
+    font-size: 1.6rem;
+  }
+  .tramite-subtitle {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tramite-modal {
+    padding: 1.5rem;
+  }
+  .tramite-title {
+    font-size: 1.4rem;
+  }
+  .tramite-subtitle {
+    font-size: 0.9rem;
+  }
+  .tramite-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+  .tramite-card {
+    padding: 0.8rem;
+  }
+  .tramite-icon {
+    width: 38px;
+    height: 38px;
+  }
+  .tramite-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* =============================
+   📱 Scroll en pantallas pequeñas
+============================= */
+
+@media (max-width: 450px) {
+  .tramite-backdrop {
+    align-items: flex-start; /* Mueve el modal hacia arriba */
+    overflow-y: auto; /* Permite scroll en el fondo */
+    padding: 1.2rem 0;
+  }
+
+  .tramite-modal {
+    margin: 1.2rem auto;
+    max-height: 90vh; /* evita que sobrepase la pantalla */
+    overflow-y: auto; /* habilita scroll solo dentro del modal */
+    -webkit-overflow-scrolling: touch; /* suaviza el scroll en iOS */
+  }
+
+  /* Scrollbar personalizada (opcional, elegante) */
+  .tramite-modal::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .tramite-modal::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+  }
+
+  .tramite-modal::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+/* Estado activo */
+.tramite-card.active {
+  background: #00a0b6;
+  border-color: #00a0b6;
+  box-shadow: 0 0 10px rgba(0, 160, 182, 0.4);
+}
+.tramite-card.active .tramite-label {
+  color: #fff;
+}
+.tramite-card.active img {
+  filter: brightness(10);
+}
+
+/* Mensaje de error */
+.tramite-error {
+  color: #d93025;
+  font-size: 0.95rem;
+  margin-top: -1rem;
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+}
+
+
+/* ===============================
+   🟦 PANTALLA 2 - Modal Trámites
+   =============================== */
+
+/* 🔵 Fondo modal general */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 21, 32, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 🔵 Contenedor modal */
+.modal-container.modal-wide {
+  background: #ddebf6;
+  border-radius: 24px;
+  padding: 2rem 2.5rem;
+  max-width: 1000px;
+  width: 95%;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+
+/* ❌ Botón cerrar */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 22px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #111520;
+}
+
+/* 🧩 Grid principal */
+.tarifas-grid {
+  display: grid;
+  grid-template-columns: 68% 32%;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* ===============================
+   🟦 Columna izquierda
+   =============================== */
+.col-izquierda {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tarifas-header h2 {
+  font-weight: 500;
+  color: #111520;
+  font-size: 2.2rem;
+  line-height: 1.3;
+}
+
+.tarifas-header strong {
+  color: #000 !important;
+  font-weight: 800;
+}
+
+.tarifas-header p {
+  font-size: 0.95rem;
+  color: #333;
+  margin-top: 0.5rem;
+}
+
+/* 🟦 Filtros (Trámite + Fecha) */
+.filtros {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.campo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.campo label {
+  font-weight: 600;
+  color: #111520;
+  margin-bottom: 0.3rem;
+}
+
+.campo select,
+.input-fecha {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #111520;
+  background: #fff;
+}
+
+/* 🗺️ Bloque mapa + sedes */
+.mapa-sedes {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.mapa-mini img {
+  width: 320px;
+  border-radius: 10px;
+  background: #eaf3f9;
+}
+
+/* 🔵 Bloque de sedes refinado */
+.lista-sedes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+  max-height: 210px; /* 👈 muestra aprox 2 sedes visibles */
+  overflow-y: auto;
+  padding-right: 6px; /* espacio para scrollbar */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #b5c9d8 transparent;
+}
+/* 🔵 Scrollbar WebKit (Chrome, Edge, Safari) */
+.lista-sedes::-webkit-scrollbar {
+  width: 6px;
+}
+.lista-sedes::-webkit-scrollbar-thumb {
+  background-color: #b5c9d8;
+  border-radius: 10px;
+}
+
+.sede-item {
+  background: #fff;
+  border: 1px solid #cdd9e6;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sede-item:hover {
+  border-color: #00a0b6;
+  box-shadow: 0 0 6px rgba(0, 160, 182, 0.3);
+}
+
+.sede-item.selected {
+  background: #e5f6fa;
+  border-color: #00a0b6;
+}
+
+/* 🔵 Contenido interno: 3 líneas ordenadas */
+.sede-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.3;
+}
+
+.sede-left {
+  width: 100%;
+}
+
+.sede-left h4 {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #111520;
+  margin: 0 0 0.3rem 0;
+}
+
+.sede-left p {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 0 0 0.3rem 0;
+}
+
+.sede-right {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.sede-right .dias,
+.sede-right .horario {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+/* 🔵 Forzar altura uniforme entre tarjetas */
+.lista-sedes .sede-item {
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ===============================
+   🟦 Columna derecha
+   =============================== */
+.col-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ciudad-ubicacion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #111520;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.ciudad-ubicacion i {
+  color: #00a0b6;
+}
+
+/* Tarifa Card */
+.tarifa-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+}
+.tarifa-card h3 {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #111520;
+}
+.tarifa-card p {
+  color: #444;
+  margin: 0.3rem 0;
+}
+.tarifa-card .valor {
+  font-size: 1.8rem;
+  color: #00a0b6;
+  font-weight: 800;
+  margin-top: 0.8rem;
+}
+.tarifa-card small {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Botones */
+.btn-outline,
+.btn-primary {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border-radius: 10px;
+  padding: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.7rem;
+  transition: 0.3s;
+}
+
+.btn-outline {
+  border: 1px solid #cdd9e6;
+  color: #111520;
+  background: #fff;
+}
+.btn-outline:hover {
+  border-color: #00a0b6;
+  color: #00a0b6;
+}
+
+.btn-primary {
+  background: #00a0b6;
+  color: #fff;
+  border: none;
+}
+.btn-primary:hover {
+  background: #008fa4;
+}
+
+/* ===============================
+   📱 Responsive (corregido)
+   =============================== */
+
+/* 🔹 TABLETS */
+@media (max-width: 768px) {
+  .tarifas-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .modal-container.modal-wide {
+    width: 95%;
+    max-height: 95vh;
+    overflow-y: auto;
+    padding: 1.25rem;
+    border-radius: 18px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mapa-mini img {
+    width: 100%;
+    height: auto;
+  }
+
+  .lista-sedes {
+    max-height: 40vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .lista-sedes::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tarifa-card {
+    margin-top: 1.25rem;
+  }
+}
+
+/* 🔹 SMARTPHONES (<=450px) */
+@media (max-width: 450px) {
+  /* Contenedor general */
+  .modal-backdrop {
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0.5rem;
+    overflow-y: auto;
+  }
+
+  .modal-container.modal-wide {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    margin: 1rem 0;
+    border-radius: 16px;
+    padding: 1rem 1rem 1.5rem;
+    overflow-y: visible;
+    box-sizing: border-box;
+  }
+
+  /* Grid en una sola columna */
+  .tarifas-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Reorganiza mapa y sedes */
+  .mapa-sedes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mapa-mini img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  /* Sedes sin límite de altura */
+  .lista-sedes {
+    max-height: none;
+    overflow-y: visible;
+    gap: 0.7rem;
+  }
+
+  /* Ajustes de texto */
+  .tarifas-header h2 {
+    font-size: 1.4rem;
+    line-height: 1.3;
+  }
+
+  .tarifas-header p {
+    font-size: 0.85rem;
+  }
+
+  /* Tarjetas de sede más compactas */
+  .sede-item {
+    padding: 0.8rem;
+  }
+
+  .sede-left h4 {
+    font-size: 0.9rem;
+  }
+
+  .sede-left p {
+    font-size: 0.8rem;
+  }
+
+  .sede-right .dias,
+  .sede-right .horario {
+    font-size: 0.75rem;
+  }
+
+  /* Tarjeta lateral (tarifa) pasa al final */
+  .col-derecha {
+    order: 2;
+    margin-top: 1rem;
+  }
+
+  /* Botones más cómodos */
+  .btn-outline,
+  .btn-primary {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+
+  /* Ajuste título */
+  .titulo-tramite {
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+
+  /* Evita recorte del contenido */
+  html,
+  body {
+    overflow: auto !important;
+    height: auto !important;
+  }
+}
+
+/* 🔹 EXTRAPEQUEÑAS (<=360px) */
+@media (max-width: 360px) {
+  .tarifas-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .campo select,
+  .input-fecha {
+    font-size: 0.8rem;
+  }
+
+  .btn-outline,
+  .btn-primary {
+    font-size: 0.85rem;
+  }
+}

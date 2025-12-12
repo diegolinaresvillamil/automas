@@ -1,0 +1,368 @@
+/* Backdrop */
+.cobertura-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Modal con fondo naranja como imagen */
+.cobertura-modal{
+  width: min(1200px, 96vw);
+  max-height: 92vh;
+  padding: 18px;
+  position: relative;
+
+  /* Fondo imagen naranja */
+  background: url('/assets/bg-naranja-patrones.png') center/cover no-repeat #fa6119;
+  border-radius: 22px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+}
+
+/* Botón cerrar */
+.close-btn{
+  position: absolute; top: 10px; right: 14px;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: none; background:#fff; color:#111; font-size: 22px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  cursor:pointer;
+}
+
+/* Sheet (rectángulo) */
+.sheet{
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(8px);
+  border-radius: 18px;
+  padding: 26px;
+  overflow: hidden;
+
+  /* En móvil: que scrollee el contenido si es largo */
+  max-height: calc(92vh - 36px);
+  overflow-y: auto;
+}
+
+/* ===== Paso 1 - Filtro ===== */
+.hero{
+  text-align: center;
+  padding: 10px 8px 0;
+}
+
+.title{
+  font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+  font-weight: 800;
+  color: #222;
+  margin: 4px 0 6px;
+}
+
+.subtitle{
+  color:#404040; opacity:.85; margin: 0 0 18px;
+}
+
+.filter-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  align-items: end;
+}
+
+.campo{ text-align:left; }
+.campo label{
+  font-weight:700; color:#222; font-size:.95rem; margin-bottom:6px; display:block;
+}
+.campo select{
+  width:100%; padding:.7rem .8rem; border-radius:12px; border:1px solid #ddd;
+  background:#fff; font-size:.95rem;
+}
+
+.actions{
+  grid-column: 1 / -1;
+  display: flex; justify-content: center; margin-top: 8px;
+}
+
+.btn-primary{
+  background:#fa6119; color:#fff; border:none; border-radius:12px;
+  padding:.75rem 1.4rem; font-weight:800; cursor:pointer;
+  box-shadow: 0 8px 18px rgba(250,97,25,.25);
+}
+.btn-primary:disabled{ opacity:.6; cursor:not-allowed; }
+
+.vehiculo{ margin-top: 18px; display:flex; justify-content:center; }
+.vehiculo img{ width:min(560px, 80%); height:auto; }
+
+/* ===== Paso 2 - Resultados ===== */
+.resultados .title-2{
+  text-align:center; font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight:800; color:#222; margin: 4px 0 8px;
+}
+.resultados .subtitle-2{
+  text-align:center; color:#555; max-width:860px; margin:0 auto 18px;
+}
+
+.cards-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:16px;
+}
+
+.sede-card{
+  background:#fff; border-radius:16px; padding:14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  display:flex; flex-direction:column; gap:8px;
+}
+.sede-card .thumb img{
+  width:100%; height:140px; object-fit:cover; border-radius:12px;
+}
+.sede-card h4{ font-size:1rem; font-weight:800; color:#222; margin: 2px 0; }
+.sede-card .city{ color:#666; font-size:.95rem; }
+.sede-card .phones{ color:#333; font-size:.92rem; }
+.btn-outline{
+  background:#fff; border:1px solid #fa6119; color:#fa6119; border-radius:10px;
+  padding:.55rem .8rem; font-weight:700; margin-top:6px; cursor:pointer;
+}
+.btn-outline:hover{ background:#fff4ed; }
+
+.btn-secondary.back{
+  margin:14px auto 0; display:block; background:#fff; border:1px solid #ddd;
+  color:#222; border-radius:10px; padding:.55rem .9rem; font-weight:700;
+}
+
+/* ===== Paso 3 - Detalle ===== */
+.detalle .cabecera{
+  display:grid; grid-template-columns: 56% 44%; gap:18px; align-items:center;
+}
+.detalle .l .ciudad{ color:#111; font-weight:600; margin-bottom:6px; }
+.detalle .l .name{ font-weight:800; font-size: clamp(1.3rem, 2vw, 2rem); margin: 4px 0; }
+.detalle .l .direccion{ color:#333; margin-bottom: 6px; }
+.phones-row{ color:#333; margin: 8px 0 12px; }
+.phones-row span{ font-weight:700; }
+
+.horarios{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+.horarios h5{ margin:0 0 6px; font-weight:800; color:#222; }
+.horarios p{ margin:0; color:#333; }
+
+.gallery img{
+  width:100%; height:220px; border-radius:14px; object-fit:cover; display:block;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+.dots{ text-align:center; margin-top:8px; }
+.dot{ display:inline-block; width:8px; height:8px; border-radius:50%; background:#ddd; margin:0 3px; }
+.dot.active{ background:#fa6119; }
+
+.grid-2{
+  display:grid; grid-template-columns: 50% 50%; gap:18px; margin-top:12px;
+}
+.mapa h5, .servicios h5, .cercanas h5{ font-weight:800; color:#222; margin:6px 0; }
+.mapa-box{
+  background:#fff; border-radius:12px; padding:8px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+}
+.mapa-box img{ width:100%; border-radius:10px; }
+
+.servicios-list{
+  list-style:none; padding:0; margin:0;
+  background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+}
+.servicios-list li{
+  padding:12px 14px; border-bottom:1px solid #f0f0f0;
+}
+.servicios-list li:last-child{ border-bottom:none; }
+
+.cercanas-list{
+  display:flex; gap:12px; margin-top:6px; overflow-x:auto; padding-bottom:4px;
+}
+.mini-card{
+  background:#fff; border-radius:12px; padding:8px; min-width:240px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  display:flex; gap:10px; align-items:center;
+}
+.thumb-mini img{ width:110px; height:70px; border-radius:10px; object-fit:cover; }
+.info-mini .n{ font-weight:800; color:#222; }
+.info-mini .c{ color:#666; margin-bottom:6px; }
+.btn-mini{
+  background:#fff; border:1px solid #fa6119; color:#fa6119; border-radius:10px;
+  padding:.35rem .6rem; font-weight:700; cursor:pointer;
+}
+.footer-acciones{
+  margin-top:14px; display:flex; gap:10px; justify-content:flex-end;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 992px){
+  .filter-grid{ grid-template-columns: repeat(2, 1fr); }
+  .cards-grid{ grid-template-columns: repeat(2, 1fr); }
+  .detalle .cabecera{ grid-template-columns: 1fr; }
+  .grid-2{ grid-template-columns: 1fr; }
+}
+
+@media (max-width: 576px){
+  .cobertura-modal{ width: 98vw; padding: 12px; }
+  .sheet{ padding: 18px; border-radius: 14px; }
+  .cards-grid{ grid-template-columns: 1fr; }
+}
+
+
+
+/* === NUEVO GRID FINAL (3 columnas balanceadas) === */
+/* === GRID FINAL AJUSTADO === */
+.grid-3 {
+  display: grid;
+  grid-template-columns: 25% 35% 40%;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+/* Servicios más ajustados al mapa */
+.servicios .servicios-list.compact {
+  margin-top: 0;
+}
+.servicios-list.compact li {
+  padding: 10px 12px;
+  font-size: 0.93rem;
+}
+
+/* Sedes Cercanas tipo tarjeta vertical */
+.mini-card.vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 210px;
+  text-align: left;
+}
+.mini-card.vertical .thumb-mini {
+  width: 100%;
+}
+.mini-card.vertical .thumb-mini img {
+  width: 100%;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.mini-card.vertical .info-mini {
+  width: 100%;
+  padding-top: 6px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .mini-card.vertical {
+    min-width: 100%;
+  }
+}
+
+
+/* Mapa pequeño alineado a la izquierda */
+.mapa-box.small {
+  width: 200px;
+  height: 200px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.mapa-box.small iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+/* === CARRUSEL DE SEDES CERCANAS === */
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.cercanas-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 6px 4px;
+}
+.cercanas-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mini cards (reutilizan tu estilo existente) */
+.mini-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px;
+  min-width: 220px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.thumb-mini img {
+  width: 90px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Flechas del carrusel */
+.arrow {
+  position: relative;
+  background: #fff;
+  border: 1px solid #fa6119;
+  color: #fa6119;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  flex-shrink: 0;
+}
+.arrow:hover {
+  background: #fa6119;
+  color: #fff;
+}
+.arrow.left {
+  margin-right: 6px;
+}
+.arrow.right {
+  margin-left: 6px;
+}
+
+/* === BOTÓN “VOLVER A RESULTADOS” === */
+.btn-secondary.back {
+  margin: 14px auto 0;
+  display: inline-block;
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #222;
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-secondary.back:hover {
+  border-color: #fa6119;
+  color: #fa6119;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .mapa-box.small {
+    max-width: 100%;
+  }
+  .arrow.left, .arrow.right {
+    display: none;
+  }
+}

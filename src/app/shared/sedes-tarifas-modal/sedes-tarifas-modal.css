@@ -1,0 +1,1825 @@
+.naranja{
+  color: #FF671F;
+  font-size: 14px;
+  
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 21, 32, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  overflow-y: auto; /* ✅ permite scroll si el contenido es largo */
+}
+
+.modal-container {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  max-height: 90vh; /* ✅ scroll vertical si se pasa del viewport */
+}
+
+
+.modal-container.modal-wide {
+  background: #f5f9fc;
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  max-width: 1000px;
+  width: 95%;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  max-height: 90vh; /* ✅ scroll */
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  font-size: 22px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 99;
+}
+
+.modal-title {
+  color: #ff5a00;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.modal-text {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.alert-warning {
+  background: #fff4e5;
+  border: 1px solid #ffd699;
+  color: #a05200;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #ccc;
+}
+
+.btn-primary {
+  background: #ff5a00;
+  color: white;
+}
+
+
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 21, 32, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container.modal-wide {
+  background: #f5f9fc;
+  border-radius: 24px;
+  padding: 2rem 2.5rem;
+  max-width: 1000px;
+  width: 95%;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 22px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.tarifas-grid {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* --- Columna izquierda --- */
+.col-izquierda {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tarifas-header h2 {
+  font-weight: 600;
+  color: #1e1e1e;
+  font-size: 1.6rem;
+  line-height: 1.3;
+}
+.tarifas-header strong {
+  color: #111520;
+  font-weight: 700;
+}
+.tarifas-header p {
+  font-size: 0.95rem;
+  color: #555;
+  margin-top: 0.5rem;
+}
+
+/* Tipos de vehículo */
+.tipos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+.tipos button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0.8rem 0.5rem;
+  background: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.tipos button.active {
+  background: #ff6600;
+  color: #fff;
+  border-color: #ff6600;
+}
+.tipos img {
+  width: 22px;
+  height: 22px;
+}
+
+/* Subtipos desplegables */
+.subtipos {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.subtipos button {
+  flex: 1;
+  border-radius: 8px;
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.subtipos button.active {
+  background: #ff6600;
+  color: white;
+}
+
+/* Ciudad */
+.campo.ciudad label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+/* Mapa */
+.mapa img {
+  width: 40%;
+  border-radius: 14px;
+  background: #e8eef3;
+  margin-top: 1rem;
+}
+
+/* Lista de sedes */
+.lista-sedes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+.sede-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.sede-item:hover {
+  border-color: #ff6600;
+  box-shadow: 0 0 5px rgba(255, 102, 0, 0.3);
+}
+
+/* --- Columna derecha --- */
+.col-derecha .tarifa-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+}
+.tarifa-card h3 {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.tarifa-card p.valor {
+  font-size: 1.8rem;
+  color: #ff6600;
+  font-weight: 700;
+  margin-top: 0.8rem;
+}
+.btn-outline,
+.btn-primary {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border-radius: 10px;
+  padding: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.7rem;
+}
+.btn-outline {
+  border: 1px solid #ccc;
+  color: #333;
+  background: #fff;
+}
+.btn-primary {
+  background: #ff6600;
+  color: #fff;
+  border: none;
+}
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+
+.ciudad-ubicacion{
+  margin-bottom: 2rem;
+    margin-right: 73% !important;
+}
+
+/* Estructura */
+.mapa-sedes {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.mapa-mini img {
+  width: 320px;
+  border-radius: 10px;
+  background: #e8eef3;
+}
+.lista-sedes.small {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Ciudad en columna derecha */
+.ubicacion-ciudad {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #111520;
+}
+.ubicacion-ciudad i {
+  color: #ff6600;
+}
+
+/* Dropdown livianos */
+.select-livianos {
+  position: relative;
+}
+.dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0.8rem 0.9rem;
+  background: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+.dropdown-btn img {
+  width: 22px;
+  height: 22px;
+}
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 105%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  z-index: 10;
+}
+.dropdown-item {
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.dropdown-item:hover {
+  background: #ff6600;
+  color: #fff;
+}
+
+/* Mostrar menú al hover (demo sin lógica JS) */
+.select-livianos:hover .dropdown-menu {
+  display: block;
+}
+
+/* Iconos hover y active */
+.tipos button:hover,
+.tipos button.active,
+.dropdown-btn:hover {
+  background: #ff6600;
+  color: white;
+  border-color: #ff6600;
+}
+.tipos button:hover img,
+.tipos button.active img,
+.dropdown-btn:hover img {
+  filter: brightness(0) invert(1);
+  transition: 0.3s;
+}
+
+.sede-item h4{
+  font-size: 1.2rem;
+}
+
+/* Lista de sedes general */
+.lista-sedes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.sede-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sede-item:hover {
+  border-color: #ff6600;
+  box-shadow: 0 0 6px rgba(255, 102, 0, 0.2);
+}
+
+.sede-item.selected {
+  background: #fff7f0;
+  border-color: #ff6600;
+}
+
+/* Distribución dos columnas */
+.sede-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sede-left h4 {
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
+  color: #111520;
+}
+
+.sede-left p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0.2rem 0 0 0;
+}
+
+.sede-right {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.sede-right .dias {
+  font-weight: 500;
+  color: #111520;
+  font-size: 0.9rem;
+}
+
+.sede-right .horario {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Responsive ajuste si se reduce ancho */
+@media (max-width: 768px) {
+  .sede-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .sede-right {
+    text-align: left;
+  }
+}
+
+
+/* ========================== */
+/* PANTALLA FINAL */
+/* ========================== */
+
+.modal-final {
+  background: #fa6119; /* 🔸 Fondo completo naranja */
+  padding: 2.5rem;
+  max-width: 1100px;
+  width: 95%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 🎨 Imagen de fondo decorativa */
+.modal-final::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: url("/assets/fondo.png") no-repeat top right;
+  background-size: contain;
+  opacity: 0.5; /* para que no opaque demasiado */
+  z-index: 0; /* debajo del blur */
+}
+
+/* Contenedor blanco con blur */
+.final-content {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1; /* por encima del adorno */
+}
+
+.final-grid {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* --------------------------- */
+/* Columna izquierda */
+/* --------------------------- */
+.titulo {
+  color: #111520;
+  font-weight: 700;
+  font-size: 2rem;
+}
+.subtitulo {
+  color: #333;
+  font-weight: 500;
+  font-size: 1.8rem;
+  margin-top: -35px;
+}
+.descripcion {
+  color: #000;
+  margin-bottom: 1.2rem;
+  font-size: 1.2rem;
+  margin-top: -20px;
+  margin-bottom: -20px;
+}
+
+.form-agendar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+.campo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.campo label {
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+}
+.campo input,
+.campo select {
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+.campo input:focus,
+.campo select:focus {
+  outline: none;
+  border-color: #fa6119;
+  box-shadow: 0 0 4px rgba(250, 97, 25, 0.4);
+}
+
+/* ✅ Checkbox autorización */
+.campo-checkbox {
+  margin-top: 0.2rem;
+}
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+  font-size: 0.92rem;
+  color: #222;
+}
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: #fa6119; /* color institucional */
+}
+.checkbox-label a {
+  color: #fa6119;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.checkbox-label a:hover {
+  text-decoration: none;
+}
+
+.btn-primary {
+  margin-top: 1rem;
+  background: #fa6119;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.btn-primary:hover:not(:disabled) {
+  background: #e55816;
+}
+
+/* --------------------------- */
+/* Columna derecha */
+/* --------------------------- */
+.col-derecha {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* Bloque resumen */
+.resumen {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: left;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 320px;
+  z-index: 3; /* por encima del carro */
+  position: relative;
+  margin-top: -20px;
+  margin-bottom: 180px;
+}
+
+.resumen h4 {
+  font-weight: 600;
+  color: #111520;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.resumen p {
+  font-size: 0.9rem;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+/* Valor total */
+.valor-total {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin-bottom: 0.5rem;
+}
+.valor-total .label {
+  font-size: 0.9rem;
+  color: #111520;
+  font-weight: 500;
+}
+.valor-total .monto {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #fa6119;
+}
+
+/* Botón secundario */
+.btn-outline {
+  display: block;
+  width: 100%;
+  border: 1px solid #ccc;
+  color: #333;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.8rem;
+  margin-top: 0.8rem;
+  cursor: pointer;
+}
+.btn-outline:hover {
+  border-color: #fa6119;
+  color: #fa6119;
+}
+
+/* Imagen del auto */
+.auto-img {
+  position: absolute;
+  right: -80px; /* más a la derecha */
+  bottom: -60px; /* más abajo */
+  z-index: 2; /* debajo del bloque de resumen */
+}
+.auto-img img {
+  width: 480px; /* más grande */
+  max-width: none;
+  transform: translateY(15px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .final-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .col-derecha {
+    align-items: center;
+  }
+
+  .auto-img {
+    position: relative;
+    right: 0;
+    bottom: 0;
+    margin-top: 2rem;
+  }
+
+  .auto-img img {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+/* =============================== */
+/* RESPONSIVE ADAPTACIÓN CELULARES */
+/* =============================== */
+@media (max-width: 992px) {
+  .modal-container,
+  .modal-container.modal-wide {
+    width: 95%;
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+
+  .tarifas-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .col-derecha {
+    width: 100%;
+  }
+
+  .tipos {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tipos button {
+    flex: 1 1 45%;
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .subtipos {
+    flex-wrap: wrap;
+  }
+
+  .campo.ciudad label {
+    font-size: 0.9rem;
+  }
+
+  select {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  .mapa img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-backdrop {
+    align-items: flex-start;
+    padding: 1rem 0;
+  }
+
+  .modal-container,
+  .modal-container.modal-wide {
+    width: 100%;
+    height: auto;
+    max-height: 95vh; /* ✅ scroll si excede altura */
+    overflow-y: auto;
+    padding: 1.2rem;
+    border-radius: 10px;
+  }
+
+  .tarifas-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tarifa-card {
+    padding: 1rem;
+  }
+
+  .col-izquierda,
+  .col-derecha {
+    width: 100%;
+  }
+
+  .tipos button {
+    flex: 1 1 48%;
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  .close-btn {
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+  }
+
+  .modal-title {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  .modal-text {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+}
+
+/* =============================== */
+/* SCROLLBAR ESTÉTICO */
+/* =============================== */
+.modal-container::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 102, 0, 0.4);
+  border-radius: 4px;
+}
+.modal-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 102, 0, 0.6);
+}
+
+
+/* ===============================
+   📱 Ajustes móviles (solo celulares)
+   =============================== */
+@media (max-width: 768px) {
+  /* Reordenar estructura general */
+  .mapa-sedes {
+    flex-direction: column; /* Apila los elementos uno debajo del otro */
+    align-items: center;
+  }
+
+  /* Mostrar ubicación arriba */
+  .ciudad-ubicacion {
+    order: -1; /* ✅ Sube la sección de ubicación encima del mapa */
+    width: 100%;
+    margin: 0 0 1rem 0 !important;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Ajustar mapa */
+  .mapa-mini img,
+  .mapa img {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  /* Mostrar lista de sedes debajo del mapa */
+  .lista-sedes.small {
+    order: 2; /* ✅ Coloca la lista de sedes debajo */
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  /* Centrar los items */
+  .sede-item {
+    text-align: center;
+  }
+
+  /* Ajuste de botones */
+  .btn,
+  .btn-primary,
+  .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Evitar desbordes */
+  .tarifas-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Espaciado general */
+  .modal-container,
+  .modal-container.modal-wide {
+    padding: 1.2rem;
+  }
+}
+
+
+/* ===============================
+   📱 Ajustes modal final en móviles (versión scroll completa)
+   =============================== */
+@media (max-width: 768px) {
+  /* Fondo con scroll independiente */
+  .modal-backdrop {
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto; /* ✅ permite desplazamiento completo */
+    -webkit-overflow-scrolling: touch; /* scroll suave iOS */
+    padding: 1rem 0;
+  }
+
+  /* Contenedor principal de la modal */
+  .modal-final {
+    padding: 1.5rem 1rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    background: #fa6119;
+    border-radius: 0;
+    overflow-y: visible;
+    display: block;
+  }
+
+  /* Contenido interno con scroll si se pasa */
+  .final-content {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: 95%;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    overflow-y: auto;
+    max-height: none;
+  }
+
+  /* Estructura en columna */
+  .final-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* Formulario */
+  .form-agendar {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .campo input,
+  .campo select {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+
+  /* Resumen centrado */
+  .resumen {
+    margin: 1rem auto 0 auto;
+    max-width: 360px;
+    text-align: center;
+  }
+
+  .valor-total .monto {
+    font-size: 2.2rem;
+  }
+
+  /* Ocultar carro decorativo */
+  .auto-img {
+    display: none !important;
+  }
+
+  /* Tipografía más compacta */
+  .titulo {
+    font-size: 1.6rem;
+  }
+
+  .subtitulo {
+    font-size: 1.2rem;
+    margin-top: -10px;
+  }
+
+  .descripcion {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Botones ancho completo */
+  .btn-primary,
+  .btn-outline {
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+
+  /* Scroll interno si la modal es muy larga */
+  .modal-final::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .modal-final::-webkit-scrollbar-thumb {
+    background: rgba(255, 102, 0, 0.4);
+    border-radius: 4px;
+  }
+
+  .modal-final::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 102, 0, 0.6);
+  }
+}
+
+
+.lista-sedes.scrollable {
+  max-height: 360px;   /* ajusta la altura que quieras */
+  overflow-y: auto;
+}
+
+
+.mapa-mini {
+  width: 100%;
+  max-width: 420px;   /* ✅ aquí controlas el ancho máximo */
+  height: 280px;      /* ✅ aquí controlas la altura */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f2f2f2;
+}
+
+.mapa-mini iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+
+
+/* ==============================
+   PASO 3 – Pago
+============================== */
+.pago-step {
+  background: #e65a14;
+  color: #111520;
+  padding: 24px;
+  overflow-x: hidden;
+}
+
+.pago-wrap {
+  background: #f8efe9;
+  border-radius: 18px;
+  padding: 24px;
+  background-image: url("/assets/pattern-orange.svg");
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: 420px;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.pago-grid {
+  display: grid;
+  grid-template-columns: 56% 44%;
+  gap: 24px;
+  width: 100%;
+}
+
+.pago-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+.pago-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111520;
+  margin-bottom: 14px;
+}
+
+/* Cupón */
+.cupon-box {
+  margin-bottom: 16px;
+}
+
+.cupon-box h4 {
+  margin: 0 0 6px;
+  color: #111520;
+  font-weight: 700;
+}
+
+.cupon-box p {
+  margin: 0 0 10px;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.cupon-box p.error {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.cupon-box p.success {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.cupon-row {
+  display: flex;
+  gap: 10px;
+}
+
+.cupon-row input {
+  flex: 1;
+  border: 1px solid #e5e5ea;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/* Resumen */
+.resumen {
+  background: #f7f9fb;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 16px;
+  box-sizing: border-box;
+}
+
+.resumen-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: start;
+}
+
+.resumen-head h5 {
+  margin: 0;
+  color: #111520;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.resumen-fechas {
+  text-align: right;
+  color: #666;
+}
+
+.resumen-fechas small {
+  display: block;
+  font-size: 0.85rem;
+}
+
+.resumen-table {
+  margin-top: 10px;
+  border: 1px solid #e9eef3;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.resumen-table .row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 80px;
+  gap: 10px;
+  padding: 10px;
+  border-top: 1px solid #eef2f6;
+  color: #111520;
+  align-items: center;
+}
+
+.resumen-table .row.header {
+  background: #eef3f7;
+  font-weight: 700;
+  border-top: 0;
+}
+
+.resumen-table .row small {
+  color: #777;
+  font-size: 0.85rem;
+  display: block;
+  margin-top: 4px;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 4px 0;
+  color: #111520;
+}
+
+.total-line.grand {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fa6119;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 2px solid #e9eef3;
+  margin-top: 8px;
+}
+
+/* Botones */
+.btn {
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-apply {
+  background: #ff671f;
+  color: white;
+  padding: 10px 14px;
+}
+
+.btn-apply:hover {
+  filter: brightness(0.95);
+}
+
+.btn-next {
+  width: 100%;
+  background: #ff671f;
+  color: #fff;
+  padding: 14px;
+  margin-top: 12px;
+  font-size: 1rem;
+}
+
+.btn-next:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.btn-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Condiciones */
+.condiciones-final {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.condiciones-final input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #fa6119;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Pago – derecha */
+.pago-right h4 {
+  margin: 0 0 8px;
+  color: #111520;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.pago-right p {
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.pay-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: #fff;
+  border: 2px solid #f37021;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.pay-option:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 10px rgba(243, 112, 33, 0.4);
+}
+
+.pay-option img {
+  width: 90px;
+  height: auto;
+  object-fit: contain;
+}
+
+.pay-option span {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #222;
+  text-align: center;
+}
+
+.pay-option.active {
+  box-shadow: 0 6px 16px rgba(255, 103, 31, 0.22);
+  border-color: #ff671f;
+  background: #fff5f0;
+}
+
+/* Resumen del cliente */
+.resumen-cliente {
+  background: #f7f9fb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.resumen-cliente h5 {
+  margin: 0 0 12px;
+  color: #111520;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.resumen-cliente p {
+  margin: 8px 0;
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+.resumen-cliente strong {
+  color: #111520;
+  font-weight: 600;
+}
+
+/* Car */
+.pago-car {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pago-car img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Scroll del modal */
+.peritaje-paso3 {
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  padding-right: 0.5rem;
+  box-sizing: border-box;
+}
+
+.peritaje-paso3::-webkit-scrollbar {
+  width: 6px;
+}
+
+.peritaje-paso3::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.volver-plan {
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  color: #ff671f;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+  display: block;
+}
+
+.volver-plan:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* ===============================
+   Responsive Tablets
+=============================== */
+@media (max-width: 992px) {
+  .pago-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pago-wrap {
+    background-size: 300px;
+    padding: 20px;
+  }
+
+  .pago-title {
+    font-size: 1.75rem;
+  }
+
+  .pago-car img {
+    max-width: 380px;
+  }
+}
+
+/* ===============================
+   Responsive Mobile
+=============================== */
+@media (max-width: 768px) {
+  .pago-step {
+    padding: 12px;
+  }
+
+  .pago-wrap {
+    padding: 16px;
+    border-radius: 14px;
+    max-width: 95%;
+    margin: 0 auto;
+  }
+
+  .pago-card {
+    padding: 14px;
+  }
+
+  .pago-title {
+    font-size: 1.5rem;
+  }
+
+  .cupon-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pago-car {
+    display: none;
+  }
+
+  .resumen-table .row {
+    grid-template-columns: 2fr 1fr;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+
+  .resumen-table .row small {
+    font-size: 0.8rem;
+  }
+
+  .total-line {
+    font-size: 0.95rem;
+  }
+
+  .total-line.grand {
+    font-size: 1.1rem;
+  }
+
+  .peritaje-paso3,
+  .pago-wrap,
+  .pago-step {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+/* ===============================
+   Responsive Pequeños
+=============================== */
+@media (max-width: 450px) {
+  .pago-wrap {
+    padding: 14px;
+    border-radius: 12px;
+    max-width: 100%;
+    background-size: 220px;
+  }
+
+  .pago-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .pago-card {
+    padding: 12px;
+  }
+
+  .pago-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .cupon-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .resumen-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .resumen-table .row {
+    grid-template-columns: 1fr 70px;
+  }
+
+  .pay-option img {
+    width: 70px;
+  }
+
+  .btn-next {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+
+  .volver-plan {
+    font-size: 0.8rem;
+  }
+
+  .pago-step,
+  .pago-wrap,
+  .peritaje-paso3 {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden !important;
+  }
+}
+
+/* ===============================
+   Checkbox de términos
+=============================== */
+.campo-checkbox {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  line-height: 1.4;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #fa6119;
+  flex-shrink: 0;
+}
+
+.checkbox-label a {
+  color: #fa6119;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.checkbox-label a:hover {
+  text-decoration: none;
+}
+
+
+
+
+
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.form-control:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.loading-spinner {
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+}
+
+.alert {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.375rem;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  color: #856404;
+}
+
+.text-muted {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+
+
+
+
+
+/* ============================================ */
+/* LOADING SPINNER EN BOTÓN */
+/* ============================================ */
+
+/* Spinner animado */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Animación de rotación */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Botón en estado loading */
+.btn-primary.loading {
+  position: relative;
+  cursor: wait;
+  opacity: 0.8;
+}
+
+/* Deshabilitar pointer events cuando está loading */
+.btn-primary.loading:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Estilo adicional para el texto mientras carga */
+.btn-primary.loading span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================ */
+/* MENSAJE DE ERROR */
+/* ============================================ */
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.alert-danger {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+}
+
+.alert strong {
+  font-weight: 600;
+}
+
+/* ============================================ */
+/* OPCIONAL: Overlay de carga en toda la pantalla */
+/* ============================================ */
+
+/* Si quieres un overlay mientras carga (opcional) */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-overlay-content {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.loading-overlay-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top-color: #ff6b35;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+.loading-overlay-text {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* ============================================ */
+/* VARIANTE: Spinner de puntos (alternativa) */
+/* ============================================ */
+
+/* Si prefieres puntos animados en lugar de spinner circular */
+.dots-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.dots-spinner span {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dots-spinner span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dots-spinner span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================ */
+/* EJEMPLO DE USO DEL OVERLAY (OPCIONAL) */
+/* ============================================ */
+
+/*
+En tu HTML, si quieres usar el overlay:
+
+<div class="loading-overlay" *ngIf="isAgendando">
+  <div class="loading-overlay-content">
+    <div class="loading-overlay-spinner"></div>
+    <p class="loading-overlay-text">Procesando tu reserva...</p>
+    <small>Por favor, no cierres esta ventana</small>
+  </div>
+</div>
+*/

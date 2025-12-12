@@ -1,0 +1,199 @@
+/* ========================== */
+/* 🔸 FORMULARIO CERTIMÁS */
+/* ========================== */
+.pago-certimas-section {
+  background: #fff;
+  padding: 80px 20px;
+  color: #000;
+}
+
+.pago-certimas-section h2 {
+  color: #ff671f;
+  font-weight: 800;
+  font-size: 3.5rem;
+  margin-top: 10%;
+}
+
+.card-form {
+  background: #fafafa;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  margin-top: 80px!important;
+}
+
+.section-title {
+  color: #075d67;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* ========================== */
+/* 🔸 BOTONES DE SELECCIÓN */
+/* ========================== */
+.cantidad-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-select {
+  flex: 1;
+  background: #00c2c4;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-select:hover,
+.btn-select.active {
+  background: #075d67;
+}
+
+/* ========================== */
+/* 🔸 CAMPOS DE FORMULARIO */
+/* ========================== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+input:focus,
+select:focus {
+  border-color: #00c2c4;
+  box-shadow: 0 0 5px rgba(0, 194, 196, 0.4);
+}
+
+/* ========================== */
+/* 🔸 BOTONES PRINCIPALES */
+/* ========================== */
+.btn-principal {
+  background: #ff671f;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  padding: 14px 36px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-principal:hover {
+  background: #e55b16;
+}
+
+.btn-pagar {
+  background: #00c2c4;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  padding: 14px 36px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-pagar:hover {
+  background: #01adb0;
+}
+
+/* ========================== */
+/* 🔸 RESPONSIVE */
+/* ========================== */
+@media (max-width: 768px) {
+  .card-form {
+    padding: 25px;
+  }
+
+  .pago-certimas-section h2 {
+    font-size: 2rem;
+  }
+
+  .btn-select {
+    flex: 1 1 100%;
+  }
+
+  .btn-principal,
+  .btn-pagar {
+    width: 100%;
+  }
+}
+
+
+/* ========================== */
+/* 🔹 MODAL DE CONFIRMACIÓN */
+/* ========================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-content h5 {
+  font-weight: 700;
+  color: #075d67;
+  margin-bottom: 15px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.btn-confirmar {
+  background: #00c2c4;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.btn-cancelar {
+  background: #ff671f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}

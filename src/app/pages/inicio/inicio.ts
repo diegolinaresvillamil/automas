@@ -1,0 +1,284 @@
+import { Component, AfterViewInit, OnInit, OnDestroy, inject } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Router, RouterModule, NavigationStart } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
+
+// Modales
+import { SedesTarifasModalService } from '../../shared/sedes-tarifas-modal/sedes-tarifas-modal.service';
+import { RtmModalService } from '../../shared/rtm-modal/rtm-modal.service';
+import { PeritajeModalService } from '../../shared/peritaje-modal/peritaje-modal.service';
+
+import { SedesTarifasModalComponent } from '../../shared/sedes-tarifas-modal/sedes-tarifas-modal';
+import { RtmModalComponent } from '../../shared/rtm-modal/rtm-modal';
+import { PeritajeModalComponent } from '../../shared/peritaje-modal/peritaje-modal';
+import { BlogSectionComponent, BlogPost } from '../../shared/blog-section/blog-section';
+
+@Component({
+  selector: 'app-inicio',
+  standalone: true,
+  imports: [
+    RouterModule,
+    SedesTarifasModalComponent,
+    RtmModalComponent,
+    PeritajeModalComponent,
+    BlogSectionComponent
+  ],
+  templateUrl: './inicio.html',
+  styleUrls: ['./inicio.css']
+})
+export class Inicio implements AfterViewInit, OnInit, OnDestroy {
+  showVideo = false;
+  videoUrl?: SafeResourceUrl;
+  userLocation: { lat: number; lon: number } | null = null;
+  errorMessage: string | null = null;
+
+  private sanitizer = inject(DomSanitizer);
+  private router = inject(Router);
+  private sedesModalSvc = inject(SedesTarifasModalService);
+  private rtmModalSvc = inject(RtmModalService);
+  private peritajeModalSvc = inject(PeritajeModalService);
+
+  private routerSub?: Subscription;
+  private animationId?: number;
+  private heroAutoInterval: any = null;
+
+  ngOnInit(): void {
+    this.checkOrRequestLocation();
+
+    this.routerSub = this.router.events
+      .pipe(filter((e) => e instanceof NavigationStart))
+      .subscribe(() => {
+        setTimeout(() => {
+          this.sedesModalSvc.close();
+          this.rtmModalSvc.close();
+          this.peritajeModalSvc.close();
+          this.stopAndCloseVideo();
+          document.body.style.overflow = '';
+          if (this.animationId) cancelAnimationFrame(this.animationId);
+        }, 100);
+      });
+  }
+
+  ngAfterViewInit(): void {
+    this.initCounters();
+    this.initAliadosCarousel();
+    this.initHeroCarousel();
+    this.initServiceHover(); // 🆕 efecto hover servicios
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe();
+    if (this.animationId) cancelAnimationFrame(this.animationId);
+    this.stopAndCloseVideo();
+    document.body.style.overflow = '';
+
+    if (this.heroAutoInterval) {
+      clearInterval(this.heroAutoInterval);
+      this.heroAutoInterval = null;
+    }
+  }
+
+  // =========================
+  // 🖼️ Hover dinámico de imágenes (nuevo)
+  // =========================
+  private initServiceHover() {
+    const serviceIcons = document.querySelectorAll<HTMLImageElement>('.service-icon');
+    serviceIcons.forEach(icon => {
+      const normalSrc = icon.getAttribute('src');
+      const hoverSrc = icon.getAttribute('data-hover');
+      if (!normalSrc || !hoverSrc) return;
+
+      icon.addEventListener('mouseenter', () => {
+        icon.src = hoverSrc;
+      });
+      icon.addEventListener('mouseleave', () => {
+        icon.src = normalSrc;
+      });
+    });
+  }
+
+  // =========================
+  // Modales
+  // =========================
+  abrirModalSedes() { this.sedesModalSvc.open(); }
+  abrirModalRTM() { this.rtmModalSvc.open(); }
+  abrirModalPeritaje() { this.peritajeModalSvc.open(); }
+
+  // =========================
+  // Localización
+  // =========================
+  private checkOrRequestLocation() {
+    const savedLocation = localStorage.getItem('userLocation');
+    if (savedLocation) {
+      try {
+        this.userLocation = JSON.parse(savedLocation);
+      } catch {
+        localStorage.removeItem('userLocation');
+      }
+    }
+  }
+
+  // =========================
+  // Contadores
+  // =========================
+  private initCounters() {
+    const counters = document.querySelectorAll('.counter');
+    const startCounting = (counter: Element) => {
+      const target = +(counter.getAttribute('data-target') || '0');
+      const speed = 30;
+      let count = 0;
+      const updateCount = () => {
+        if (count < target) {
+          count += Math.ceil(target / 100);
+          (counter as HTMLElement).innerText = '+' + count;
+          setTimeout(updateCount, speed);
+        } else {
+          (counter as HTMLElement).innerText = '+' + target;
+        }
+      };
+      updateCount();
+    };
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          startCounting(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach((counter) => observer.observe(counter));
+  }
+
+  // =========================
+  // Carrusel Aliados
+  // =========================
+  private initAliadosCarousel() {
+    const track = document.getElementById('sliderTrack');
+    const leftArrow = document.querySelector('.arrow-left');
+    const rightArrow = document.querySelector('.arrow-right');
+    if (!track || !leftArrow || !rightArrow) return;
+
+    leftArrow.addEventListener('click', () => track.scrollBy({ left: -200, behavior: 'smooth' }));
+    rightArrow.addEventListener('click', () => track.scrollBy({ left: 200, behavior: 'smooth' }));
+
+    let isHovered = false;
+    track.addEventListener('mouseenter', () => isHovered = true);
+    track.addEventListener('mouseleave', () => isHovered = false);
+
+    const autoScroll = () => {
+      if (!isHovered) {
+        track.scrollLeft += 1;
+        if (track.scrollLeft >= track.scrollWidth / 2) track.scrollLeft = 0;
+      }
+      this.animationId = requestAnimationFrame(autoScroll);
+    };
+    this.animationId = requestAnimationFrame(autoScroll);
+  }
+
+  // =========================
+  // 🎞️ HERO CAROUSEL
+  // =========================
+  private initHeroCarousel() {
+    setTimeout(() => {
+      const track = document.getElementById('heroTrack') as HTMLElement | null;
+      const slides = document.querySelectorAll('.hero-slide');
+      const prevBtn = document.getElementById('heroPrev') as HTMLButtonElement | null;
+      const nextBtn = document.getElementById('heroNext') as HTMLButtonElement | null;
+
+      if (!track || slides.length === 0 || !prevBtn || !nextBtn) return;
+
+      let currentIndex = 0;
+      const totalSlides = slides.length;
+
+      const goToSlide = (index: number) => {
+        currentIndex = (index + totalSlides) % totalSlides;
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      };
+
+      const nextSlide = () => goToSlide(currentIndex + 1);
+      const prevSlide = () => goToSlide(currentIndex - 1);
+
+      prevBtn.onclick = () => {
+        prevSlide();
+        restartAuto();
+      };
+      nextBtn.onclick = () => {
+        nextSlide();
+        restartAuto();
+      };
+
+      const startAuto = () => {
+        if (this.heroAutoInterval) clearInterval(this.heroAutoInterval);
+        this.heroAutoInterval = setInterval(() => nextSlide(), 5000);
+      };
+
+      const restartAuto = () => {
+        if (this.heroAutoInterval) clearInterval(this.heroAutoInterval);
+        startAuto();
+      };
+
+      track.addEventListener('mouseenter', () => {
+        if (this.heroAutoInterval) clearInterval(this.heroAutoInterval);
+      });
+      track.addEventListener('mouseleave', () => startAuto());
+
+      goToSlide(0);
+      startAuto();
+    }, 0);
+  }
+
+  // =========================
+  // 🎬 Video Modal
+  // =========================
+  openVideo() {
+    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      'https://www.youtube.com/embed/sB2YyyTlJgU?autoplay=1&rel=0'
+    ) as SafeResourceUrl;
+    this.showVideo = true;
+  }
+
+  closeVideo() {
+    this.showVideo = false;
+  }
+
+  private stopAndCloseVideo() {
+    if (this.showVideo) {
+      const iframe = document.querySelector<HTMLIFrameElement>('.video-content iframe');
+      if (iframe) {
+        const src = iframe.src;
+        iframe.src = '';
+        setTimeout(() => iframe.src = src, 0);
+      }
+    }
+    this.showVideo = false;
+    this.videoUrl = undefined;
+  }
+
+  // =========================
+  // BLOG POSTS
+  // =========================
+  blogPosts: BlogPost[] = [
+    {
+      title: '¡No Esperes a Que Sea Tarde!',
+      tag: 'Revisión Técnico Mecánica',
+      excerpt: 'Descubre por qué debes realizar tu Revisión Técnico Mecánica ahora.',
+      image: '/assets/blog/destacado.jpg',
+      url: '/blog/revision-tecnico-mecanica'
+    },
+    {
+      title: '¿Comprando usado?',
+      image: '/assets/blog/blog1.jpg',
+      url: '/blog/comprando-usado'
+    },
+    {
+      title: '¿Qué es un peritaje vehicular y cuánto cuesta?',
+      image: '/assets/blog/blog2.jpg',
+      url: '/blog/peritaje-costo'
+    },
+    {
+      title: '¿Qué es un peritaje vehicular y cuánto cuesta?',
+      image: '/assets/blog/blog3.jpg',
+      url: '/blog/peritaje-costo-2'
+    }
+  ];
+}

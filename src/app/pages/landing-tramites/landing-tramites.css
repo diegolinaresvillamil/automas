@@ -1,0 +1,796 @@
+
+
+
+/* === SECCIÓN Tramites === */
+.tramites-section {
+  background: #e8f3fc;
+  padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 60px);
+  text-align: center;
+}
+
+/* 🟧 Título principal */
+.tramites-section h2 {
+  font-size: 3rem; /* 48px */
+  font-weight: 700;
+  margin-bottom: clamp(32px, 5vw, 48px);
+  color: #000;
+  line-height: 1.2;
+  transition: font-size 0.3s ease;
+}
+
+/* === GRID RESPONSIVE === */
+.tramites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* === TARJETA === */
+.tramite-card {
+  background: transparent;
+  border: 4px solid #ffffff;
+  border-radius: 20px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.tramite-card:hover {
+  transform: translateY(-2px);
+  border-color: #ff671f;
+}
+
+/* === ENCABEZADO === */
+.tramite-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  color: #0c2d35;
+  font-size: 1.2rem;
+}
+
+.tramite-header i:first-child {
+  font-size: 1.4rem;
+  color: #0c2d35;
+  margin-right: 10px;
+}
+
+.tramite-header i:last-child {
+  font-size: 1.2rem;
+  color: #0c2d35;
+  transition: transform 0.3s ease;
+}
+
+.tramite-card:hover .tramite-header i:first-child {
+  color: #ff671f;
+}
+
+/* === CONTENIDO DESPLEGABLE === */
+.tramite-content {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.tramite-content h4 {
+  color: #111;
+  font-weight: 700;
+  font-size: 1.25rem; /* 20px */
+  margin-bottom: 10px;
+}
+
+/* Lista de documentos */
+.tramite-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tramite-content li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0c2d35;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.tramite-content li i {
+  color: #ff671f;
+  font-size: 1.1rem;
+}
+
+.tramite-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-right: 10px;
+  transition: transform 0.3s ease;
+}
+
+/* Efecto en hover */
+.tramite-card:hover .tramite-icon {
+  transform: scale(1.1);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+  .tramites-section h2 {
+    font-size: 2.25rem; /* ≈36px en tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .tramites-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tramite-card {
+    padding: 14px 16px;
+  }
+
+  .tramite-header {
+    font-size: 1rem;
+  }
+
+  .tramite-content h4 {
+    font-size: 1.125rem; /* 18px */
+  }
+
+  .tramite-content li {
+    font-size: 1rem; /* 16px en móviles */
+  }
+
+  .tramites-section h2 {
+    font-size: 1.875rem; /* 30px en móviles */
+  }
+}
+
+
+
+/* === SECCIÓN AGENDA === */
+.agenda-section {
+  background: #fff;
+  text-align: center;
+  padding: clamp(50px, 8vw, 100px) clamp(20px, 5vw, 60px);
+}
+
+/* 🟧 TÍTULO PRINCIPAL */
+.agenda-section h2 {
+  font-size: 3rem; /* 48px */
+  font-weight: 700;
+  color: #000;
+  margin-bottom: clamp(40px, 6vw, 60px);
+  line-height: 1.2;
+  transition: font-size 0.3s ease;
+}
+
+/* === GRID === */
+.agenda-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 140px;
+}
+
+/* === ITEM === */
+.agenda-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.35s ease;
+}
+
+/* === CUADRO DEL ICONO === */
+.icon-wrapper {
+  background: #efeef1;
+  border-radius: 20px;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.35s ease;
+}
+
+.icon-wrapper:hover {
+  transform: translateY(-8px);
+  background: #00b6c4;
+  box-shadow: 0 10px 25px rgba(0, 182, 196, 0.25);
+}
+
+/* ÍCONO */
+.agenda-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.icon-wrapper:hover .agenda-icon {
+  transform: scale(1.05);
+}
+
+/* === TEXTO (afuera del recuadro) === */
+.agenda-item h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #000;
+  margin-top: 40px;
+  transition: color 0.3s ease;
+}
+
+.icon-wrapper:hover + h3 {
+  color: #00b6c4;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+  .agenda-section h2 {
+    font-size: 2.25rem; /* ~36px tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .agenda-grid {
+    gap: 60px;
+  }
+
+  .icon-wrapper {
+    width: 160px;
+    height: 180px;
+  }
+
+  .agenda-icon {
+    width: 85px;
+    height: 85px;
+  }
+
+  .agenda-item h3 {
+    font-size: 1rem;
+    margin-top: 14px;
+  }
+
+  .agenda-section h2 {
+    font-size: 1.875rem; /* ~30px móviles */
+  }
+}
+
+
+/* === SECCIÓN AGENDA TU TRÁMITE === */
+.agenda-pasos {
+  background: #ddebf6;
+  padding: clamp(20px, 5vw, 90px); /* 🔹 menos padding en móvil */
+  overflow: hidden;
+  position: relative;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.agenda-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding-top: 100px;
+}
+
+/* === COLUMNA IZQUIERDA === */
+.agenda-info {
+  flex: 1 1 400px;
+  color: #001f23;
+}
+
+.agenda-info h2 {
+  font-weight: 700;
+  font-size: 3rem; /* 48px */
+  color: #000;
+  line-height: 1.2;
+  margin-bottom: 40px;
+}
+
+/* === LISTA DE PASOS === */
+.agenda-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 50px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.agenda-list li {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 22px; /* 🔹 menos padding → más aire general */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  font-size: 1.25rem; /* 20px */
+  font-weight: 500;
+  color: #333;
+  transition: transform 0.2s ease;
+  line-height: 1.4;
+}
+
+.agenda-list li:hover {
+  transform: translateX(4px);
+}
+
+/* 🔹 Alineación exacta número-texto */
+.agenda-num {
+  background: #00c1c4b9;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  margin-right: 10px; /* 🔹 separación justa */
+}
+
+.agenda-list p {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+  display: flex;
+  align-items: center; /* 🔹 centra verticalmente el texto con el número */
+}
+
+/* === BOTÓN === */
+.agenda-btn {
+  background: #00C2C4;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1.56rem; /* 25px */
+  font-weight: 700;
+  padding: 16px 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 182, 196, 0.25);
+}
+
+.agenda-btn:hover {
+  background: #0199a7;
+  transform: translateY(-2px);
+}
+
+/* === IMAGEN === */
+.agenda-image {
+  flex: 1 1 450px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.agenda-image img {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  object-fit: contain;
+  margin-right: -120px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+  .agenda-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .agenda-info h2 {
+    font-size: 2.25rem; /* 36px */
+  }
+
+  .agenda-list li {
+    justify-content: flex-start;
+    text-align: left;
+    padding: 12px 18px;
+  }
+
+  .agenda-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .agenda-image {
+    margin-top: 30px;
+    justify-content: center;
+  }
+
+  .agenda-image img {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+/* 🔹 En móviles: imagen fuera + más aire */
+@media (max-width: 768px) {
+    .agenda-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding-top: 100px;
+}
+  .agenda-pasos {
+    padding: 30px 20px; /* 🔹 reduce padding vertical */
+  }
+
+  .agenda-image {
+    display: none;
+  }
+
+  .agenda-info h2 {
+    font-size: 1.875rem; /* 30px */
+  }
+
+  .agenda-list li {
+    font-size: 1rem; /* 16px */
+    padding: 10px 14px;
+  }
+
+  .agenda-num {
+    width: 34px;
+    height: 34px;
+    font-size: 1.1rem;
+    margin-right: 8px;
+  }
+
+  .agenda-btn {
+    font-size: 1.25rem; /* 20px */
+    padding: 14px 28px;
+  }
+}
+
+
+
+/* === Personalización del FAQ solo para la página de Trámites === */
+:host ::ng-deep .faq-item.open {
+  background: #075d67 !important;
+  color: #fff !important;
+}
+
+:host ::ng-deep .faq-item.open .faq-answer {
+  background: #075d67!important;
+  color: #fff !important;
+}
+
+:host ::ng-deep .faq-item.open .faq-icon {
+  color: #075d67 !important;
+}
+:host ::ng-deep .faq-icon {
+  color: #075d67 !important;
+}
+
+:host ::ng-deep .faq-item.open .faq-question {
+  color: #fff !important;
+}
+
+
+/* 🌟 TESTIMONIOS */
+.clientes-section {
+  position: relative;
+  background: linear-gradient(180deg, #022f46 0%, #013a50 100%);
+  padding: 100px 20px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Fondo decorativo */
+.clientes-section::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0,182,196,0.3) 0%, transparent 70%);
+  filter: blur(80px);
+  z-index: 0;
+}
+
+.clientes-header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 50px;
+}
+
+.clientes-header h2 {
+  color: #fff;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.clientes-header h2 span {
+  color: #fa6119;
+}
+.clientes-header p {
+  color: #e0e0e0;
+  font-size: 1.05rem;
+}
+
+/* GRID DE TESTIMONIOS */
+.clientes-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+/* TARJETAS */
+.cliente-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 30px 25px 40px;
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s ease;
+  transform: translateY(0);
+  position: relative;
+  overflow: hidden;
+}
+
+.cliente-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  border-color: #00b6c4;
+}
+
+/* AVATAR */
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 20px;
+  border: 3px solid #00b6c4;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* TEXTO */
+.comentario {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e8e8e8;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.cliente-card h4 {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.cargo {
+  color: #00b6c4;
+  font-size: 0.9rem;
+}
+
+/* ✨ ANIMACIÓN DE ENTRADA */
+.cliente-card {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeUp 1.2s ease forwards;
+}
+.cliente-card:nth-child(2) { animation-delay: 0.2s; }
+.cliente-card:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .clientes-section {
+    padding: 80px 16px;
+  }
+
+  .clientes-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 20px;
+  }
+
+  .cliente-card {
+    flex: 0 0 80%;
+    scroll-snap-align: center;
+  }
+
+  .clientes-grid::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .clientes-grid::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cliente-card {
+    flex: 0 0 90%;
+    padding: 25px 20px;
+  }
+}
+
+
+/* ============================== */
+/* SECCIÓN NUESTRA EXPERIENCIA */
+/* ============================== */
+
+.experiencia-section {
+  background: #fff;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 100px 0;
+  font-family: 'Urbanist', sans-serif;
+}
+
+.experiencia-section h2 {
+  font-size: 3rem; /* 48px */
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 60px;
+}
+
+/* === Tarjetas === */
+.experiencia-card {
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* === Iconos === */
+.icon-box {
+  width: 150px;
+  height: 150px;
+  background: #EFEEF1;
+  color: #ff671f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  margin: 0 auto 25px;
+  font-size: 5rem; /* ícono más grande */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+/* Hover */
+.experiencia-card:hover .icon-box {
+  background: #ff671f;
+  color: #fff;
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(255, 103, 31, 0.4);
+}
+
+/* === Contadores === */
+.counter {
+  font-size: 3rem; /* ✅ 48px */
+  font-weight: 800; /* Extra bold */
+  color: #000;
+  margin-bottom: 8px;
+}
+
+/* === Textos debajo de los números === */
+.experiencia-card p {
+  font-size: 1.7rem; /* ✅ 27px */
+  font-weight: 400;
+  color: #333;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* ============================== */
+/* RESPONSIVE */
+/* ============================== */
+
+@media (max-width: 992px) {
+  .experiencia-section h2 {
+    font-size: 2.2rem; /* 🔹 Título reducido en tablets */
+  }
+
+  .icon-box {
+    width: 120px;
+    height: 120px;
+    font-size: 4rem;
+  }
+
+  .counter {
+    font-size: 2.6rem;
+  }
+
+  .experiencia-card p {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .experiencia-section {
+    padding: 80px 0;
+  }
+
+  .experiencia-section h2 {
+    font-size: 2.2rem; /* 🔹 Título reducido en móviles medianos */
+  }
+
+  .icon-box {
+    width: 100px;
+    height: 100px;
+    font-size: 3rem;
+  }
+
+  .counter {
+    font-size: 2.2rem;
+  }
+
+  .experiencia-card p {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .experiencia-section {
+    padding: 60px 0;
+  }
+
+  .experiencia-section h2 {
+    font-size: 2.2rem; /* 🔹 Título reducido en móviles pequeños */
+  }
+
+  .icon-box {
+    width: 85px;
+    height: 85px;
+    font-size: 2.3rem;
+  }
+
+  .counter {
+    font-size: 2rem;
+  }
+
+  .experiencia-card p {
+    font-size: 1.1rem;
+  }
+}

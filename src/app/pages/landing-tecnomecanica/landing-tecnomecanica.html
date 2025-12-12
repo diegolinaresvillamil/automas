@@ -1,0 +1,365 @@
+<!-- HERO Tramites -->
+<section class="hero-certimas">
+  <div class="hero-wrap">
+    <div class="hero-text">
+      <h1>
+        Revisión Técnico Mecánica
+        <span class="highlight">Bógota D.C</span>
+      </h1>
+
+      <button class="btn-video">
+        Agendar Ahora
+        <i class="bi bi-calendar-event"></i>
+      </button>
+    </div>
+
+    <div class="hero-image">
+      <img src="assets/mercedes.png" alt="Auto CertiMás" />
+    </div>
+  </div>
+
+</section>
+
+<!-- COMO AGENDAR -->
+<section class="agendar-section">
+  <h2>¿Cómo Agendar?</h2>
+
+  <!-- 🔸 Flujo de pasos -->
+  <div class="steps-flow">
+    <div class="step-item active">
+      <div class="circle">1</div>
+      <p>Elige el servicio que deseas</p>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+      <div class="circle">2</div>
+      <p>Selecciona la sede más cercana</p>
+    </div>
+  </div>
+
+  <!-- 🔸 Filtro y buscador (Angular) -->
+  <div class="filtros-container">
+    <label>Filtrar por:</label>
+
+    <select [(ngModel)]="filtroServicio" (change)="aplicarFiltros()">
+      <option value="all">Todos los servicios</option>
+      <option value="Livianos">Tecno Livianos</option>
+      <option value="Pesados">Tecno Pesados</option>
+      <option value="Motos">Tecno Motos</option>
+      <option value="Eléctricos">Tecno Eléctricos</option>
+    </select>
+
+    <input
+      type="text"
+      [(ngModel)]="busqueda"
+      (input)="aplicarFiltros()"
+      placeholder="Buscar sede..."
+    />
+  </div>
+
+  <!-- 🔸 Grid de sedes -->
+  <div class="sedes-grid">
+    <div class="sede-card" *ngFor="let s of sedesFiltradas">
+      <img [src]="s.img" [alt]="s.nombre" />
+<!-- Título en el medio -->
+      <h4>{{ s.nombre }}</h4>
+      <!-- Botón arriba -->
+      <button class="btn-primary">Agendar</button>
+
+      
+
+      <!-- Botón abajo -->
+      <button class="btn-outline">Condiciones del servicio</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- PRECIOS -->
+<section class="precios-section">
+  <h2>¿Cuánto cuesta tu tecnomecánica?</h2>
+  <div class="precios-grid">
+    <div class="precio-item">
+      <h4>Livianos Particulares</h4>
+      <p>Desde <strong>$310.193</strong></p>
+    </div>
+        <div class="precio-item">
+      <h4>Livianos Públicos</h4>
+      <p>Desde <strong>$309.193</strong></p>
+    </div>
+        <div class="precio-item">
+      <h4>Livianos eléctricos</h4>
+      <p>Desde <strong>$231.265</strong></p>
+    </div>
+        <div class="precio-item">
+      <h4>Motocicletas</h4>
+      <p>Desde <strong>$209.664</strong></p>
+    </div>
+        <div class="precio-item">
+      <h4>Ciclomotores</h4>
+      <p>Desde <strong>$160.294</strong></p>
+    </div>
+    <div class="precio-item">
+      <h4>Pesados Públicos</h4>
+      <p>Desde <strong>$444.658</strong></p>
+    </div>
+        <div class="precio-item">
+      <h4>Pesados Particulares</h4>
+      <p>Desde <strong>$444.658</strong></p>
+    </div>
+        <div class="precio-item">
+      <h4>Pesados eléctricos</h4>
+      <p>Desde <strong>$324.841</strong></p>
+    </div>
+        <div class="precio-item">
+      <h4>Cuadriciclos</h4>
+      <p>Desde <strong>$218.791</strong></p>
+    </div>
+  </div>
+  <button class="btn-primary">Agendar ➜</button>
+</section>
+
+<!-- 🌟 EXPERIENCIA -->
+<section class="experiencia-section">
+  <div class="experiencia-container">
+    <!-- Imagen izquierda -->
+    <div class="experiencia-img">
+      <img src="/assets/experiencia.png" alt="Experiencia Automás" />
+    </div>
+
+    <!-- Contenido derecha -->
+    <div class="experiencia-content">
+      <h2>Somos pioneros en revisión tecnomecánica en Colombia</h2>
+      <p>
+        Con más de <strong>19 años de experiencia</strong>, somos el único CDA con presencia nacional,
+        ofreciendo atención de calidad en más de <strong>37 sedes en todo el país</strong> y 9 en Bogotá.
+      </p>
+
+      <!-- Contadores -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="bi bi-gear-fill icon"></i>
+          <div class="stat-text">
+            <h3 class="counter" data-target="400">0</h3>
+            <p>Tecnomecánicas por día</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <i class="bi bi-emoji-smile-fill icon"></i>
+          <div class="stat-text">
+            <h3 class="counter" data-target="400">0</h3>
+            <p>Clientes satisfechos</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <i class="bi bi-building-fill-check icon"></i>
+          <div class="stat-text">
+            <h3 class="counter" data-target="37">0</h3>
+            <p>Sedes en Colombia</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <i class="bi bi-geo-alt-fill icon"></i>
+          <div class="stat-text">
+            <h3 class="counter" data-target="9">0</h3>
+            <p>Sedes en Bogotá</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- SERVICIOS ADICIONALES -->
+<section class="services-section py-5">
+  <div class="container">
+    <h2 class="services-title text-center mb-5">Servicios Adicionales</h2>
+
+    <div class="row justify-content-center g-4">
+
+      <!-- Tarjeta 1 -->
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a routerLink="/tramites" class="service-card text-start">
+          <h5 class="service-name">Trámites Vehículares</h5>
+          <div class="service-content position-relative">
+            <img 
+              src="/assets/tramites-n.png" 
+              data-hover="/assets/tramites-h.png"
+              alt="Trámites Vehículares" 
+              class="service-icon" />
+            <div class="arrow-btn">
+              <i class="bi bi-arrow-up-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tarjeta 2 -->
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a routerLink="/tecnomecanica" class="service-card text-start">
+          <h5 class="service-name">Servicios Complementarios</h5>
+          <div class="service-content position-relative">
+            <img 
+              src="/assets/tecno-n.png" 
+              data-hover="/assets/tecno-h.png"
+              alt="Revisión Técnico Mecánica" 
+              class="service-icon" />
+            <div class="arrow-btn">
+              <i class="bi bi-arrow-up-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tarjeta 3 -->
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a routerLink="/peritaje" class="service-card text-start">
+          <h5 class="service-name">Peritaje / Avalúo</h5>
+          <div class="service-content position-relative">
+            <img 
+              src="/assets/peritaje-n.png" 
+              data-hover="/assets/peritaje-h.png"
+              alt="Peritaje / Avalúo" 
+              class="service-icon" />
+            <div class="arrow-btn">
+              <i class="bi bi-arrow-up-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tarjeta 4 -->
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a routerLink="/certimas" class="service-card text-start">
+          <h5 class="service-name">CertiMás</h5>
+          <div class="service-content position-relative">
+            <img 
+              src="/assets/certimas-h.png" 
+              data-hover="/assets/certimas-n.png"
+              alt="CertiMás" 
+              class="service-icon" />
+            <div class="arrow-btn">
+              <i class="bi bi-arrow-up-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONOCE TECNOMECÁNICA -->
+<!-- 🚗 CARRUSEL INFINITO TECNOMECÁNICA -->
+<section class="tecnomecanica-carousel">
+  <h2>¿Conoces todo sobre tu <span>Tecnomecánica?</span></h2>
+  <p class="sub">Descubre los principales sistemas que revisamos en tu vehículo.</p>
+
+  <div class="carousel-wrapper">
+    <div class="carousel-track">
+      <!-- Duplicamos contenido para efecto infinito -->
+      <div class="carousel-group">
+        <div class="carousel-card">
+          <img src="/assets/mecanico.jpg" alt="Sistema Mecánico">
+          <h3>Sistema Mecánico</h3>
+          <p>Motor, transmisión, dirección y lubricación.</p>
+        </div>
+        <div class="carousel-card">
+          <img src="/assets/Llantas.jpg" alt="Llantas">
+          <h3>Llantas</h3>
+          <p>Agarre, desgaste, grietas y caducidad.</p>
+        </div>
+        <div class="carousel-card">
+          <img src="/assets/emisiones.jpg" alt="Emisión de Gases">
+          <h3>Emisión de Gases</h3>
+          <p>Niveles contaminantes y eficiencia del escape.</p>
+        </div>
+        <div class="carousel-card">
+          <img src="/assets/electrico.jpg" alt="Luces y Señales">
+          <h3>Sistema Eléctrico</h3>
+          <p>Verificamos que todo el sistema eléctrico funcione correctamente.</p>
+        </div>
+        <div class="carousel-card">
+          <img src="/assets/emisiones.jpg" alt="Sistema de Frenos">
+          <h3>Elementos de seguridad</h3>
+          <p>Chequeo completo de frenos de servicio y emergencia.</p>
+        </div>
+      </div>
+
+      <!-- Duplicado para bucle continuo -->
+      <div class="carousel-group">
+        <div class="carousel-card">
+          <img src="/assets/mecanico.jpg" alt="Sistema Mecánico">
+          <h3>Sistema Mecánico</h3>
+          <p>Motor, transmisión, dirección y lubricación.</p>
+        </div>
+        <div class="carousel-card">
+          <img src="/assets/Llantas.jpg" alt="Llantas">
+          <h3>Llantas</h3>
+          <p>Agarre, desgaste, grietas y caducidad.</p>
+        </div>
+        <div class="carousel-card">
+          <img src="/assets/emisiones.jpg" alt="Emisión de Gases">
+          <h3>Emisión de Gases</h3>
+          <p>Niveles contaminantes y eficiencia del escape.</p>
+        </div>
+        <div class="carousel-card">
+          <img src="/assets/tecnomecanica-luces.jpg" alt="Luces y Señales">
+          <h3>Luces y Señales</h3>
+          <p>Verificamos que todo el sistema lumínico funcione correctamente.</p>
+        </div>
+        <div class="carousel-card">
+          <img src="/assets/emisiones.jpg" alt="Sistema de Frenos">
+          <h3>Elementos de seguridad</h3>
+          <p>Chequeo completo de frenos de servicio y emergencia.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- 🌟 TESTIMONIOS -->
+<section class="clientes-section">
+  <div class="clientes-header">
+    <h2>Lo que dicen nuestros <span>Clientes</span></h2>
+    <p>La confianza de miles de conductores respalda nuestro compromiso con la seguridad y la calidad.</p>
+  </div>
+
+  <div class="clientes-grid">
+    <div class="cliente-card">
+      <div class="avatar">
+        <img src="/assets/testimonio2.jpg" alt="Laura Ortiz">
+      </div>
+      <p class="comentario">“Estoy muy satisfecha con el servicio de tecnomecánica de AutoMás. Todo fue rápido y sin complicaciones.”</p>
+      <h4>Laura Ortiz</h4>
+      <span class="cargo">Cliente frecuente</span>
+    </div>
+
+    <div class="cliente-card">
+      <div class="avatar">
+        <img src="/assets/testimonio1.jpg" alt="Camilo Gutiérrez">
+      </div>
+      <p class="comentario">“La revisión fue ágil, el personal amable y las instalaciones impecables.”</p>
+      <h4>Camilo Gutiérrez</h4>
+      <span class="cargo">Conductor profesional</span>
+    </div>
+
+    <div class="cliente-card">
+      <div class="avatar">
+        <img src="/assets/testimonio3.jpg" alt="Andrea Bermúdez">
+      </div>
+      <p class="comentario">“Excelente atención y puntualidad. Definitivamente volveré a realizar mi revisión aquí.”</p>
+      <h4>Andrea Bermúdez</h4>
+      <span class="cargo">Propietaria de vehículo</span>
+    </div>
+  </div>
+</section>
+
+<app-contacto-popup></app-contacto-popup>

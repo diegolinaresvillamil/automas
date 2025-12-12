@@ -1,0 +1,106 @@
+<!-- HERO Cobertura -->
+<section class="hero-certimas">
+  <div class="hero-wrap">
+    <div class="hero-text">
+      <span class="tag">Cobertura</span>
+      <h1>
+        <span class="ligth">Encuentra la</span><br />
+        <span class="highlight">Sede más cercana</span>
+      </h1>
+      <p>
+        Filtra por ciudad, servicio y tipo de centro para ver opciones disponibles.
+      </p>
+
+      <button class="btn-video" (click)="abrirModal()">
+        Explorar cobertura
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+
+    <div class="hero-image">
+      <img src="assets/cobertura.png" alt="Cobertura CertiMás" />
+    </div>
+  </div>
+</section>
+
+<!-- 🧩 Modal de Cobertura -->
+<app-cobertura-modal
+  [visible]="modalVisible"
+  (closed)="cerrarModal()">
+</app-cobertura-modal>
+
+
+<!-- SECCIÓN IMPORTANCIA -->
+<section class="importancia-section fullwidth">
+  <div class="image-side">
+    <img src="/assets/carro-cobertura.png" alt="Vehículo AutoMás" />
+  </div>
+
+  <div class="content-side">
+    <span class="tag">Nuestra Sedes</span>
+    <h2>
+      Explora nuestra red de<br> cobertura nacional
+    </h2>
+
+    <ul class="benefits">
+      <li>
+        <i class="bi bi-check-circle-fill"></i>
+        <div>
+          <strong>Cobertura en expansión</strong><br />
+          Estamos presentes en más de 40<br> ciudades para que siempre<br> encuentres una sede cerca.
+        </div>
+      </li>
+
+      <li>
+        <i class="bi bi-check-circle-fill"></i>
+        <div>
+          <strong>Servicio a nivel nacional</strong><br />
+          Estamos presentes en más de 40<br> ciudades para que siempre<br> encuentres una sede cerca.
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- SECCIÓN CERTIMÁS -->
+<section class="certimas-section text-center py-5">
+
+  <!-- Caja Naranja -->
+  <div class="certimas-box mx-auto p-4 p-md-5 position-relative overflow-visible">
+    <div class="row align-items-center justify-content-between">
+
+      <!-- Texto -->
+      <div class="col-12 col-md-6 text-white text-md-start mb-4 mb-md-0">
+        <h2 class="fw-bold mb-2">¿Tienes dudas sobre nuestras sedes?</h2>
+        <p class="mb-4">
+          Escríbenos y te ayudamos a encontrar la más cercana.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3">
+          <button class="btn btn-outline-light compra-btn">Consultar por WhatsApp</button>
+        </div>
+      </div>
+
+      <!-- Imagen -->
+      <div class="col-12 col-md-6 text-center position-relative">
+        <img src="/assets/sedes.png" alt="Vehiculos" class="img-fluid certimas-img" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--Sección FAQ-->
+<section class="tramites-page">
+<app-faq
+  [title]="'Preguntas Frecuentes'"
+  [items]="faqItems"
+  [multiple]="false">
+</app-faq>
+</section>
+
+<!-- COMPONENTE BLOG -->
+<app-blog-section
+  [heading]="'Blog'"
+  [posts]="blogPosts">
+</app-blog-section>
+

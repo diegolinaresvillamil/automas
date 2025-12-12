@@ -1,0 +1,550 @@
+<!-- ========================== -->
+<!-- PANTALLA 0: Pedir ubicación -->
+<!-- ========================== -->
+<div class="modal-backdrop" *ngIf="open() && step === 0">
+  <div class="modal-container">
+    <button class="close-btn" (click)="cerrar()">×</button>
+    <div class="modal-content text-center">
+      <h2 class="modal-title">¿Quieres ver las Sedes Cercanas a ti?</h2>
+      <p class="modal-text">
+        Usa tu ubicación actual para sugerencias automáticas.
+      </p>
+      <div class="alert-warning">
+        ⚠️ Tu información no será almacenada y puedes cambiarla en cualquier momento.
+      </div>
+      <div class="buttons">
+        <button class="btn btn-outline" (click)="step = 1">
+          No, seleccionar manualmente
+        </button>
+        <button class="btn btn-primary" (click)="activarUbicacion()">
+          Sí, activar ubicación
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================== -->
+<!-- PANTALLA 1: Ciudad + sedes -->
+<!-- ========================== -->
+<div class="modal-backdrop" *ngIf="open() && step === 1">
+  <div class="modal-container modal-wide">
+    <button class="close-btn" (click)="cerrar()">×</button>
+    <div class="tarifas-grid">
+      <!-- 🟠 COLUMNA IZQUIERDA -->
+      <div class="col-izquierda">
+        <div class="tarifas-header">
+          <h2>
+            Consulta el valor de la <br />
+            <strong>Revisión Técnico-Mecánica</strong>
+          </h2>
+          <p>
+            Al selecionar la ciudad, el tipo de vehículo y la sede de tu preferencia te mostraremos el valor base del servcio,
+            <br />
+            <span class="naranja">
+              *Recuerda que esta valor no cuenta con el fondo nacional de seguridad vial. El valor de la tarifa podrá variar según la resolución 20213040063835 de 2021 o la que la modifique y/o sustituya; y el valor adicional sera asumido por el consumidor.
+            </span>
+          </p>
+        </div>
+
+        <!-- Filtros -->
+        <form [formGroup]="filtroForm" class="filtros-form">
+          <!-- Ciudad -->
+          <div class="campo">
+            <label>Ciudad</label>
+            <select
+              formControlName="ciudad"
+              (change)="seleccionarCiudad($any($event.target).value)"
+            >
+              <option value="">Selecciona una ciudad</option>
+              <option *ngFor="let c of ciudades()" [value]="c.id">
+                {{ c.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Tipos de vehículo -->
+          <div class="tipos">
+            <button
+              type="button"
+              *ngFor="let t of tipos"
+              (click)="seleccionarTipo(t.value)"
+              [class.active]="selectedTipo() === t.value"
+            >
+              <img
+                *ngIf="t.value === 'liviano'"
+                src="assets/livianos.svg"
+                alt="Livianos"
+              />
+              <img
+                *ngIf="t.value === 'moto'"
+                src="assets/motos.svg"
+                alt="Motocicletas"
+              />
+              <img
+                *ngIf="t.value === 'ciclomotor'"
+                src="assets/ciclomotors.svg"
+                alt="Ciclomotores"
+              />
+              <img
+                *ngIf="t.value === 'cuadriciclo'"
+                src="assets/cuadriciclos.svg"
+                alt="Cuadriciclos"
+              />
+              {{ t.label }}
+            </button>
+          </div>
+
+          <!-- Subtipos (solo si aplica) -->
+          <div class="subtipos" *ngIf="mostrarSubtipos">
+            <button
+              type="button"
+              *ngFor="let s of subtipos"
+              (click)="seleccionarSubtipo(s.value)"
+              [class.active]="selectedSubtipo() === s.value"
+            >
+              {{ s.label }}
+            </button>
+          </div>
+        </form>
+
+        <!-- 🗺 MAPA + LISTA DE SEDES -->
+        <div class="mapa-sedes">
+          <!-- Mapa: por defecto imagen, si hay sede seleccionada muestra iframe -->
+          <div class="mapa-mini">
+            <ng-container *ngIf="mapaUrl; else mapaEstatico">
+              <iframe
+                [src]="mapaUrl"
+                width="100%"
+                height="100%"
+                style="border:0;"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </ng-container>
+            <ng-template #mapaEstatico>
+              <img src="assets/mapa.svg" alt="Mapa de sedes" />
+            </ng-template>
+          </div>
+
+          <!-- 👇 LISTA CON SCROLL -->
+          <div class="lista-sedes scrollable">
+            <!-- Estado de carga -->
+            <p *ngIf="loadingSedes()">Cargando sedes...</p>
+
+            <!-- Sin sedes -->
+            <p *ngIf="!loadingSedes() && sedes().length === 0">
+              Selecciona una ciudad para ver las sedes disponibles.
+            </p>
+
+            <!-- Sedes reales desde el API -->
+            <div
+              class="sede-item"
+              *ngFor="let s of sedes()"
+              [class.selected]="sedeSeleccionada?.nombre === s.name"
+              (click)="
+                elegirSede({
+                  nombre: s.name,
+                  direccion: extraerDireccion(s.description) || s.address || s.direccion || '',
+                  horario: extraerHorarios(s.description) || s.horario || ''
+                })
+              "
+            >
+              <div class="sede-info">
+                <div class="sede-left">
+                  <h4>{{ s.name }}</h4>
+                  <p>
+                    {{
+                      extraerDireccion(s.description) ||
+                      s.address ||
+                      s.direccion ||
+                      ''
+                    }}
+                  </p>
+                </div>
+                <div class="sede-right">
+                  <span class="dias">Horarios de atención</span>
+                  <span class="horario">
+                    {{
+                      extraerHorarios(s.description) ||
+                      s.horario ||
+                      'Horarios disponibles en la sede'
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🟠 COLUMNA DERECHA -->
+      <div class="col-derecha">
+        <!-- Ciudad seleccionada -->
+        <div class="ciudad-ubicacion">
+          <i class="bi bi-geo-alt"></i>
+          <span>{{ nombreCiudadSeleccionada }}</span>
+        </div>
+
+        <!-- Tarifa visible -->
+        <div class="tarifa-card">
+          <h3>
+            {{ nombreCiudadSeleccionada + ' – ' + (sedeSeleccionada?.nombre || 'Sede') }}
+          </h3>
+
+          <!-- Tipo/subtipo dinámico -->
+          <p>{{ descripcionTipoSeleccionado }}</p>
+
+          <ng-container *ngIf="valorEstimado; else sinValor">
+            <p class="valor">
+              Desde
+              <strong>
+                {{ valorEstimado | currency:'COP':'symbol':'1.0-0' }}
+              </strong>
+            </p>
+            <small>
+              El valor final puede variar según el modelo y año del vehículo.
+            </small>
+          </ng-container>
+          <ng-template #sinValor>
+            <p class="valor">
+              Selecciona una sede para ver el valor estimado.
+            </p>
+          </ng-template>
+
+          <button class="btn-outline">Condiciones del Servicio</button>
+          <button
+            class="btn-primary"
+            [disabled]="!puedeAgendar"
+            (click)="agendarRevision()"
+          >
+            Agendar mi revisión
+            <i class="bi bi-calendar-event"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================== -->
+<!-- PANTALLA 2: Confirmar y agendar revisión -->
+<!-- ========================== -->
+<div class="modal-backdrop" *ngIf="open() && step === 2">
+  <div class="modal-container modal-final">
+    <button class="close-btn" (click)="cerrar()">×</button>
+    <div class="final-content">
+      <div class="final-grid">
+        <!-- 🟠 Columna izquierda -->
+        <div class="col-izquierda">
+          <h2 class="titulo">¡Todo listo!</h2>
+          <h3 class="subtitulo">Este es el valor de tu revisión</h3>
+          <p class="descripcion">
+            Completa tus datos y agenda tu revisión:
+          </p>
+
+          <!-- 🕒 Fecha + horario -->
+          <div class="form-row">
+            <div class="campo">
+              <label>Fecha de tu revisión</label>
+              <input
+                type="date"
+                (change)="onFechaChange($event)"
+                [value]="fechaSeleccionada ? (fechaSeleccionada | date:'yyyy-MM-dd') : ''"
+              />
+            </div>
+            <div class="campo">
+              <label>Horario disponible</label>
+              
+              <!-- Loading spinner -->
+              <div class="horarios-wrapper" *ngIf="loadingHorarios">
+                <p class="text-info">⏳ Cargando horarios...</p>
+              </div>
+
+              <!-- Sin fecha seleccionada -->
+              <div class="horarios-wrapper" *ngIf="!fechaSeleccionada && !loadingHorarios">
+                <p class="text-muted">Selecciona una fecha para ver los horarios disponibles.</p>
+              </div>
+
+              <!-- SELECT de horarios -->
+              <select 
+                class="form-control"
+                [(ngModel)]="franjaSeleccionada"
+                [disabled]="!fechaSeleccionada || loadingHorarios || horariosDisponibles.length === 0"
+                *ngIf="fechaSeleccionada && !loadingHorarios"
+              >
+                <option [value]="null" disabled selected>
+                  {{ horariosDisponibles.length > 0 ? 'Selecciona un horario' : 'Sin horarios disponibles' }}
+                </option>
+                <option 
+                  *ngFor="let horario of horariosDisponibles" 
+                  [value]="horario"
+                >
+                  {{ horario }}
+                </option>
+              </select>
+
+              <!-- Mensaje de error -->
+              <small class="text-danger" *ngIf="errorHorarios && !loadingHorarios">
+                {{ errorHorarios }}
+              </small>
+
+              <!-- Mensaje informativo cuando no hay horarios -->
+              <small class="text-muted" *ngIf="fechaSeleccionada && !loadingHorarios && horariosDisponibles.length === 0 && !errorHorarios">
+                ℹ️ No hay horarios disponibles para esta fecha. Puedes continuar sin seleccionar horario.
+              </small>
+            </div>
+          </div>
+
+          <form
+            [formGroup]="agendaForm"
+            class="form-agendar"
+          >
+            <div class="form-row">
+              <div class="campo">
+                <label>Número de placa</label>
+                <input
+                  type="text"
+                  placeholder="ABC123"
+                  formControlName="placa"
+                />
+              </div>
+              <div class="campo">
+                <label>Nombre</label>
+                <input
+                  type="text"
+                  placeholder="Nombre completo"
+                  formControlName="nombre"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="campo">
+                <label>Teléfono</label>
+                <input
+                  type="text"
+                  placeholder="321 321 3211"
+                  formControlName="telefono"
+                />
+              </div>
+              <div class="campo">
+                <label>Correo</label>
+                <input
+                  type="email"
+                  placeholder="correo@gmail.com"
+                  formControlName="correo"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="campo">
+                <label>Tipo de documento</label>
+                <select formControlName="tipoDocumento">
+                  <option value="">Selecciona</option>
+                  <option value="cc">Cédula de ciudadanía</option>
+                  <option value="ce">Cédula de extranjería</option>
+                  <option value="nit">NIT</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label>Documento</label>
+                <input
+                  type="text"
+                  placeholder="123 123 1234"
+                  formControlName="documento"
+                />
+              </div>
+            </div>
+
+            <!-- ✅ Checkbox de autorización de datos -->
+            <div class="campo campo-checkbox">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  formControlName="aceptoDatos"
+                  required
+                />
+                He leído y acepto la
+                <a
+                  href="/autorizacion-datos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  autorización para tratamiento de datos personales
+                </a>.
+              </label>
+            </div>
+
+            <!-- 🔄 Mensaje de error si hay -->
+            <div class="alert alert-danger" *ngIf="errorAgendamiento">
+              <strong>⚠️ Error:</strong> {{ errorAgendamiento }}
+            </div>
+
+            <!-- 🔄 BOTÓN CON LOADING -->
+            <button
+              type="button"
+              class="btn-primary"
+              [disabled]="!agendaForm.valid || isAgendando"
+              [class.loading]="isAgendando"
+              (click)="irAPago()"
+            >
+              <!-- Spinner cuando está cargando -->
+              <span class="spinner" *ngIf="isAgendando"></span>
+              
+              <!-- Texto del botón -->
+              <span *ngIf="!isAgendando">
+                Continuar al pago
+                <i class="bi bi-arrow-right"></i>
+              </span>
+              <span *ngIf="isAgendando">
+                Procesando...
+              </span>
+            </button>
+          </form>
+        </div>
+
+        <!-- 🟠 Columna derecha -->
+        <div class="col-derecha">
+          <div class="tarifa-card resumen">
+            <h4>
+              {{ nombreCiudadSeleccionada + ' – ' + (sedeSeleccionada?.nombre || 'Sede') }}
+            </h4>
+            <p>{{ descripcionTipoSeleccionado }}</p>
+            <div class="valor-total">
+              <span class="label">Valor total (estimado)</span>
+              <strong class="monto">
+                {{ (valorEstimado || 390000) | currency:'COP':'symbol':'1.0-0' }}
+              </strong>
+            </div>
+            <small>
+              Este es el total estimado para tu revisión técnico–mecánica.
+            </small>
+            <button class="btn-outline">Condiciones del Servicio</button>
+          </div>
+          <div class="auto-img">
+            <img src="assets/vehiculo.png" alt="Vehículo" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PANTALLA 3 – PAGO ===================== -->
+<section *ngIf="open() && step === 3" class="pago-step peritaje-paso3">
+  <div class="modal-backdrop">
+    <div class="modal-container modal-wide">
+      <button class="close-btn" (click)="cerrar()">×</button>
+      
+      <div class="pago-wrap">
+        <div class="pago-grid">
+          <!-- Columna izquierda -->
+          <div class="pago-card pago-left">
+            <h2 class="pago-title">Finaliza tu pago</h2>
+
+            <!-- Cupón -->
+            <div class="cupon-box">
+              <h4>Código Promocional</h4>
+              <p>¿Dispones de un código promocional? Introdúcelo aquí</p>
+              <div class="cupon-row">
+                <input
+                  type="text"
+                  [(ngModel)]="codigoCupon"
+                  placeholder="AUTOMAS10"
+                />
+                <button class="btn btn-apply" (click)="aplicarCupon()">
+                  Aplicar Código
+                </button>
+              </div>
+              <p *ngIf="mensajeCupon" [class.error]="!cuponValido" [class.success]="cuponValido">
+                {{ mensajeCupon }}
+              </p>
+            </div>
+
+            <!-- Resumen -->
+            <div class="resumen">
+              <div class="resumen-head">
+                <h5>Resumen del pedido</h5>
+                <div class="resumen-fechas">
+                  <small>Fecha de la transacción: {{ fechaTransaccion | date:'dd-MM-yyyy HH:mm' }}</small>
+                </div>
+              </div>
+
+              <div class="resumen-table">
+                <div class="row header">
+                  <div>Servicio</div>
+                  <div>Precio</div>
+                  <div>Cantidad</div>
+                </div>
+                <div class="row">
+                  <div>
+                    Revisión Técnico-Mecánica<br>
+                    <small>{{ sedeSeleccionada?.nombre }}</small><br>
+                    <small>{{ fechaSeleccionada | date:'dd/MM/yyyy' }} - {{ franjaSeleccionada }}</small>
+                  </div>
+                  <div>${{ valorEstimado | number }}</div>
+                  <div>1</div>
+                </div>
+              </div>
+
+              <div class="total-line" *ngIf="descuentoAplicado > 0">
+                <span>Descuento aplicado</span>
+                <strong>- ${{ descuentoAplicado | number }}</strong>
+              </div>
+
+              <div class="total-line grand">
+                <span>Cantidad total (IVA Incluido):</span>
+                <strong>${{ totalAPagar | number }}</strong>
+              </div>
+
+              <label class="condiciones-final">
+                <input type="checkbox" [(ngModel)]="aceptaCondicionesPago" />
+                Entiendo qué incluye este servicio y estoy de acuerdo con sus condiciones.
+              </label>
+
+              <button
+                class="btn btn-next"
+                [disabled]="!aceptaCondicionesPago || isProcessingPayment"
+                (click)="procesarPago()"
+              >
+                {{ isProcessingPayment ? 'Procesando...' : 'Confirmar y Pagar' }}
+              </button>
+
+              <p class="volver-plan" (click)="volver()">← Volver a datos de agendamiento</p>
+            </div>
+          </div>
+
+          <!-- Columna derecha -->
+          <div class="pago-card pago-right">
+            <h4>Método de pago</h4>
+            <p>Elige la pasarela de pago:</p>
+
+            <button
+              class="pay-option"
+              [class.active]="medioPagoSeleccionado === 'mercado-pago'"
+              (click)="seleccionarMedioPago('mercado-pago')"
+            >
+              <img src="/assets/mercadopago.png" alt="Mercado Pago" />
+              <span>Mercado Pago</span>
+            </button>
+
+            <!-- Resumen del cliente -->
+            <div class="resumen-cliente">
+              <h5>Datos del cliente</h5>
+              <p><strong>Nombre:</strong> {{ agendaForm.get('nombre')?.value }}</p>
+              <p><strong>Placa:</strong> {{ agendaForm.get('placa')?.value }}</p>
+              <p><strong>Teléfono:</strong> {{ agendaForm.get('telefono')?.value }}</p>
+              <p><strong>Email:</strong> {{ agendaForm.get('correo')?.value }}</p>
+            </div>
+
+            <div class="pago-car">
+              <img src="/assets/vehiculos.png" alt="Carro" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

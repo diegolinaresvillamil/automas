@@ -1,0 +1,324 @@
+/* ============================== */
+/* 🔸 HEADER SUPERIOR */
+/* ============================== */
+.top-header {
+  background-color: #ff671f;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 40px;
+  position: fixed; /* 🔹 fijo para que no se corte */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  height: 60px; /* 🔹 asegura que el logo no se corte */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo */
+.logo img {
+  height: 42px;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ============================== */
+/* 🔸 BOTONES SUPERIORES */
+/* ============================== */
+.top-links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-sm {
+  font-size: 0.9rem;
+  border-radius: 10px;
+  font-weight: 500;
+  padding: 8px 20px;
+  transition: all 0.3s ease;
+}
+
+.city-btn {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.whatsapp-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+}
+
+/* ============================== */
+/* 🔸 NAV MENU */
+/* ============================== */
+.nav-menu {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  padding: 10px 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 85%;
+  max-width: 1500px;
+  margin: 0 auto;
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  transition: all 0.3s ease;
+}
+
+/* Ajuste para pantallas medianas */
+@media (max-width: 1400px) {
+  .nav-menu {
+    width: 90%;
+    padding: 10px 30px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .nav-menu {
+    width: 95%;
+    padding: 10px 20px;
+  }
+}
+
+/* ============================== */
+/* 🔸 NAVBAR ITEMS */
+/* ============================== */
+.navbar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  color: #000;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  padding: 8px 16px;
+  flex: 1;
+  text-align: center;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: #f15a24;
+  background-color: rgba(255, 103, 31, 0.1);
+}
+
+/* ============================== */
+/* 🔸 MENÚS HAMBURGUESA */
+/* ============================== */
+.hamburger-left,
+.hamburger-right {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ============================== */
+/* 🔸 MENÚ SUPERIOR HAMBURGUESA (MÓVIL) */
+/* ============================== */
+.top-links {
+  transition: all 0.3s ease;
+}
+
+.top-links.open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff671f;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  padding: 1.2rem 0;
+  gap: 1rem;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  animation: fadeInDown 0.3s ease;
+}
+
+.top-links.open .btn-sm {
+  width: 85%;
+  max-width: 280px;
+  text-align: center;
+  border-radius: 12px;
+  font-size: 1rem;
+  padding: 10px 0;
+}
+
+/* Animación suave */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================== */
+/* 🔸 RESPONSIVE */
+/* ============================== */
+@media (max-width: 992px) {
+  .top-header {
+    padding: 10px 20px;
+    justify-content: space-between;
+  }
+
+  .hamburger-left,
+  .hamburger-right {
+    display: block;
+  }
+
+  .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Ocultar menú superior por defecto */
+  .top-links {
+    display: none;
+  }
+
+  /* Menú principal (móvil) */
+  .nav-menu {
+    position: static;
+    transform: none;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff;
+    margin-top: 0;
+    display: none;
+    flex-direction: column;
+    padding: 20px 0;
+    min-width: unset;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nav-link {
+    font-size: 1rem;
+  }
+
+  /* 🔹 Espacio superior e inferior */
+  body {
+    padding-top: 60px; /* evita que el header tape contenido */
+    padding-bottom: 70px; /* evita que el menú inferior tape contenido */
+  }
+}
+
+/* 🔹 Desktop: mantener horizontal y centrado */
+@media (min-width: 993px) {
+  .nav-menu {
+    display: flex !important;
+  }
+
+  .navbar-nav {
+    flex-direction: row !important;
+  }
+
+  .hamburger-left,
+  .hamburger-right {
+    display: none !important;
+  }
+
+  .top-links {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .logo {
+    position: static;
+    transform: none;
+  }
+}
+
+/* ============================== */
+/* 🔹 MENÚ INFERIOR MÓVIL */
+/* ============================== */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.bottom-nav a {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.3s ease;
+}
+
+.bottom-nav a i {
+  font-size: 1.3rem;
+}
+
+.bottom-nav a.active,
+.bottom-nav a:hover {
+  color: #fa6119;
+}
+
+/* 🔸 Mostrar menú inferior solo en móvil y tablet */
+@media (max-width: 992px) {
+  .bottom-nav {
+    display: flex;
+  }
+}
+
+/* 🔸 Ocultar menú inferior en desktop */
+@media (min-width: 993px) {
+  .bottom-nav {
+    display: none !important;
+  }
+}

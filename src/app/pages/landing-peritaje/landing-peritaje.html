@@ -1,0 +1,289 @@
+<!-- SECCIÓN PERITAJE Y AVALÚO -->
+<section class="peritaje-section text-center text-white py-5">
+  <div class="container position-relative">
+
+    <!-- Texto principal -->
+    <div class="peritaje-content mx-auto">
+      <h3 class="fw-normal">Consulta y agenda</h3>
+      <h2 class="fw-bold mb-3">
+        tu <span class="highlight">Peritaje & Avalúo</span>
+      </h2>
+      <p class="mb-5 px-3 px-md-5">
+        Con tu placa y documento verificaremos qué planes de peritaje están disponibles para tu vehículo. 
+        Así podrás comparar beneficios, precios y elegir fácilmente el que mejor se adapte a tu necesidad.
+      </p>
+
+      <!-- Botones -->
+      <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+        <button class="btn btn-light-custom">
+          Consulta sedes y tarifas <i class="bi bi-search ms-2"></i>
+        </button>
+        <button class="btn btn-orange-custom">
+          Agendar mi peritaje ahora <i class="bi bi-calendar-event ms-2"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Imagen inferior -->
+    <div class="peritaje-image mt-5">
+      <img src="/assets/peritaje.png" alt="Vehículos Automás" class="img-fluid">
+    </div>
+
+  </div>
+</section>
+
+
+
+<!-- SECCIÓN IMPORTANCIA -->
+<section class="importancia-section fullwidth">
+  <div class="image-side">
+    <img src="/assets/carro-peritaje.png" alt="Vehículo AutoMás" />
+  </div>
+
+  <div class="content-side">
+    <span class="tag">Asegura tu Inversión</span>
+    <h2>
+      La Compra Inteligente  <br />
+      Comienza con el Peritaje
+    </h2>
+
+    <ul class="benefits">
+      <li>
+        <i class="bi bi-check-circle-fill"></i>
+        <div>
+          <strong>Diagnóstico Experto, Inspección 360°</strong><br />
+          Evaluamos meticulosamente la estructura, motor y componentes vitales para determinar el estado real del vehículo.
+        </div>
+      </li>
+
+      <li>
+        <i class="bi bi-check-circle-fill"></i>
+        <div>
+          <strong>Transparencia Total, Historial y Legalidad Verificados</strong><br />
+          Consultamos antecedentes y revisamos documentos a fondo para confirmar la procedencia y legalidad del vehículo.
+        </div>
+      </li>
+
+      <li>
+        <i class="bi bi-check-circle-fill"></i>
+        <div>
+          <strong>Poder de Decisión    </strong><br />
+          Compra o Venta con Respaldo. Recibe la información técnica que necesitas para negociar con confianza y evitar cualquier riesgo o sorpresa futura.
+        </div>
+      </li>
+    </ul>
+            <br> <br>
+            <button class="btn btn-orange-custom">
+          Agendar mi peritaje ahora <i class="bi bi-calendar-event ms-2"></i>
+        </button>
+  </div>
+</section>
+
+<!--COMO AGENDAR 
+
+<section class="agendar-section">
+  <h2>¿Cómo Agendar?</h2>
+
+  <div class="steps-flow">
+    <div class="step-item active">
+      <div class="circle">1</div>
+      <p>Elige el servicio que deseas</p>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+      <div class="circle">2</div>
+      <p>Selecciona la sede más cercana</p>
+    </div>
+  </div>
+
+  <div class="filtros-container">
+    <label>Filtrar por:</label>
+
+    <select [(ngModel)]="filtroServicio" (change)="aplicarFiltros()">
+      <option value="all">Todos los servicios</option>
+      <option value="Livianos">Tecno Livianos</option>
+      <option value="Pesados">Tecno Pesados</option>
+      <option value="Motos">Tecno Motos</option>
+      <option value="Eléctricos">Tecno Eléctricos</option>
+    </select>
+
+    <input
+      type="text"
+      [(ngModel)]="busqueda"
+      (input)="aplicarFiltros()"
+      placeholder="Buscar sede..."
+    />
+  </div>
+
+  
+  <div class="sedes-grid">
+    <div class="sede-card" *ngFor="let s of sedesFiltradas">
+      <img [src]="s.img" [alt]="s.nombre" />
+
+      <h4>{{ s.nombre }}</h4>
+     
+      <button class="btn-primary">Agendar</button>
+
+      <button class="btn-outline">Condiciones del servicio</button>
+    </div>
+  </div>
+</section>
+
+-->
+
+<!-- SECCIÓN CERTIMÁS -->
+<section class="certimas-section text-center py-5">
+
+  <!-- Caja Naranja -->
+  <div class="certimas-box mx-auto p-4 p-md-5 position-relative overflow-visible">
+    <div class="row align-items-center justify-content-between">
+
+      <!-- Texto -->
+      <div class="col-12 col-md-6 text-white text-md-start mb-4 mb-md-0">
+        <h2 class="fw-bold mb-2">¡Solo con tu placa!</h2>
+        <p class="mb-4">
+          Consulta el mejor servicio para<br> tu vehículo
+        </p>
+
+        <div class="d-flex flex-wrap gap-3">
+          <button class="btn btn-outline-light compra-btn">Agendar Peritaje </button>
+        </div>
+      </div>
+
+      <!-- Imagen -->
+      <div class="col-12 col-md-6 text-center position-relative">
+        <img src="/assets/vehiculos.png" alt="Vehiculos" class="img-fluid certimas-img" />
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SERVICIOS ADICIONALES -->
+<section class="services-section py-5">
+  <div class="container">
+    <h2 class="services-title text-center mb-5">Servicios Adicionales</h2>
+
+    <div class="row justify-content-center g-4">
+
+      <!-- Tarjeta 1 -->
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a routerLink="/tramites" class="service-card text-start">
+          <h5 class="service-name">Trámites Vehículares</h5>
+          <div class="service-content position-relative">
+            <img 
+              src="/assets/tramites-n.png" 
+              data-hover="/assets/tramites-h.png"
+              alt="Trámites Vehículares" 
+              class="service-icon" />
+            <div class="arrow-btn">
+              <i class="bi bi-arrow-up-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tarjeta 2 -->
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a routerLink="/tecnomecanica" class="service-card text-start">
+          <h5 class="service-name">Servicios Complementarios</h5>
+          <div class="service-content position-relative">
+            <img 
+              src="/assets/tecno-n.png" 
+              data-hover="/assets/tecno-h.png"
+              alt="Revisión Técnico Mecánica" 
+              class="service-icon" />
+            <div class="arrow-btn">
+              <i class="bi bi-arrow-up-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tarjeta 3 -->
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a routerLink="/peritaje" class="service-card text-start">
+          <h5 class="service-name">Peritaje / Avalúo</h5>
+          <div class="service-content position-relative">
+            <img 
+              src="/assets/peritaje-n.png" 
+              data-hover="/assets/peritaje-h.png"
+              alt="Peritaje / Avalúo" 
+              class="service-icon" />
+            <div class="arrow-btn">
+              <i class="bi bi-arrow-up-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tarjeta 4 -->
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a routerLink="/certimas" class="service-card text-start">
+          <h5 class="service-name">CertiMás</h5>
+          <div class="service-content position-relative">
+            <img 
+              src="/assets/certimas-h.png" 
+              data-hover="/assets/certimas-n.png"
+              alt="CertiMás" 
+              class="service-icon" />
+            <div class="arrow-btn">
+              <i class="bi bi-arrow-up-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- COMPONENTE FAQ -->
+<app-faq
+  [title]="'Preguntas Frecuentes Peritaje'"
+  [items]="faqItems"
+  [multiple]="false">
+</app-faq>
+
+
+
+
+<!-- 🌟 TESTIMONIOS -->
+<section class="clientes-section">
+  <div class="clientes-header">
+    <h2>Lo que dicen nuestros <span>Clientes</span></h2>
+    <p>La confianza de miles de conductores respalda nuestro compromiso con la seguridad y la calidad.</p>
+  </div>
+
+  <div class="clientes-grid">
+    <div class="cliente-card">
+      <div class="avatar">
+        <img src="/assets/testimonio2.jpg" alt="Laura Ortiz">
+      </div>
+      <p class="comentario">“Estoy muy satisfecha con el servicio de tecnomecánica de AutoMás. Todo fue rápido y sin complicaciones.”</p>
+      <h4>Laura Ortiz</h4>
+      <span class="cargo">Cliente frecuente</span>
+    </div>
+
+    <div class="cliente-card">
+      <div class="avatar">
+        <img src="/assets/testimonio1.jpg" alt="Camilo Gutiérrez">
+      </div>
+      <p class="comentario">“La revisión fue ágil, el personal amable y las instalaciones impecables.”</p>
+      <h4>Camilo Gutiérrez</h4>
+      <span class="cargo">Conductor profesional</span>
+    </div>
+
+    <div class="cliente-card">
+      <div class="avatar">
+        <img src="/assets/testimonio3.jpg" alt="Andrea Bermúdez">
+      </div>
+      <p class="comentario">“Excelente atención y puntualidad. Definitivamente volveré a realizar mi revisión aquí.”</p>
+      <h4>Andrea Bermúdez</h4>
+      <span class="cargo">Propietaria de vehículo</span>
+    </div>
+  </div>
+</section>
+
+<app-contacto-popup></app-contacto-popup>

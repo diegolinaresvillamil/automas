@@ -1,0 +1,155 @@
+<div class="modal-backdrop" *ngIf="open()">
+  <div class="rtm-modal-container" role="dialog" aria-modal="true">
+    <button class="close-btn" (click)="cerrar()" aria-label="Cerrar">×</button>
+
+    <!-- ======== PASO 1: CONFIRMAR DATOS ======== -->
+    <div class="rtm-content" *ngIf="paso() === 1">
+      <div class="rtm-header">
+        <h2>Ingresa los datos del vehículo.</h2>
+        <p>
+          Digita la placa, el tipo de documento y número de documento para consultar la información del vehículo. <br />
+          <span class="naranja">*Recuerda que esta información debe ser la del propietario.</span>
+        </p>
+      </div>
+
+      <form [formGroup]="form" class="rtm-form">
+        <div class="form-row">
+          <div class="campo">
+            <label>Número de placa</label>
+            <input
+              type="text"
+              formControlName="placa"
+              placeholder="Placa del vehículo a consultar"
+            />
+          </div>
+
+          <div class="campo">
+            <label>Nombre</label>
+            <input
+              type="text"
+              formControlName="nombre"
+              placeholder="Nombre del propietario"
+            />
+          </div>
+
+          <div class="campo">
+            <label>Teléfono</label>
+            <input
+              type="text"
+              formControlName="telefono"
+              placeholder="321 321 3214"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="campo">
+            <label>Tipo de Documento del propietario</label>
+            <select formControlName="docTipo">
+              <option value="cc">Cédula de ciudadanía</option>
+              <option value="ce">Cédula de extranjería</option>
+              <option value="nit">NIT</option>
+              <option value="pas">Pasaporte</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label>Número de Documento del propietario</label>
+            <input
+              type="text"
+              formControlName="documento"
+              placeholder="1010101010"
+            />
+          </div>
+
+          <div class="campo align-end">
+            <button
+              type="button"
+              class="btn-consultar"
+              [disabled]="!form.valid"
+              (click)="siguiente()"
+            >
+              Consultar <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ✅ Casilla de aceptación -->
+        <div class="campo campo-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="aceptoDatos" required />
+            He leído y acepto la
+            <a
+              href="/autorizacion-datos"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              autorización para tratamiento de datos personales
+            </a>.
+          </label>
+        </div>
+      </form>
+
+      <div class="rtm-footer">
+        <img src="/assets/servicio.png" alt="Vehículos" />
+      </div>
+    </div>
+
+    <!-- ======== PASO 2: REVISIÓN POR VENCER ======== -->
+    <div class="rtm-content" *ngIf="paso() === 2">
+      <div class="rtm-header">
+        <h2>
+          <i class="bi bi-exclamation-triangle"></i>
+          Te informamos la fecha de tu Revisión Técnico Mecánica
+        </h2>
+        <p>
+          Evita multas, accidentes y contribuye al medio ambiente.<br />
+          El vehículo
+          <strong>
+            {{ vehiculoNombre() || placaMostrada() || '(Nombre del Vehículo)' }}
+          </strong>
+          cuenta con esta información:
+        </p>
+      </div>
+
+      <div class="rtm-form">
+        <div class="form-row">
+          <div class="campo">
+            <label>Número de placa</label>
+            <input
+              type="text"
+              [value]="placaMostrada() || ''"
+              readonly
+            />
+          </div>
+
+          <div class="campo">
+            <label>Vence el:</label>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input
+                type="text"
+                [value]="fechaVenceRtm() || ''"
+                readonly
+              />
+              <i
+                class="bi bi-exclamation-triangle"
+                style="color:#fa6119; font-size:1.4rem;"
+              ></i>
+            </div>
+          </div>
+
+          <div class="campo align-end">
+            <label>Agenda tu revisión antes de que expire:</label>
+            <button type="button" class="btn-sede" (click)="abrirModalSedes()">
+              Elegir ciudad y sede
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="rtm-footer">
+        <img src="/assets/servicio.png" alt="Vehículos" />
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+{
+  "/rtm-api": {
+    "target": "https://servicio-agendamiento.automas.co/api/",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/rtm-api": ""
+    }
+  }
+}
