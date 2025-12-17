@@ -332,3 +332,38 @@
 .checkbox-label a:hover {
   text-decoration: none;
 }
+
+
+
+
+
+
+
+.badge-runt,
+.badge-manual {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+.badge-runt {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.badge-manual {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.btn-consultar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

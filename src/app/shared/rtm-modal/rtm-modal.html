@@ -66,15 +66,19 @@
             <button
               type="button"
               class="btn-consultar"
-              [disabled]="!form.valid"
+              [disabled]="!form.valid || isConsultando()"
               (click)="siguiente()"
             >
-              Consultar <i class="bi bi-search"></i>
+              <span *ngIf="!isConsultando()">
+                Consultar <i class="bi bi-search"></i>
+              </span>
+              <span *ngIf="isConsultando()">
+                Consultando... <i class="bi bi-hourglass-split"></i>
+              </span>
             </button>
           </div>
         </div>
 
-        <!-- ✅ Casilla de aceptación -->
         <div class="campo campo-checkbox">
           <label class="checkbox-label">
             <input type="checkbox" formControlName="aceptoDatos" required />
@@ -106,10 +110,20 @@
           Evita multas, accidentes y contribuye al medio ambiente.<br />
           El vehículo
           <strong>
-            {{ vehiculoNombre() || placaMostrada() || '(Nombre del Vehículo)' }}
+            {{ vehiculoNombre() }}
           </strong>
           cuenta con esta información:
         </p>
+        
+        <!-- ✅ Badge indicando si viene del RUNT -->
+        <div class="badge-runt" *ngIf="vieneDeRunt()">
+          <i class="bi bi-check-circle-fill"></i>
+          Datos verificados con el RUNT
+        </div>
+        <div class="badge-manual" *ngIf="!vieneDeRunt()">
+          <i class="bi bi-info-circle-fill"></i>
+          No se pudieron obtener datos del RUNT - Continuar manualmente
+        </div>
       </div>
 
       <div class="rtm-form">
@@ -128,12 +142,13 @@
             <div style="display:flex; align-items:center; gap:8px;">
               <input
                 type="text"
-                [value]="fechaVenceRtm() || ''"
+                [value]="fechaVenceRtm() || 'No disponible'"
                 readonly
               />
               <i
                 class="bi bi-exclamation-triangle"
                 style="color:#fa6119; font-size:1.4rem;"
+                *ngIf="fechaVenceRtm() && fechaVenceRtm() !== 'No disponible'"
               ></i>
             </div>
           </div>

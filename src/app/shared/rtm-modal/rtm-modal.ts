@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { RtmModalService } from './rtm-modal.service';
 import { SedesTarifasModalService } from '../sedes-tarifas-modal/sedes-tarifas-modal.service';
 
-
 @Component({
   selector: 'app-rtm-modal',
   standalone: true,
@@ -21,7 +20,6 @@ export class RtmModalComponent implements OnInit, OnDestroy {
   open = signal(false);
   paso = signal<1 | 2>(1);
 
-  // subscripciones
   private sub?: Subscription;
   private placaSub?: Subscription;
   private docTipoSub?: Subscription;
@@ -29,18 +27,20 @@ export class RtmModalComponent implements OnInit, OnDestroy {
   private nombreSub?: Subscription;
   private telSub?: Subscription;
 
-  // Estado para las ciudades
   ciudades = signal<any[]>([]);
   loadingCiudades = signal(false);
 
   // 🔹 Estado para la pantalla 2
   vehiculoNombre = signal<string | null>(null);
-  placaMostrada  = signal<string | null>(null);
-  fechaVenceRtm  = signal<string | null>(null);
+  placaMostrada = signal<string | null>(null);
+  fechaVenceRtm = signal<string | null>(null);
+  
+  // 🆕 Estados para consulta RUNT
+  isConsultando = signal(false);
+  datosRunt = signal<any | null>(null);
+  vieneDeRunt = signal(false);
 
-  // ========= FORMULARIO =========
   form = this.fb.group({
-    // 1. Placa: AAA123 (3 letras + 3 números, siempre mayúscula)
     placa: [
       '',
       [
@@ -48,8 +48,6 @@ export class RtmModalComponent implements OnInit, OnDestroy {
         Validators.pattern(/^[A-Z]{3}\d{3}$/)
       ]
     ],
-
-    // 2. Nombre: solo texto
     nombre: [
       '',
       [
@@ -57,8 +55,6 @@ export class RtmModalComponent implements OnInit, OnDestroy {
         Validators.pattern(/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$/)
       ]
     ],
-
-    // 3. Teléfono: solo números, exactamente 10 dígitos
     telefono: [
       '',
       [
@@ -66,26 +62,17 @@ export class RtmModalComponent implements OnInit, OnDestroy {
         Validators.pattern(/^\d{10}$/)
       ]
     ],
-
-    // 4. Tipo de documento
     docTipo: ['cc', [Validators.required]],
-
-    // 5. Documento (reglas dinámicas según docTipo)
     documento: ['', [Validators.required]],
-
-    // 6. Autorización datos
     aceptoDatos: [false, [Validators.requiredTrue]]
   });
 
-  // ================= CICLO DE VIDA =================
   ngOnInit(): void {
-    // normalizaciones y validaciones dinámicas
     this.configurarNormalizacionPlaca();
     this.configurarNormalizacionNombre();
     this.configurarNormalizacionTelefono();
     this.configurarDocumentoDinamico();
 
-    // control de apertura/cierre del modal
     this.sub = this.modal.open$.subscribe(isOpen => {
       this.open.set(isOpen);
       document.body.style.overflow = isOpen ? 'hidden' : '';
@@ -94,6 +81,7 @@ export class RtmModalComponent implements OnInit, OnDestroy {
         this.cargarCiudades();
       } else {
         this.paso.set(1);
+        this.resetearDatosRunt();
       }
     });
   }
@@ -110,7 +98,6 @@ export class RtmModalComponent implements OnInit, OnDestroy {
 
   // ================= NORMALIZACIONES =================
 
-  /** Placa: mayúsculas, sin símbolos, máx 6 chars */
   private configurarNormalizacionPlaca() {
     const placaCtrl = this.form.get('placa');
     if (!placaCtrl) return;
@@ -125,7 +112,6 @@ export class RtmModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Nombre: solo letras y espacios */
   private configurarNormalizacionNombre() {
     const nombreCtrl = this.form.get('nombre');
     if (!nombreCtrl) return;
@@ -140,7 +126,6 @@ export class RtmModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Teléfono: solo números, máx 10 dígitos */
   private configurarNormalizacionTelefono() {
     const telCtrl = this.form.get('telefono');
     if (!telCtrl) return;
@@ -155,10 +140,9 @@ export class RtmModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Documento: validaciones y limpieza según tipo */
   private configurarDocumentoDinamico() {
     const docTipoCtrl = this.form.get('docTipo');
-    const docCtrl     = this.form.get('documento');
+    const docCtrl = this.form.get('documento');
 
     if (!docTipoCtrl || !docCtrl) return;
 
@@ -166,16 +150,16 @@ export class RtmModalComponent implements OnInit, OnDestroy {
       const validators: any[] = [Validators.required];
 
       switch (tipo) {
-        case 'cc': // cédula ciudadanía: 10 dígitos
+        case 'cc':
           validators.push(Validators.pattern(/^\d{10}$/));
           break;
-        case 'ce': // cédula extranjería: 6–15 dígitos
+        case 'ce':
           validators.push(Validators.pattern(/^\d{6,15}$/));
           break;
-        case 'nit': // NIT: 9–10 dígitos
+        case 'nit':
           validators.push(Validators.pattern(/^\d{9,10}$/));
           break;
-        case 'pas': // pasaporte: 6–15 alfanumérico
+        case 'pas':
           validators.push(Validators.pattern(/^[A-Za-z0-9]{6,15}$/));
           break;
         default:
@@ -186,16 +170,13 @@ export class RtmModalComponent implements OnInit, OnDestroy {
       docCtrl.updateValueAndValidity({ emitEvent: false });
     };
 
-    // primera aplicación
     aplicarValidadores(docTipoCtrl.value);
 
-    // cuando cambia el tipo de documento
     this.docTipoSub = docTipoCtrl.valueChanges.subscribe(tipo => {
       aplicarValidadores(tipo);
       docCtrl.setValue('', { emitEvent: false });
     });
 
-    // limpieza de caracteres según el tipo
     this.docValorSub = docCtrl.valueChanges.subscribe(value => {
       if (typeof value !== 'string') return;
       const tipo = docTipoCtrl.value;
@@ -207,22 +188,18 @@ export class RtmModalComponent implements OnInit, OnDestroy {
           cleaned = value.replace(/\D/g, '');
           if (cleaned.length > 10) cleaned = cleaned.slice(0, 10);
           break;
-
         case 'ce':
           cleaned = value.replace(/\D/g, '');
           if (cleaned.length > 15) cleaned = cleaned.slice(0, 15);
           break;
-
         case 'nit':
           cleaned = value.replace(/\D/g, '');
           if (cleaned.length > 10) cleaned = cleaned.slice(0, 10);
           break;
-
         case 'pas':
           cleaned = value.replace(/[^A-Za-z0-9]/g, '');
           if (cleaned.length > 15) cleaned = cleaned.slice(0, 15);
           break;
-
         default:
           cleaned = value.replace(/\s+/g, ' ');
       }
@@ -239,53 +216,160 @@ export class RtmModalComponent implements OnInit, OnDestroy {
     this.modal.close();
   }
 
+  // 🆕 MÉTODO ACTUALIZADO: Consultar vehículo en RUNT
   siguiente() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    // Datos del formulario
     const v = this.form.value;
-
-    const placa             = v.placa ?? '';
+    const placa = v.placa ?? '';
     const nombrePropietario = v.nombre ?? '';
+    const telefono = v.telefono ?? '';
+    const docTipo = v.docTipo ?? 'cc';
+    const documento = v.documento ?? '';
 
-    // ✅ Guardar datos iniciales en el servicio
+    // ✅ CORRECTO: Guardar todos los datos EXCEPTO correo
+    // El correo es el ÚNICO campo que el usuario debe llenar manualmente en el modal de agendamiento
     this.modal.setDatosIniciales({
-      placa: placa,
-      nombre: nombrePropietario,
-      telefono: v.telefono ?? '',
-      docTipo: v.docTipo ?? 'cc',
-      documento: v.documento ?? '',
-      // por ahora sin correo porque este form no lo tiene
-      correo: ''
-    });
-
-    // Guardamos para la pantalla 2
-    this.placaMostrada.set(placa);
-
-    // Texto demo para el nombre del vehículo
-    this.vehiculoNombre.set(`Vehículo placa ${placa}`);
-
-    // Fecha RTM mock (luego se reemplaza por la del API)
-    this.fechaVenceRtm.set('25 de julio de 2026');
-
-    console.log('Formulario RTM válido, datos:', {
       placa,
-      nombrePropietario,
-      docTipo: v.docTipo,
-      documento: v.documento,
-      telefono: v.telefono
+      nombre: nombrePropietario,  // ✅ Sí guardar - viene del paso 1
+      telefono,                    // ✅ Sí guardar - viene del paso 1
+      docTipo,
+      documento,
+      correo: ''                   // ❌ NO guardar - usuario lo ingresa en el modal
     });
 
-    this.paso.set(2);
+    this.placaMostrada.set(placa);
+    this.isConsultando.set(true);
+
+    console.log('🔍 Consultando vehículo en RUNT...');
+
+    const tipoIdentificacion = this.mapTipoIdentificacion(docTipo);
+
+    this.modal.consultarVehiculo({
+      placa,
+      tipo_identificacion: tipoIdentificacion,
+      identificacion: documento,
+      nombres: nombrePropietario,
+      celular: telefono
+    }).subscribe({
+      next: (resp) => {
+        console.log('✅ Respuesta consulta RUNT:', resp);
+
+        if (resp && resp.data) {
+          // ✅ CORRECCIÓN: resp.data contiene {error, mensaje, data}
+          // Los datos del vehículo están en resp.data.data
+          const dataCompleta = resp.data;
+          const data = dataCompleta.data || dataCompleta; // Segundo nivel o fallback
+          
+          console.log('📋 DATA COMPLETA:', dataCompleta);
+          console.log('📋 DATA DEL VEHÍCULO (extraída):', data);
+          console.log('📋 data.claseVehiculo:', data.claseVehiculo);
+          console.log('📋 data.tipoServicio:', data.tipoServicio);
+          console.log('📋 data.tipoCombustible:', data.tipoCombustible);
+          console.log('📋 data.modelo:', data.modelo);
+          console.log('📋 data.revisionRTMActual:', data.revisionRTMActual);
+          
+          this.datosRunt.set(data);
+          this.vieneDeRunt.set(resp.fromRunt);
+
+          // ✅ MAPEO CORRECTO según la respuesta del RUNT oficial
+          const dataMapeada = {
+            // Campos principales del vehículo
+            clase_vehiculo: data.claseVehiculo || data.clasificacion,
+            tipo_servicio: data.tipoServicio || data.tipoServicioNombre,
+            tipo_combustible: data.tipoCombustible,
+            modelo: data.modelo,
+            
+            // Fecha de vencimiento RTM - está en revisionRTMActual
+            fecha_vencimiento_rtm: data.revisionRTMActual?.fecha_vencimiento || null,
+            
+            // Información adicional del vehículo
+            placa: data.noPlaca,
+            marca: data.marca,
+            linea: data.linea,
+            color: data.color,
+            cilindraje: data.cilindraje,
+            noMotor: data.noMotor,
+            noChasis: data.noChasis,
+            
+            // RTM actual
+            nroRTM: data.revisionRTMActual?.numero,
+            cdaExpide: data.revisionRTMActual?.cda_expide,
+            fecha_expedicion_rtm: data.revisionRTMActual?.fecha_expedicion,
+            vigente: data.revisionRTMActual?.vigente,
+            
+            // Datos del propietario (para referencia)
+            estadoDelVehiculo: data.estadoDelVehiculo,
+            organismoTransito: data.organismoTransito
+          };
+
+          console.log('🔄 Datos RUNT mapeados:', dataMapeada);
+
+          // ✅ GUARDAR DATOS RUNT MAPEADOS EN EL SERVICIO
+          (this.modal as any)._datosRunt = dataMapeada;
+          console.log('💾 Datos RUNT guardados en servicio:', dataMapeada);
+
+          // ✅ Construir nombre del vehículo: MARCA LÍNEA placa XXX
+          if (dataMapeada.marca && dataMapeada.linea) {
+            // Formato preferido: CHEVROLET SPARK placa IWK888
+            const marca = dataMapeada.marca.toUpperCase();
+            const linea = dataMapeada.linea.toUpperCase();
+            this.vehiculoNombre.set(`${marca} ${linea} placa ${placa}`);
+          } else if (dataMapeada.clase_vehiculo) {
+            // Fallback 1: usar clase si no hay marca/línea
+            const claseVehiculo = dataMapeada.clase_vehiculo.toUpperCase();
+            this.vehiculoNombre.set(`${claseVehiculo} placa ${placa}`);
+          } else if (dataMapeada.modelo) {
+            // Fallback 2: usar modelo si no hay clase_vehiculo
+            this.vehiculoNombre.set(`Vehículo ${dataMapeada.modelo} placa ${placa}`);
+          } else {
+            // Fallback 3: solo placa
+            this.vehiculoNombre.set(`Vehículo placa ${placa}`);
+          }
+
+          const fechaVenc = dataMapeada.fecha_vencimiento_rtm || null;
+          if (fechaVenc) {
+            this.fechaVenceRtm.set(this.formatearFecha(fechaVenc));
+          } else {
+            this.fechaVenceRtm.set('No disponible');
+          }
+
+          console.log('✅ Datos del RUNT obtenidos:', {
+            clase_vehiculo: dataMapeada.clase_vehiculo,
+            tipo_servicio: dataMapeada.tipo_servicio,
+            tipo_combustible: dataMapeada.tipo_combustible,
+            fecha_vencimiento: fechaVenc,
+            modelo: dataMapeada.modelo,
+            marca: dataMapeada.marca,
+            linea: dataMapeada.linea,
+            fromRunt: resp.fromRunt
+          });
+        } else {
+          console.warn('⚠️ No se obtuvieron datos del RUNT, continuar manualmente');
+          this.vieneDeRunt.set(false);
+          this.vehiculoNombre.set(`Vehículo placa ${placa}`);
+          this.fechaVenceRtm.set('No disponible - Ingresa manualmente');
+        }
+
+        this.isConsultando.set(false);
+        this.paso.set(2);
+      },
+      error: (err) => {
+        console.error('❌ Error al consultar RUNT:', err);
+        this.isConsultando.set(false);
+        this.vieneDeRunt.set(false);
+        this.vehiculoNombre.set(`Vehículo placa ${placa}`);
+        this.fechaVenceRtm.set('No disponible - Ingresa manualmente');
+        this.paso.set(2);
+      }
+    });
   }
 
-  // Abrir la modal de sedes
   abrirModalSedes() {
     const ciudadesActuales = this.ciudades();
-
     this.sedesModalSvc.setCiudades(ciudadesActuales);
 
     this.cerrar();
@@ -294,7 +378,6 @@ export class RtmModalComponent implements OnInit, OnDestroy {
     }, 300);
   }
 
-  // === Llamada al servicio para obtener ciudades ===
   private cargarCiudades() {
     if (this.ciudades().length > 0) return;
 
@@ -302,7 +385,7 @@ export class RtmModalComponent implements OnInit, OnDestroy {
 
     this.modal.obtenerCiudades().subscribe({
       next: (resp) => {
-        console.log('Respuesta obtener_ciudades:', resp);
+        console.log('✅ Respuesta obtener_ciudades:', resp);
         this.ciudades.set(resp?.data ?? []);
 
         if (this.ciudades().length > 0) {
@@ -311,7 +394,7 @@ export class RtmModalComponent implements OnInit, OnDestroy {
         }
       },
       error: (err) => {
-        console.error('Error al cargar ciudades', err);
+        console.error('❌ Error al cargar ciudades', err);
         this.loadingCiudades.set(false);
       },
       complete: () => {
@@ -320,15 +403,68 @@ export class RtmModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  // === Solo para probar obtener_proveedores en consola ===
   private probarProveedores(nombreCiudad: string) {
     this.modal.obtenerProveedores(nombreCiudad).subscribe({
       next: (resp) => {
-        console.log('Respuesta obtener_proveedores para', nombreCiudad, resp);
+        console.log('✅ Respuesta obtener_proveedores para', nombreCiudad, resp);
       },
       error: (err) => {
-        console.error('Error al cargar proveedores', err);
+        console.error('❌ Error al cargar proveedores', err);
       }
     });
+  }
+
+  private resetearDatosRunt() {
+    this.datosRunt.set(null);
+    this.vieneDeRunt.set(false);
+    this.vehiculoNombre.set(null);
+    this.fechaVenceRtm.set(null);
+    this.isConsultando.set(false);
+  }
+
+  private mapTipoIdentificacion(codigo: string): string {
+    switch (codigo) {
+      case 'ce':
+        return 'Cedula de Extranjeria';
+      case 'nit':
+        return 'NIT';
+      case 'pas':
+        return 'Pasaporte';
+      case 'cc':
+      default:
+        return 'Cedula de Ciudadania';
+    }
+  }
+
+  private formatearFecha(fechaStr: string): string {
+    try {
+      // El RUNT devuelve formato: "07/02/2026" (DD/MM/YYYY)
+      // Necesitamos convertirlo a formato legible
+      
+      if (fechaStr.includes('/')) {
+        // Formato DD/MM/YYYY
+        const [dia, mes, anio] = fechaStr.split('/');
+        const fecha = new Date(parseInt(anio), parseInt(mes) - 1, parseInt(dia));
+        
+        const opciones: Intl.DateTimeFormatOptions = { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        };
+        return fecha.toLocaleDateString('es-CO', opciones);
+      } else {
+        // Formato ISO (fallback)
+        const fecha = new Date(fechaStr);
+        const opciones: Intl.DateTimeFormatOptions = { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        };
+        return fecha.toLocaleDateString('es-CO', opciones);
+      }
+    } catch (error) {
+      console.error('Error al formatear fecha:', error);
+      return fechaStr;
+    }
   }
 }

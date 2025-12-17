@@ -6,13 +6,13 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(17, 21, 32, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 1rem;
   overflow-y: auto; /* ✅ permite scroll si el contenido es largo */
+  background: #00000021;
 }
 
 .modal-container {
@@ -101,11 +101,11 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(17, 21, 32, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  background: #00000021;
 }
 
 .modal-container.modal-wide {

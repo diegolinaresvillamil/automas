@@ -1,0 +1,114 @@
+<!-- ===================== PANTALLA 3 – PAGO ===================== -->
+<section *ngIf="open() && step === 3" class="pago-step peritaje-paso3">
+  <div class="modal-backdrop">
+    <div class="modal-container modal-wide">
+      <button class="close-btn" (click)="cerrar()">×</button>
+      
+      <div class="pago-wrap">
+        <div class="pago-grid">
+          <!-- Columna izquierda -->
+          <div class="pago-card pago-left">
+            <h2 class="pago-title">Finaliza tu pago</h2>
+
+            <!-- Cupón -->
+            <div class="cupon-box">
+              <h4>Código Promocional</h4>
+              <p>¿Dispones de un código promocional? Introdúcelo aquí</p>
+              <div class="cupon-row">
+                <input
+                  type="text"
+                  [(ngModel)]="codigoCupon"
+                  placeholder="AUTOMAS10"
+                />
+                <button class="btn btn-apply" (click)="aplicarCupon()">
+                  Aplicar Código
+                </button>
+              </div>
+              <p *ngIf="mensajeCupon" [class.error]="!cuponValido" [class.success]="cuponValido">
+                {{ mensajeCupon }}
+              </p>
+            </div>
+
+            <!-- Resumen -->
+            <div class="resumen">
+              <div class="resumen-head">
+                <h5>Resumen del pedido</h5>
+                <div class="resumen-fechas">
+                  <small>Fecha de la transacción: {{ fechaTransaccion | date:'dd-MM-yyyy HH:mm' }}</small>
+                </div>
+              </div>
+
+              <div class="resumen-table">
+                <div class="row header">
+                  <div>Servicio</div>
+                  <div>Precio</div>
+                  <div>Cantidad</div>
+                </div>
+                <div class="row">
+                  <div>
+                    {{ paymentData()?.servicio?.nombre || 'Revisión Técnico-Mecánica' }}<br>
+                    <small>{{ sedeSeleccionada?.nombre }}</small><br>
+                    <small>{{ fechaSeleccionada | date:'dd/MM/yyyy' }} - {{ franjaSeleccionada }}</small>
+                  </div>
+                  <div>${{ valorEstimado | number }}</div>
+                  <div>1</div>
+                </div>
+              </div>
+
+              <div class="total-line" *ngIf="descuentoAplicado > 0">
+                <span>Descuento aplicado</span>
+                <strong>- ${{ descuentoAplicado | number }}</strong>
+              </div>
+
+              <div class="total-line grand">
+                <span>Cantidad total (IVA Incluido):</span>
+                <strong>${{ totalAPagar | number }}</strong>
+              </div>
+
+              <label class="condiciones-final">
+                <input type="checkbox" [(ngModel)]="aceptaCondicionesPago" />
+                Entiendo qué incluye este servicio y estoy de acuerdo con sus condiciones.
+              </label>
+
+              <button
+                class="btn btn-next"
+                [disabled]="!aceptaCondicionesPago || isProcessingPayment"
+                (click)="procesarPago()"
+              >
+                {{ isProcessingPayment ? 'Procesando...' : 'Confirmar y Pagar' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Columna derecha -->
+          <div class="pago-card pago-right">
+            <h4>Método de pago</h4>
+            <p>Elige la pasarela de pago:</p>
+
+            <button
+              class="pay-option"
+              [class.active]="medioPagoSeleccionado === 'mercado-pago'"
+              (click)="seleccionarMedioPago('mercado-pago')"
+            >
+              <img src="/assets/mercadopago.png" alt="Mercado Pago" />
+              <span>Mercado Pago</span>
+            </button>
+
+            <!-- Resumen del cliente -->
+            <div class="resumen-cliente">
+              <h5>Datos del cliente</h5>
+              <p><strong>Nombre:</strong> {{ agendaForm.get('nombre')?.value }}</p>
+              <p><strong>Placa:</strong> {{ agendaForm.get('placa')?.value }}</p>
+              <p><strong>Teléfono:</strong> {{ agendaForm.get('telefono')?.value }}</p>
+              <p><strong>Email:</strong> {{ agendaForm.get('correo')?.value }}</p>
+            </div>
+
+            <div class="pago-car">
+              <img src="/assets/vehiculos.png" alt="Carro" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -16,8 +16,17 @@
         <button class="btn btn-outline" (click)="step = 1">
           No, seleccionar manualmente
         </button>
-        <button class="btn btn-primary" (click)="activarUbicacion()">
-          Sí, activar ubicación
+        
+        <!-- ✅ 1. Botón con loading -->
+        <button 
+          class="btn btn-primary" 
+          (click)="activarUbicacion()"
+          [disabled]="loadingUbicacion"
+          [class.loading]="loadingUbicacion"
+        >
+          <span class="spinner" *ngIf="loadingUbicacion"></span>
+          <span *ngIf="!loadingUbicacion">Sí, activar ubicación</span>
+          <span *ngIf="loadingUbicacion">Obteniendo ubicación...</span>
         </button>
       </div>
     </div>
@@ -70,6 +79,9 @@
               *ngFor="let t of tipos"
               (click)="seleccionarTipo(t.value)"
               [class.active]="selectedTipo() === t.value"
+              [disabled]="tipoVehiculoBloqueado"
+              [style.opacity]="tipoVehiculoBloqueado ? '0.5' : '1'"
+              [style.cursor]="tipoVehiculoBloqueado ? 'not-allowed' : 'pointer'"
             >
               <img
                 *ngIf="t.value === 'liviano'"
@@ -102,6 +114,9 @@
               *ngFor="let s of subtipos"
               (click)="seleccionarSubtipo(s.value)"
               [class.active]="selectedSubtipo() === s.value"
+              [disabled]="tipoVehiculoBloqueado"
+              [style.opacity]="tipoVehiculoBloqueado ? '0.5' : '1'"
+              [style.cursor]="tipoVehiculoBloqueado ? 'not-allowed' : 'pointer'"
             >
               {{ s.label }}
             </button>
@@ -197,7 +212,8 @@
 
           <ng-container *ngIf="valorEstimado; else sinValor">
             <p class="valor">
-              Desde
+              <!-- ✅ 4. Solo mostrar "Desde" si mostrarDesde es true -->
+              <span *ngIf="mostrarDesde">Desde </span>
               <strong>
                 {{ valorEstimado | currency:'COP':'symbol':'1.0-0' }}
               </strong>
@@ -367,7 +383,7 @@
                   required
                 />
                 He leído y acepto la
-                <a
+                <a                   
                   href="/autorizacion-datos"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -399,7 +415,7 @@
                 <i class="bi bi-arrow-right"></i>
               </span>
               <span *ngIf="isAgendando">
-                Procesando...
+                Preparando pago...
               </span>
             </button>
           </form>
@@ -413,13 +429,19 @@
             </h4>
             <p>{{ descripcionTipoSeleccionado }}</p>
             <div class="valor-total">
-              <span class="label">Valor total (estimado)</span>
+              <!-- ✅ Ocultar "(estimado)" cuando viene del RUNT -->
+              <span class="label" *ngIf="mostrarDesde">Valor total (estimado)</span>
+              <span class="label" *ngIf="!mostrarDesde">Valor total</span>
               <strong class="monto">
                 {{ (valorEstimado || 390000) | currency:'COP':'symbol':'1.0-0' }}
               </strong>
             </div>
-            <small>
+            <!-- ✅ Cambiar descripción cuando viene del RUNT -->
+            <small *ngIf="mostrarDesde">
               Este es el total estimado para tu revisión técnico–mecánica.
+            </small>
+            <small *ngIf="!mostrarDesde">
+              Este es el valor total para tu revisión técnico–mecánica.
             </small>
             <button class="btn-outline">Condiciones del Servicio</button>
           </div>
@@ -431,120 +453,3 @@
     </div>
   </div>
 </div>
-
-<!-- ===================== PANTALLA 3 – PAGO ===================== -->
-<section *ngIf="open() && step === 3" class="pago-step peritaje-paso3">
-  <div class="modal-backdrop">
-    <div class="modal-container modal-wide">
-      <button class="close-btn" (click)="cerrar()">×</button>
-      
-      <div class="pago-wrap">
-        <div class="pago-grid">
-          <!-- Columna izquierda -->
-          <div class="pago-card pago-left">
-            <h2 class="pago-title">Finaliza tu pago</h2>
-
-            <!-- Cupón -->
-            <div class="cupon-box">
-              <h4>Código Promocional</h4>
-              <p>¿Dispones de un código promocional? Introdúcelo aquí</p>
-              <div class="cupon-row">
-                <input
-                  type="text"
-                  [(ngModel)]="codigoCupon"
-                  placeholder="AUTOMAS10"
-                />
-                <button class="btn btn-apply" (click)="aplicarCupon()">
-                  Aplicar Código
-                </button>
-              </div>
-              <p *ngIf="mensajeCupon" [class.error]="!cuponValido" [class.success]="cuponValido">
-                {{ mensajeCupon }}
-              </p>
-            </div>
-
-            <!-- Resumen -->
-            <div class="resumen">
-              <div class="resumen-head">
-                <h5>Resumen del pedido</h5>
-                <div class="resumen-fechas">
-                  <small>Fecha de la transacción: {{ fechaTransaccion | date:'dd-MM-yyyy HH:mm' }}</small>
-                </div>
-              </div>
-
-              <div class="resumen-table">
-                <div class="row header">
-                  <div>Servicio</div>
-                  <div>Precio</div>
-                  <div>Cantidad</div>
-                </div>
-                <div class="row">
-                  <div>
-                    Revisión Técnico-Mecánica<br>
-                    <small>{{ sedeSeleccionada?.nombre }}</small><br>
-                    <small>{{ fechaSeleccionada | date:'dd/MM/yyyy' }} - {{ franjaSeleccionada }}</small>
-                  </div>
-                  <div>${{ valorEstimado | number }}</div>
-                  <div>1</div>
-                </div>
-              </div>
-
-              <div class="total-line" *ngIf="descuentoAplicado > 0">
-                <span>Descuento aplicado</span>
-                <strong>- ${{ descuentoAplicado | number }}</strong>
-              </div>
-
-              <div class="total-line grand">
-                <span>Cantidad total (IVA Incluido):</span>
-                <strong>${{ totalAPagar | number }}</strong>
-              </div>
-
-              <label class="condiciones-final">
-                <input type="checkbox" [(ngModel)]="aceptaCondicionesPago" />
-                Entiendo qué incluye este servicio y estoy de acuerdo con sus condiciones.
-              </label>
-
-              <button
-                class="btn btn-next"
-                [disabled]="!aceptaCondicionesPago || isProcessingPayment"
-                (click)="procesarPago()"
-              >
-                {{ isProcessingPayment ? 'Procesando...' : 'Confirmar y Pagar' }}
-              </button>
-
-              <p class="volver-plan" (click)="volver()">← Volver a datos de agendamiento</p>
-            </div>
-          </div>
-
-          <!-- Columna derecha -->
-          <div class="pago-card pago-right">
-            <h4>Método de pago</h4>
-            <p>Elige la pasarela de pago:</p>
-
-            <button
-              class="pay-option"
-              [class.active]="medioPagoSeleccionado === 'mercado-pago'"
-              (click)="seleccionarMedioPago('mercado-pago')"
-            >
-              <img src="/assets/mercadopago.png" alt="Mercado Pago" />
-              <span>Mercado Pago</span>
-            </button>
-
-            <!-- Resumen del cliente -->
-            <div class="resumen-cliente">
-              <h5>Datos del cliente</h5>
-              <p><strong>Nombre:</strong> {{ agendaForm.get('nombre')?.value }}</p>
-              <p><strong>Placa:</strong> {{ agendaForm.get('placa')?.value }}</p>
-              <p><strong>Teléfono:</strong> {{ agendaForm.get('telefono')?.value }}</p>
-              <p><strong>Email:</strong> {{ agendaForm.get('correo')?.value }}</p>
-            </div>
-
-            <div class="pago-car">
-              <img src="/assets/vehiculos.png" alt="Carro" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>

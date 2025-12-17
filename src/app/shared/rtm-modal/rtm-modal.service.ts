@@ -1,24 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { environment } from '../../../environments/environment'; 
+import { catchError, switchMap } from 'rxjs/operators';
 import { API_CONFIG } from '../../config';
 
 @Injectable({ providedIn: 'root' })
 export class RtmModalService {
-  // =============================
-  // ✅ CONTROL DEL MODAL
-  // =============================
   private _open$ = new BehaviorSubject<boolean>(false);
   open$ = this._open$.asObservable();
 
   open() { this._open$.next(true); }
   close() { this._open$.next(false); }
 
-  // =============================
-  // ✅ DATOS INICIALES DEL USUARIO
-  // =============================
   private _datosIniciales:
     | {
         placa: string;
@@ -45,12 +38,13 @@ export class RtmModalService {
     return this._datosIniciales;
   }
 
-  // =============================
-  // ✅ CONFIG API
-  // =============================
   private readonly baseUrl = API_CONFIG.BASE_URL;
   private readonly token = 'c3237a07dd144d951a0d213330550818101cb81c';
   private readonly cliente = 'pagina_web';
+  
+  // ✅ NUEVO: Configuración para RUNT Operations (endpoint oficial)
+  private readonly runtUrl = 'https://b.automas.co/api-v2/api/runt-operations/get_full_runt_information/';
+  private readonly runtToken = '0a74c9adbcc2f1dbbb60d9016b26aa9d47993557';
 
   constructor(private http: HttpClient) {}
 
@@ -61,61 +55,31 @@ export class RtmModalService {
     });
   }
 
-  // =============================
-  // 🔧 HELPER: Construir URL base correcta
-  // =============================
-  /**
-   * 🔥 VERSIÓN CORREGIDA para trabajar con proxy PHP
-   * 
-   * DESARROLLO (localhost):
-   * - baseUrl = '/rtm-api/'
-   * - Resultado: '/rtm-api/wh/transversal/ejecutar-accion/'
-   * 
-   * PRODUCCIÓN (automas.com.co):
-   * - baseUrl = '/api-proxy.php?path='
-   * - Resultado: '/api-proxy.php?path=/rtm-api/wh/transversal/ejecutar-accion/'
-   * - Proxy PHP agrega: 'https://servicio-agendamiento.automas.co/api/'
-   * - Final: 'https://servicio-agendamiento.automas.co/api/rtm-api/wh/...'
-   */
   private buildUrl(tipo: 'transversal' | 'pagos'): string {
-    // Detectar si estamos en producción (no localhost)
     const isProduction = !window.location.hostname.includes('localhost');
     
     if (isProduction) {
-      // 🔥 PRODUCCIÓN: Usar proxy PHP
-      // baseUrl = '/api-proxy.php?path='
-      
+      // PRODUCCIÓN: Usar proxy PHP
       if (tipo === 'transversal') {
-        // Agregar /rtm-api/ al path para endpoints RUNT
-        return this.baseUrl + '/rtm-api/wh/transversal/ejecutar-accion/';
+        // Proxy PHP: /api-proxy.php?path=/wh/transversal/ejecutar-accion/
+        return '/api-proxy.php?path=/wh/transversal/ejecutar-accion/';
       } else {
-        // Para endpoints de pagos
-        return this.baseUrl + '/proyecto-pagos/';
+        // Proxy PHP: /api-proxy.php?path=/proyecto-pagos/
+        return '/api-proxy.php?path=/proyecto-pagos/';
       }
     } else {
-      // 🔥 DESARROLLO: Sin proxy PHP
-      // baseUrl = '/rtm-api/'
-      
-      const cleanBase = this.baseUrl.replace(/\/$/, '');
-      
+      // DESARROLLO: Usar directamente (con proxy Angular si está configurado)
       if (tipo === 'transversal') {
-        return `${cleanBase}/wh/transversal/ejecutar-accion/`;
+        return '/api/wh/transversal/ejecutar-accion/';
       } else {
-        // En desarrollo, cambiar de /rtm-api/ a /api/ para pagos
-        const apiBase = cleanBase.replace(/\/rtm-api$/, '/api');
-        return `${apiBase}/`;
+        return '/api/proyecto-pagos/';
       }
     }
   }
 
-  // =============================
-  // 🚗 CIUDADES Y PROVEEDORES
-  // =============================
   obtenerCiudades(): Observable<any> {
     const params = new HttpParams().set('accion', 'obtener_ciudades');
     const url = this.buildUrl('transversal');
-    
-    console.log('🏙️ Obteniendo ciudades desde:', url);
     
     return this.http.post<any>(url, {}, { 
       headers: this.getHeaders(),
@@ -136,9 +100,6 @@ export class RtmModalService {
     
     const url = this.buildUrl('transversal');
     
-    console.log('🏢 Obteniendo proveedores para:', ciudadNombre);
-    console.log('🏢 URL completa:', url);
-    
     return this.http.post<any>(url, {}, { 
       headers: this.getHeaders(),
       params: params
@@ -150,9 +111,155 @@ export class RtmModalService {
     );
   }
 
-  // =============================
-  // 🧩 HELPERS
-  // =============================
+  /**
+   * 🔍 CONSULTAR VEHÍCULO EN RUNT - ENDPOINT OFICIAL
+   * 
+   * Usa el servicio oficial de RUNT operations
+   * Endpoint: https://b.automas.co/api-v2/api/runt-operations/get_full_runt_information/
+   */
+  consultarVehiculo(params: {
+    placa: string;
+    tipo_identificacion: string;
+    identificacion: string;
+    nombres: string;
+    celular: string;
+  }): Observable<any> {
+    // ✅ Body simplificado según especificaciones del cliente
+    const body = {
+      placa: params.placa,
+      cliente: this.cliente,
+      tipo_identificacion: params.tipo_identificacion,
+      identificacion: params.identificacion
+    };
+    
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.runtToken}`
+    });
+    
+    console.log('🔍 ═══════════════════════════════════════');
+    console.log('🔍 CONSULTANDO RUNT OFICIAL');
+    console.log('🔍 URL:', this.runtUrl);
+    console.log('🔍 Body:', JSON.stringify(body, null, 2));
+    console.log('🔍 ═══════════════════════════════════════');
+    
+    return this.http.post<any>(this.runtUrl, body, { headers }).pipe(
+      switchMap(resp => {
+        console.log('📦 Respuesta RUNT oficial (completa):', resp);
+        console.log('📦 Tipo de respuesta:', typeof resp);
+        console.log('📦 Keys de la respuesta:', Object.keys(resp));
+        console.log('📦 resp.data:', resp?.data);
+        console.log('📦 resp.data keys:', resp?.data ? Object.keys(resp.data) : 'N/A');
+        console.log('📦 resp.error:', resp?.error);
+        console.log('📦 resp.mensaje:', resp?.mensaje);
+        
+        // ✅ CORRECCIÓN: Los datos del vehículo están en resp.data
+        // El backend devuelve: { error: false, mensaje: "...", data: { ...datos del vehículo... } }
+        const vehiculoData = resp?.data;
+        console.log('🚗 Datos del vehículo extraídos:', vehiculoData);
+        
+        if (resp && resp.error === false && vehiculoData) {
+          // ✅ Respuesta exitosa del RUNT
+          console.log('✅ Consulta RUNT exitosa - Datos del vehículo obtenidos');
+          return of({
+            success: true,
+            fromRunt: true,
+            data: vehiculoData  // ← Pasar resp.data directamente
+          });
+        } else {
+          // ❌ RUNT devolvió error, usar fallback
+          console.warn('⚠️ RUNT devolvió error o no hay datos, usando fallback SIN RUNT');
+          return this.consultarSinRunt(params);
+        }
+      }),
+      catchError(err => {
+        console.error('❌ Error al consultar RUNT:', err);
+        console.warn('⚠️ Usando fallback SIN RUNT');
+        return this.consultarSinRunt(params);
+      })
+    );
+  }
+
+  /**
+   * 🔄 FALLBACK: Consultar SIN RUNT (datos estimados)
+   */
+  private consultarSinRunt(params: {
+    placa: string;
+    nombres: string;
+    celular: string;
+  }): Observable<any> {
+    const baseUrl = this.buildUrl('transversal');
+    
+    const httpParams = new HttpParams().set('accion', 'cotizar');
+    
+    // ✅ Fecha actual + 3 días
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() + 3);
+    
+    const bodySinRunt = {
+      cliente: this.cliente,
+      placa: params.placa,
+      fecha_agenda: {
+        day: fecha.getDate(),
+        month: fecha.getMonth() + 1,
+        year: fecha.getFullYear()
+      },
+      franja: '10:30 AM',
+      ciudad: 'Bogotá',
+      sede: 'CDA AutoMás Revisión Técnico Mecánica Cll 13',
+      celular: params.celular,
+      correo: 'consulta@automas.com.co', // ✅ Correo temporal
+      nombres: params.nombres,
+      clase_vehiculo: 'CAMIONETA',
+      tipo_servicio: 'Particular',
+      tipo_combustible: 'GASOLINA',
+      modelo: '2020',
+      fecha_vencimiento_rtm: '2024-09-16T00:00:00',
+      from_flow: 'rtm'
+    };
+    
+    console.log('🔄 Consultando SIN RUNT (fallback):', bodySinRunt);
+    
+    return this.http.post<any>(baseUrl, bodySinRunt, { 
+      headers: this.getHeaders(),
+      params: httpParams
+    }).pipe(
+      switchMap(resp => {
+        console.log('📦 Respuesta SIN RUNT (RAW):', resp);
+        
+        if (resp && (resp.price || resp.modelo || resp.search)) {
+          console.log('✅ Consulta SIN RUNT exitosa:', resp);
+          return of({
+            success: true,
+            fromRunt: false,
+            data: {
+              ...resp,
+              modelo: resp.modelo || 'Vehículo (datos estimados)',
+              fecha_vencimiento_rtm: resp.fecha_vencimiento_rtm || null
+            }
+          });
+        } else {
+          console.error('❌ Ambas consultas fallaron');
+          return of({
+            success: false,
+            fromRunt: false,
+            data: null,
+            message: 'No se pudo consultar el vehículo'
+          });
+        }
+      }),
+      catchError(err => {
+        console.error('❌ Consulta SIN RUNT también falló:', err);
+        return of({
+          success: false,
+          fromRunt: false,
+          data: null,
+          message: 'No se pudo consultar el vehículo'
+        });
+      })
+    );
+  }
+
   private buildFechaAgenda(fecha: Date) {
     return {
       day: fecha.getDate(),
@@ -161,9 +268,6 @@ export class RtmModalService {
     };
   }
 
-  // =============================
-  // 🕒 HORARIOS DISPONIBLES (OPCIONAL - Token expirado)
-  // =============================
   obtenerHorariosDisponibles(params: {
     sede: string;
     fecha: Date;
@@ -186,26 +290,19 @@ export class RtmModalService {
       ciudad: params.ciudad.trim()
     };
     
-    console.log('🕒 Consultando horarios disponibles:', body);
-    console.log('⚠️ NOTA: Token puede estar expirado, continuará sin horarios');
-    
     return this.http.post<any>(url, body, {
       headers: this.getHeaders()
     }).pipe(
       catchError(err => {
-        console.warn('⚠️ Error al obtener horarios (token expirado):', err);
-        // Retornar estructura vacía pero válida
+        console.warn('⚠️ Error al obtener horarios:', err);
         return of({ 
           data: [],
-          message: 'Token expirado - Continuar sin horarios'
+          message: 'Continuar sin horarios'
         });
       })
     );
   }
 
-  // =============================
-  // 💰 2A) COTIZAR CON RUNT
-  // =============================
   cotizarConRunt(params: {
     placa: string;
     fecha: Date;
@@ -236,14 +333,11 @@ export class RtmModalService {
       from_flow: 'rtm'
     };
     
-    console.log('💰 Cotizando con RUNT:', body);
-    
     return this.http.post<any>(url, body, { 
       headers: this.getHeaders() 
     }).pipe(
       catchError(err => {
         console.error('❌ Error al cotizar:', err);
-        // Retornar precio por defecto
         return of({ 
           data: { price: 290000 },
           message: 'Precio estimado'
@@ -252,9 +346,6 @@ export class RtmModalService {
     );
   }
 
-  // =============================
-  // 💰 2B) COTIZAR SIN RUNT
-  // =============================
   cotizarSinRunt(params: {
     placa: string;
     fecha: Date;
@@ -291,8 +382,6 @@ export class RtmModalService {
       from_flow: 'rtm'
     };
     
-    console.log('💰 Cotizando sin RUNT:', body);
-    
     return this.http.post<any>(url, body, { 
       headers: this.getHeaders() 
     }).pipe(
@@ -306,9 +395,6 @@ export class RtmModalService {
     );
   }
 
-  // =============================
-  // 📆 3A) AGENDAR CON RUNT
-  // =============================
   agendarConRunt(params: {
     placa: string;
     fecha: Date;
@@ -339,14 +425,16 @@ export class RtmModalService {
       from_flow: 'rtm'
     };
     
-    console.log('📆 Agendando con RUNT:', body);
+    console.log('📧 ═══════════════════════════════════════');
+    console.log('📧 CORREO QUE SE ENVIARÁ AL BACKEND:', params.correo);
+    console.log('📧 ═══════════════════════════════════════');
+    console.log('📦 Payload completo de agendamiento:', JSON.stringify(body, null, 2));
     
     return this.http.post<any>(url, body, { 
       headers: this.getHeaders() 
     }).pipe(
       catchError(err => {
         console.error('❌ Error al agendar:', err);
-        // Retornar invoice_id ficticio para continuar
         return of({ 
           data: { invoice_id: 999999 },
           message: 'Agendamiento simulado'
@@ -355,9 +443,6 @@ export class RtmModalService {
     );
   }
 
-  // =============================
-  // 📆 3B) AGENDAR SIN RUNT
-  // =============================
   agendarSinRunt(params: {
     placa: string;
     fecha: Date;
@@ -394,8 +479,6 @@ export class RtmModalService {
       from_flow: 'rtm'
     };
     
-    console.log('📆 Agendando sin RUNT:', body);
-    
     return this.http.post<any>(url, body, { 
       headers: this.getHeaders() 
     }).pipe(
@@ -409,130 +492,38 @@ export class RtmModalService {
     );
   }
 
-  // =============================
-  // 💳 4) REGISTRAR PAGO (ANTIGUO - Deprecado)
-  // =============================
+  /**
+   * 💳 REGISTRAR PAGO
+   * Notifica al backend que el pago fue exitoso en Mercado Pago
+   * Debe llamarse DESPUÉS de que Mercado Pago confirme el pago
+   */
   registrarPago(invoiceId: number): Observable<any> {
     const baseUrl = this.buildUrl('transversal');
     const url = `${baseUrl}?accion=registrar_pago`;
-    const body = { invoice_id: invoiceId };
     
-    console.log('💳 Registrando pago para invoice:', invoiceId);
+    const body = {
+      invoice_id: invoiceId
+    };
+    
+    console.log('💳 ═══════════════════════════════════════');
+    console.log('💳 REGISTRANDO PAGO EN EL BACKEND');
+    console.log('💳 URL:', url);
+    console.log('💳 Body:', body);
+    console.log('💳 ═══════════════════════════════════════');
     
     return this.http.post<any>(url, body, { 
       headers: this.getHeaders() 
     }).pipe(
       catchError(err => {
         console.error('❌ Error al registrar pago:', err);
-        return of({ success: false, message: 'Error al registrar pago' });
-      })
-    );
-  }
-
-  // =============================
-  // 💳 NUEVOS MÉTODOS DE INTEGRACIÓN DE PAGOS
-  // =============================
-
-  /**
-   * 📌 5) OBTENER PROYECTO DE PAGO
-   * Obtiene la configuración del proyecto de pago activo
-   * Endpoint: GET /api/proyecto-pagos/{codigo_proyecto}/
-   */
-  obtenerProyectoPago(codigoProyecto: string = 'pagina_web'): Observable<any> {
-    const baseUrl = this.buildUrl('pagos');
-    const url = `${baseUrl}proyecto-pagos/${codigoProyecto}/`;
-    
-    console.log('🔍 Obteniendo proyecto de pago desde:', url);
-    
-    return this.http.get<any>(url, { 
-      headers: this.getHeaders() 
-    }).pipe(
-      catchError(err => {
-        console.error('❌ Error al obtener proyecto de pago:', err);
-        console.error('URL intentada:', url);
-        // Retornar estructura mínima para continuar
         return of({ 
-          id: 1,
-          codigo_proyecto: codigoProyecto,
-          medio_de_pago: {
-            id: 1,
-            nombre: 'Mercado Pago',
-            codigo: 'mercadopago',
-            activo: true
-          },
-          estado: true,
-          message: 'Configuración por defecto (error al cargar)'
+          success: false,
+          message: 'Error al registrar el pago'
         });
       })
     );
   }
 
-  /**
-   * 📌 6) GENERAR LINK DE PAGO
-   * Genera un link de pago en Mercado Pago
-   * Endpoint: POST /api/pagos/generar-link/
-   */
-  generarLinkPago(payload: {
-    proyecto: string;
-    medio_pago: string;
-    sede: string;
-    servicio_tipovehiculo: string;
-    servicio_label: string;
-    placa_vehiculo: string;
-    valor: number;
-  }): Observable<{
-    pago_id: string;
-    preference_id: string;
-    payment_link: string;
-  }> {
-    const baseUrl = this.buildUrl('pagos');
-    const url = `${baseUrl}pagos/generar-link/`;
-    
-    console.log('💳 Generando link de pago desde:', url);
-    console.log('💳 Payload:', payload);
-    
-    return this.http.post<any>(url, payload, { 
-      headers: this.getHeaders() 
-    }).pipe(
-      catchError(err => {
-        console.error('❌ Error al generar link de pago:', err);
-        console.error('URL intentada:', url);
-        console.error('Status:', err.status);
-        console.error('Message:', err.message);
-        
-        // Lanzar el error para que el componente lo maneje
-        throw err;
-      })
-    );
-  }
-
-  /**
-   * 📌 7) VERIFICAR ESTADO DE PAGO
-   * Verifica el estado actual de un pago
-   * Endpoint: GET /api/pagos/{uuid_pago}/verificar-estado/
-   */
-  verificarEstadoPago(pagoUuid: string): Observable<any> {
-    const baseUrl = this.buildUrl('pagos');
-    const url = `${baseUrl}pagos/${pagoUuid}/verificar-estado/`;
-    
-    console.log('🔍 Verificando estado de pago desde:', url);
-    
-    return this.http.get<any>(url, { 
-      headers: this.getHeaders() 
-    }).pipe(
-      catchError(err => {
-        console.error('❌ Error al verificar estado de pago:', err);
-        return of({ 
-          estado: 'error',
-          message: 'No se pudo verificar el estado del pago'
-        });
-      })
-    );
-  }
-
-  // =============================
-  // 🗂️ COMPARTIR CIUDADES ENTRE SERVICIOS
-  // =============================
   private ciudadesCache: any[] = [];
 
   setCiudades(ciudades: any[]) {
