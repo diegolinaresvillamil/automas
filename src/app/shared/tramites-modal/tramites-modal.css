@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 9998!important; /* 🔧 REDUCIDO para que step 2 esté encima */
   overflow-y: auto;
   padding: 1rem;
 }
@@ -127,6 +127,7 @@
 .tramite-card.active {
   background: #00a0b6;
   border-color: #00a0b6;
+  box-shadow: 0 0 10px rgba(0, 160, 182, 0.4);
 }
 .tramite-card.active .tramite-label {
   color: #fff;
@@ -222,18 +223,6 @@
     background: transparent;
   }
 }
-/* Estado activo */
-.tramite-card.active {
-  background: #00a0b6;
-  border-color: #00a0b6;
-  box-shadow: 0 0 10px rgba(0, 160, 182, 0.4);
-}
-.tramite-card.active .tramite-label {
-  color: #fff;
-}
-.tramite-card.active img {
-  filter: brightness(10);
-}
 
 /* Mensaje de error */
 .tramite-error {
@@ -257,7 +246,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999; /* 🔧 MAYOR que step 1 para estar encima */
 }
 
 /* 🔵 Contenedor modal */
@@ -686,5 +675,416 @@
   .btn-outline,
   .btn-primary {
     font-size: 0.85rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ========================================
+   ESTILOS ADICIONALES PARA TRAMITES MODAL
+   ======================================== */
+
+/* 📝 Formulario de datos personales */
+.form-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.datos-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* 📋 Resumen */
+.resumen-container {
+  padding: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.resumen-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.resumen-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.resumen-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #00bcd4;
+  margin: 1.5rem 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.resumen-card h3:first-child {
+  margin-top: 0;
+}
+
+.resumen-card p {
+  font-size: 0.95rem;
+  color: #333;
+  margin: 0.3rem 0;
+  padding-left: 1.8rem;
+}
+
+.precio-total {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  text-align: center;
+  border: 2px solid #00bcd4;
+}
+
+.precio-total h3 {
+  color: #333;
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  justify-content: center;
+}
+
+.precio-total .precio {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #00bcd4;
+  margin: 0;
+  padding: 0;
+}
+
+/* 🔘 Botones de navegación */
+.botones-navegacion {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.botones-navegacion button {
+  flex: 1;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #00bcd4;
+  color: #00bcd4;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #00bcd4;
+  color: white;
+}
+
+.btn-primary {
+  background: #00bcd4;
+  border: 2px solid #00bcd4;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #00a5bb;
+  border-color: #00a5bb;
+}
+
+.btn-primary:disabled,
+.btn-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-success {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #45a049;
+  border-color: #45a049;
+}
+
+/* ⚠️ Mensajes */
+.loading-text {
+  text-align: center;
+  color: #00bcd4;
+  font-size: 1rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.loading-text i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .form-container,
+  .resumen-container {
+    padding: 1.5rem;
+  }
+
+  .botones-navegacion {
+    flex-direction: column;
+  }
+
+  .botones-navegacion button {
+    width: 100%;
+  }
+
+  .resumen-card {
+    padding: 1.5rem;
+  }
+
+  .precio-total .precio {
+    font-size: 2rem;
+  }
+}
+
+/* 🎨 Info de sede */
+.info-sede {
+  background: #f0f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.info-sede p {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-sede i {
+  color: #00bcd4;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* =============================================== */
+/* CSS ADICIONAL PARA STEP 3 - FORMULARIO DATOS */
+/* =============================================== */
+
+.form-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111520;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-subtitle {
+  font-size: 1rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.datos-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.datos-form .campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.datos-form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111520;
+  margin-bottom: 0.5rem;
+}
+
+.datos-form input,
+.datos-form select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.datos-form input:focus,
+.datos-form select:focus {
+  outline: none;
+  border-color: #00a0b6;
+  box-shadow: 0 0 0 3px rgba(0, 160, 182, 0.1);
+}
+
+.botones-navegacion {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+  
+  .form-title {
+    font-size: 1.5rem;
+  }
+}
+
+
+
+
+
+
+
+
+/* =============================================== */
+/* CSS ADICIONAL PARA STEP 3 - FORMULARIO DATOS */
+/* =============================================== */
+
+.form-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111520;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-subtitle {
+  font-size: 1rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.datos-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.datos-form .campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.datos-form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111520;
+  margin-bottom: 0.5rem;
+}
+
+.datos-form input,
+.datos-form select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.datos-form input:focus,
+.datos-form select:focus {
+  outline: none;
+  border-color: #00a0b6;
+  box-shadow: 0 0 0 3px rgba(0, 160, 182, 0.1);
+}
+
+.botones-navegacion {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+  
+  .form-title {
+    font-size: 1.5rem;
   }
 }

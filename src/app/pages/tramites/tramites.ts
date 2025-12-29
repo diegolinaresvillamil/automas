@@ -13,6 +13,9 @@ import { TramitesModalService } from '../../shared/tramites-modal/tramites-modal
   styleUrls: ['./tramites.css']
 })
 export class Tramites {
+  // ===============================
+  // 🔧 Inyección del servicio
+  // ===============================
   private modalSvc = inject(TramitesModalService);
 
   // ==========================
@@ -160,18 +163,27 @@ export class Tramites {
 
   // ==========================
   // SECCIÓN: MODAL DE TRÁMITES
+  // ✅ AHORA USA EL SERVICIO
   // ==========================
-  selectedTramite = signal<any>(null);
-  modalAbierta = signal(false);
+  
+  // ❌ ELIMINADOS (ya no se usan):
+  // selectedTramite = signal<any>(null);
+  // modalAbierta = signal(false);
 
   abrirModal(tramite?: any) {
-    const tramiteSeleccionado = tramite || this.tramites[3]; // por defecto Traspaso
-    this.selectedTramite.set(tramiteSeleccionado);
-    this.modalAbierta.set(true);
+    console.log('🚀 Abriendo modal de trámites');
+    
+    // Opcional: si quieres pre-seleccionar un trámite, puedes guardarlo en el servicio
+    // if (tramite) {
+    //   this.modalSvc.tramite.set(tramite);
+    // }
+    
+    this.modalSvc.abrir(); // ✅ Usa el servicio
   }
 
   cerrarModal() {
-    this.modalAbierta.set(false);
+    console.log('🚪 Cerrando modal de trámites desde la página');
+    this.modalSvc.cerrar(); // ✅ Usa el servicio
   }
 
   // ==========================

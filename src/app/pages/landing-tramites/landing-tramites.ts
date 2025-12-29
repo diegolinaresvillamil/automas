@@ -1,4 +1,4 @@
-import { Component, inject, signal, AfterViewInit } from '@angular/core';
+import { Component, inject, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FaqComponent, FaqItem } from '../../shared/faq/faq';
 import { BlogSectionComponent, BlogPost } from '../../shared/blog-section/blog-section';
@@ -20,6 +20,9 @@ import { ContactoPopupComponent } from '../../shared/contacto-popup/contacto-pop
   styleUrls: ['./landing-tramites.css']
 })
 export class LandingTramites implements AfterViewInit {
+  // ===============================
+  // 🔧 Inyección del servicio
+  // ===============================
   private modalSvc = inject(TramitesModalService);
 
   // ==========================
@@ -78,18 +81,21 @@ export class LandingTramites implements AfterViewInit {
 
   // ==========================
   // 💬 SECCIÓN: MODAL DE TRÁMITES
+  // ✅ AHORA USA EL SERVICIO
   // ==========================
-  selectedTramite = signal<any>(null);
-  modalAbierta = signal(false);
+  
+  // ❌ ELIMINADOS (ya no se usan):
+  // selectedTramite = signal<any>(null);
+  // modalAbierta = signal(false);
 
   abrirModal(tramite?: any) {
-    const tramiteSeleccionado = tramite || this.tramites[0];
-    this.selectedTramite.set(tramiteSeleccionado);
-    this.modalAbierta.set(true);
+    console.log('🚀 Abriendo modal de trámites desde landing');
+    this.modalSvc.abrir(); // ✅ Usa el servicio
   }
 
   cerrarModal() {
-    this.modalAbierta.set(false);
+    console.log('🚪 Cerrando modal de trámites desde landing');
+    this.modalSvc.cerrar(); // ✅ Usa el servicio
   }
 
   // ==========================

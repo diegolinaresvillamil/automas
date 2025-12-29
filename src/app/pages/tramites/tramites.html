@@ -20,7 +20,6 @@
       <img src="assets/carro-tramites.png" alt="Auto CertiMás" />
     </div>
   </div>
-
 </section>
 
 <!--Sección Tramites-->
@@ -48,7 +47,6 @@
 </section>
 
 <!--Sección Agenda-->
-
 <section class="agenda-section">
   <h2>¿Por qué agendar con nosotros?</h2>
 
@@ -70,13 +68,6 @@
     </div>
   </div>
 </section>
-
-<!-- Modal -->
-<app-tramites-modal
-  [open]="modalAbierta()"
-  [tramiteSeleccionado]="selectedTramite()"
-  (cerrar)="cerrarModal()">
-</app-tramites-modal>
 
 <!-- === SECCIÓN AGENDA TU TRÁMITE === -->
 <section class="agenda-pasos">
@@ -101,16 +92,10 @@
           </li>
         </ul>
 
-<button class="agenda-btn" (click)="abrirModal()">
-  <span>Comenzar Ahora</span>
-  <i class="bi bi-calendar-event"></i>
-</button>
-
-<app-tramites-modal
-  [open]="modalAbierta()"
-  [tramiteSeleccionado]="selectedTramite()"
-  (cerrar)="cerrarModal()">
-</app-tramites-modal>
+        <button class="agenda-btn" (click)="abrirModal()">
+          <span>Comenzar Ahora</span>
+          <i class="bi bi-calendar-event"></i>
+        </button>
       </div>
 
       <!-- Columna Derecha -->
@@ -123,11 +108,11 @@
 
 <!--Sección FAQ-->
 <section class="tramites-page">
-<app-faq
-  [title]="'Preguntas Frecuentes para Trámites'"
-  [items]="faqItems"
-  [multiple]="false">
-</app-faq>
+  <app-faq
+    [title]="'Preguntas Frecuentes para Trámites'"
+    [items]="faqItems"
+    [multiple]="false">
+  </app-faq>
 </section>
 
 <!-- COMPONENTE BLOG -->
@@ -135,3 +120,9 @@
   [heading]="'Blog'"
   [posts]="blogPosts">
 </app-blog-section>
+
+<!-- 
+  ✅ MODAL DE TRÁMITES - UNA SOLA INSTANCIA
+  El modal se controla completamente a través del servicio TramitesModalService
+-->
+<app-tramites-modal (cerrar)="cerrarModal()"></app-tramites-modal>

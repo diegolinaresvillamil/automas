@@ -5,6 +5,7 @@ import { filter, Subscription } from 'rxjs';
 
 // Modales
 import { SedesTarifasModalService } from '../../shared/sedes-tarifas-modal/sedes-tarifas-modal.service';
+import { ConsultaPeritajeModalComponent } from '../../shared/consulta-peritaje-modal/consulta-peritaje-modal';
 import { RtmModalService } from '../../shared/rtm-modal/rtm-modal.service';
 import { PeritajeModalService } from '../../shared/peritaje-modal/peritaje-modal.service';
 
@@ -19,6 +20,7 @@ import { BlogSectionComponent, BlogPost } from '../../shared/blog-section/blog-s
   imports: [
     RouterModule,
     SedesTarifasModalComponent,
+    ConsultaPeritajeModalComponent,
     RtmModalComponent,
     PeritajeModalComponent,
     BlogSectionComponent

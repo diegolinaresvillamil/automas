@@ -13,6 +13,11 @@
       Así podrás comparar beneficios, precios y elegir fácilmente el que mejor se adapte a tu necesidad.
     </p>
 
+    <!-- ✅ Mensaje de error si hay (consulta RUNT) -->
+    <div class="alert alert-danger" *ngIf="errorRunt()">
+      <strong>⚠️ Error:</strong> {{ errorRunt() }}
+    </div>
+
     <form [formGroup]="form" class="form-grid" (ngSubmit)="consultar()">
       
       <!-- ✅ PLACA con validación -->
@@ -107,15 +112,21 @@
         </label>
       </div>
 
-      <!-- ✅ Botón con validación -->
+      <!-- ✅ Botón con validación y loading -->
       <div class="submit-wrap">
         <button 
           class="btn-consultar" 
           type="submit" 
-          [disabled]="!form.valid"
-          [class.disabled]="!form.valid"
+          [disabled]="!form.valid || consultandoRunt()"
+          [class.disabled]="!form.valid || consultandoRunt()"
+          [class.loading]="consultandoRunt()"
         >
-          Consultar <i class="bi bi-search"></i>
+          <span *ngIf="!consultandoRunt()">
+            Consultar <i class="bi bi-search"></i>
+          </span>
+          <span *ngIf="consultandoRunt()">
+            <i class="spinner"></i> Consultando RUNT...
+          </span>
         </button>
       </div>
     </form>
@@ -139,7 +150,7 @@
         <div class="input-duo">
           <div class="campo half">
             <label>Número de placa</label>
-            <input type="text" [value]="form.value.placa" disabled />
+            <input type="text" [value]="form.value.placa?.toUpperCase()" disabled />
           </div>
           <div class="campo half">
             <label>Número de identidad</label>
@@ -147,30 +158,47 @@
           </div>
         </div>
 
-        <p class="descripcion">
-          Verificamos que el vehículo Chevrolet Spark, placa [{{ form.value.placa || 'XXX' }}]. 
-           esta clasificado como Vehículo Liviano y puede realizar estos servicios. <br>
-           Peritaje Diamante vehículo Liviano, Peritaje Oro Vehículo Liviano, Peritaje Plata Vehículo Liviano. 
+        <!-- 🆕 DESCRIPCIÓN DINÁMICA DEL VEHÍCULO -->
+        <p class="descripcion" *ngIf="datosRunt()">
+          Verificamos que el vehículo <strong>{{ descripcionVehiculo }}</strong> puede realizar estos servicios.
+        </p>
+        
+        <p class="descripcion" *ngIf="!datosRunt()">
+          Vehículo <strong>{{ form.value.placa?.toUpperCase() }}</strong>
+        </p>
+        
+        <!-- 🆕 MENSAJE SEGÚN CANTIDAD DE PLANES -->
+        <p class="descripcion-ayuda" *ngIf="cantidadPlanesDisponibles > 1">
           Consulta los diferentes precios:
         </p>
+        
+        <p class="descripcion-ayuda" *ngIf="cantidadPlanesDisponibles === 1">
+          Este es el único plan disponible para tu vehículo:
+        </p>
 
-        <!-- Botones de plan -->
+        <!-- Botones de plan (solo mostrar los disponibles) -->
         <div class="planes">
           <button
+            *ngIf="planesDisponibles.diamante"
             class="plan-btn"
             [class.active]="planActivo() === 'diamante'"
             (click)="cambiarPlan('diamante')">Diamante</button>
           <button
+            *ngIf="planesDisponibles.oro"
             class="plan-btn"
             [class.active]="planActivo() === 'oro'"
             (click)="cambiarPlan('oro')">Oro</button>
           <button
+            *ngIf="planesDisponibles.plata"
             class="plan-btn"
             [class.active]="planActivo() === 'plata'"
             (click)="cambiarPlan('plata')">Plata</button>
         </div>
 
-        <p class="precio">Total: <strong>$390.000</strong></p>
+        <!-- 🆕 PRECIO DINÁMICO -->
+        <p class="precio">
+          Total: <strong>{{ precioPlan() | currency:'COP':'symbol':'1.0-0' }}</strong>
+        </p>
 
         <!-- Imagen dinámica -->
         <div class="vehiculo-imagen">
@@ -181,30 +209,16 @@
 
     <!-- Columna derecha -->
     <div class="peritaje-right">
-      <div class="tabs">
-        <button
-          class="tab"
-          [class.active]="tabActiva() === 'livianos'"
-          (click)="cambiarTab('livianos')">Vehículos livianos</button>
-        <button
-          class="tab"
-          [class.active]="tabActiva() === 'pesados'"
-          (click)="cambiarTab('pesados')">Vehículos pesados</button>
-        <button
-          class="tab"
-          [class.active]="tabActiva() === 'motos'"
-          (click)="cambiarTab('motos')">Motocicletas</button>
-      </div>
-
+      
       <!-- ====== LIVIANOS ====== -->
-      <div class="tab-content" [class.active]="tabActiva() === 'livianos'">
+      <div class="tab-content" [class.active]="tabCorrecta === 'livianos'">
         <div class="combo-header" [ngClass]="planActivo()">
-          <span class="vehiculo-tipo">Vehículos livianos</span>
+          <span class="vehiculo-tipo">VEHÍCULOS LIVIANOS</span>
           <h3 class="combo-nombre">
             <ng-container [ngSwitch]="planActivo()">
               <span *ngSwitchCase="'diamante'">Combo Diamante</span>
-              <span *ngSwitchCase="'oro'">Combo Oro </span>
-              <span *ngSwitchCase="'plata'">Combo Plata </span>
+              <span *ngSwitchCase="'oro'">Combo Oro</span>
+              <span *ngSwitchCase="'plata'">Combo Plata</span>
             </ng-container>
           </h3>
         </div>
@@ -227,18 +241,22 @@
             <p>Medición de compresión, fugas, desempeño y estado de componentes principales.</p>
           </details>
         </div>
+
+        <!-- ✅ Botón de agendar -->
+        <div class="acciones">
+          <button class="btn-agendar" (click)="agendarPeritaje()">Agendar mi peritaje</button>
+        </div>
       </div>
 
       <!-- ====== PESADOS ====== -->
-      <div class="tab-content" [class.active]="tabActiva() === 'pesados'">
+      <div class="tab-content" [class.active]="tabCorrecta === 'pesados'">
         <div class="combo-header" [ngClass]="planActivo()">
-          <span class="vehiculo-tipo">Vehículos pesados</span>
+          <span class="vehiculo-tipo">VEHÍCULOS PESADOS</span>
           <h3 class="combo-nombre">
-            
             <ng-container [ngSwitch]="planActivo()">
               <span *ngSwitchCase="'diamante'">Combo Diamante</span>
-              <span *ngSwitchCase="'oro'">Combo Oro </span>
-              <span *ngSwitchCase="'plata'">Combo Plata </span>
+              <span *ngSwitchCase="'oro'">Combo Oro</span>
+              <span *ngSwitchCase="'plata'">Combo Plata</span>
             </ng-container>
           </h3>
         </div>
@@ -257,18 +275,22 @@
             <p>Control de gases según normativa vigente.</p>
           </details>
         </div>
+
+        <!-- ✅ Botón de agendar -->
+        <div class="acciones">
+          <button class="btn-agendar" (click)="agendarPeritaje()">Agendar mi peritaje</button>
+        </div>
       </div>
 
       <!-- ====== MOTOS ====== -->
-      <div class="tab-content" [class.active]="tabActiva() === 'motos'">
+      <div class="tab-content" [class.active]="tabCorrecta === 'motos'">
         <div class="combo-header" [ngClass]="planActivo()">
-          <span class="vehiculo-tipo">Motocicletas</span>
+          <span class="vehiculo-tipo">MOTOCICLETAS</span>
           <h3 class="combo-nombre">
-            
             <ng-container [ngSwitch]="planActivo()">
-              <span *ngSwitchCase="'diamante'"> Combo Diamante</span>
-              <span *ngSwitchCase="'oro'">Combo Oro </span>
-              <span *ngSwitchCase="'plata'">Combo Plata </span>
+              <span *ngSwitchCase="'diamante'">Combo Diamante</span>
+              <span *ngSwitchCase="'oro'">Combo Oro</span>
+              <span *ngSwitchCase="'plata'">Combo Plata</span>
             </ng-container>
           </h3>
         </div>
@@ -287,16 +309,56 @@
             <p>Verificación de desempeño general en ruta controlada.</p>
           </details>
         </div>
+
+        <!-- ✅ Botón de agendar -->
+        <div class="acciones">
+          <button class="btn-agendar" (click)="agendarPeritaje()">Agendar mi peritaje</button>
+        </div>
       </div>
 
-<div class="acciones">
-  <button class="btn-agendar" (click)="agendarPeritaje()">Agendar mi peritaje</button>
-</div>
+      <!-- ====== A DOMICILIO ====== -->
+      <div class="tab-content" [class.active]="tabCorrecta === 'domicilio'">
+        <div class="combo-header" [ngClass]="planActivo()">
+          <span class="vehiculo-tipo">PERITAJE A DOMICILIO</span>
+          <h3 class="combo-nombre">
+            <ng-container [ngSwitch]="planActivo()">
+              <span *ngSwitchCase="'diamante'">Combo Diamante</span>
+              <span *ngSwitchCase="'oro'">Combo Oro</span>
+              <span *ngSwitchCase="'plata'">Combo Plata</span>
+            </ng-container>
+          </h3>
+        </div>
+
+        <div class="acordeon">
+          <details open>
+            <summary>Inspección en tu ubicación</summary>
+            <p>Nuestro perito se desplaza hasta donde te encuentres para realizar la inspección completa.</p>
+          </details>
+          <details>
+            <summary>Flexibilidad horaria</summary>
+            <p>Agenda según tu disponibilidad, sin necesidad de desplazarte.</p>
+          </details>
+          <details>
+            <summary>Servicio integral</summary>
+            <p>Incluye todos los aspectos del plan seleccionado, con la comodidad de tu hogar u oficina.</p>
+          </details>
+          <details>
+            <summary>Informe digital</summary>
+            <p>Recibe el informe completo vía email con fotos y detalles de la inspección.</p>
+          </details>
+        </div>
+
+        <!-- ✅ Botón de agendar -->
+        <div class="acciones">
+          <button class="btn-agendar" (click)="agendarPeritaje()">Agendar mi peritaje</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- ===================== COMPARADOR DE PLANES ===================== -->
+<!-- ===================== COMPARADOR DE PLANES (OPCIONAL) ===================== -->
 <div class="comparador-backdrop" *ngIf="mostrarComparador()">
   <div class="comparador-modal">
     <button class="close-btn" (click)="cerrarComparador()">×</button>
@@ -307,16 +369,16 @@
       <!-- Combo Diamante -->
       <div class="combo-card diamante">
         <h3>Combo Diamante </h3>
-        <p class="precio">$390.000</p>
+        <p class="precio">{{ precios.diamante | currency:'COP':'symbol':'1.0-0' }}</p>
         <p class="tiempo">Tiempo estimado 60 minutos</p>
-<ul>
-  <li>Diagnóstico básico <span class="check">✔️</span></li>
-  <li>Prueba de ruta <span class="check">✔️</span></li>
-  <li>Improntas & antecedentes <span class="check">✔️</span></li>
-  <li>Scanner electrónico <span class="check">✔️</span></li>
-  <li>Revisión estructura <span class="check">✔️</span></li>
-  <li>Entrega virtual <span class="check">✔️</span></li>
-</ul>
+        <ul>
+          <li>Diagnóstico básico <span class="check">✔️</span></li>
+          <li>Prueba de ruta <span class="check">✔️</span></li>
+          <li>Improntas & antecedentes <span class="check">✔️</span></li>
+          <li>Scanner electrónico <span class="check">✔️</span></li>
+          <li>Revisión estructura <span class="check">✔️</span></li>
+          <li>Entrega virtual <span class="check">✔️</span></li>
+        </ul>
 
         <button class="btn-select" (click)="cambiarPlan('diamante'); cerrarComparador(true)">Seleccionar este plan</button>
       </div>
@@ -329,21 +391,20 @@
         <h3 *ngIf="planComparado() === 'oro'">Combo Oro </h3>
         <h3 *ngIf="planComparado() === 'plata'">Combo Plata </h3>
 
-        <p class="precio" *ngIf="planComparado() === 'oro'">$350.000</p>
-        <p class="precio" *ngIf="planComparado() === 'plata'">$320.000</p>
+        <p class="precio" *ngIf="planComparado() === 'oro'">{{ precios.oro | currency:'COP':'symbol':'1.0-0' }}</p>
+        <p class="precio" *ngIf="planComparado() === 'plata'">{{ precios.plata | currency:'COP':'symbol':'1.0-0' }}</p>
 
         <p class="tiempo" *ngIf="planComparado() === 'oro'">Tiempo estimado 40 minutos</p>
         <p class="tiempo" *ngIf="planComparado() === 'plata'">Tiempo estimado 30 minutos</p>
 
-<ul>
-  <li>Diagnóstico básico <span class="check">✔️</span></li>
-  <li>Prueba de ruta <span class="check">✔️</span></li>
-  <li>Improntas & antecedentes <span [class.check]="true" [class.cross]="planComparado() === 'plata'">✔️</span></li>
-  <li>Scanner electrónico <span class="cross">✖️</span></li>
-  <li>Revisión estructura <span class="check">✔️</span></li>
-  <li>Entrega virtual <span class="cross">✖️</span></li>
-</ul>
-
+        <ul>
+          <li>Diagnóstico básico <span class="check">✔️</span></li>
+          <li>Prueba de ruta <span class="check">✔️</span></li>
+          <li>Improntas & antecedentes <span [class.check]="true" [class.cross]="planComparado() === 'plata'">✔️</span></li>
+          <li>Scanner electrónico <span class="cross">✖️</span></li>
+          <li>Revisión estructura <span class="check">✔️</span></li>
+          <li>Entrega virtual <span class="cross">✖️</span></li>
+        </ul>
 
         <button class="btn-select" (click)="cambiarPlan(planComparado()!); cerrarComparador(true)">Seleccionar este plan</button>
       </div>
@@ -351,262 +412,5 @@
   </div>
 </div>
 
-<!-- ===================== PASO 3 – SELECCIÓN DE SEDE ===================== -->
-<section *ngIf="paso() === 3" class="sede-step peritaje-paso3-sede">
-  <div class="sede-wrap">
-    
-    <!-- Header -->
-    <div class="sede-header">
-      <h2 class="sede-title">Selecciona una sede</h2>
-      <p class="sede-subtitle">Elige la sede más cercana para tu peritaje</p>
-    </div>
-
-    <!-- Botón de ubicación -->
-    <div class="ubicacion-box">
-      <button 
-        class="btn-ubicacion"
-        (click)="detectarUbicacion()"
-        [disabled]="usarUbicacion()"
-      >
-        <i class="bi bi-geo-alt-fill"></i>
-        <span *ngIf="!usarUbicacion()">Usar mi ubicación</span>
-        <span *ngIf="usarUbicacion()">Detectando ubicación...</span>
-      </button>
-      
-      <p class="ubicacion-hint" *ngIf="ubicacionUsuario()">
-        ✅ Sedes ordenadas por cercanía
-      </p>
-    </div>
-
-    <!-- Filtro por ciudad (solo cuando NO se usa ubicación) -->
-    <div class="sede-filtros" *ngIf="!usarUbicacion() && sedes().length">
-      <label for="filtroCiudad" class="sede-filtros-label">Filtrar por ciudad</label>
-      <select
-        id="filtroCiudad"
-        class="sede-filtros-select"
-        [value]="ciudadFiltro()"
-        (change)="cambiarCiudadFiltro($any($event.target).value)"
-      >
-        <option value="todas">Todas</option>
-        <option *ngFor="let ciudad of ciudades()" [value]="ciudad">
-          {{ ciudad }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Loading -->
-    <div class="sede-loading" *ngIf="cargandoSedes()">
-      <div class="spinner"></div>
-      <p>Cargando sedes disponibles...</p>
-    </div>
-
-    <!-- Lista de sedes -->
-    <div class="sedes-grid" *ngIf="!cargandoSedes()">
-      <div 
-        *ngFor="let sede of sedesParaMostrar()"
-        class="sede-card"
-        [class.selected]="sedeSeleccionada()?.id === sede.id"
-        (click)="seleccionarSede(sede)"
-      >
-        <!-- Badge de ciudad -->
-        <span class="sede-ciudad-badge">{{ sede.ciudad }}</span>
-        
-        <!-- Contenido de la sede -->
-        <div class="sede-content">
-          <h3 class="sede-nombre">{{ sede.nombre }}</h3>
-          
-          <div class="sede-info">
-            <div class="sede-info-item">
-              <i class="bi bi-geo-alt"></i>
-              <span>{{ sede.direccion }}</span>
-            </div>
-            
-            <div class="sede-info-item">
-              <i class="bi bi-telephone"></i>
-              <span>{{ sede.telefono }}</span>
-            </div>
-          </div>
-
-          <!-- Distancia (solo si se detectó ubicación) -->
-          <div class="sede-distancia" *ngIf="ubicacionUsuario()">
-            <i class="bi bi-signpost-2"></i>
-            <span>
-              {{ calcularDistancia(
-                ubicacionUsuario()!.lat, 
-                ubicacionUsuario()!.lon, 
-                sede.lat, 
-                sede.lon
-              ).toFixed(1) }} km
-            </span>
-          </div>
-        </div>
-
-        <!-- Checkmark cuando está seleccionada -->
-        <div class="sede-check" *ngIf="sedeSeleccionada()?.id === sede.id">
-          <i class="bi bi-check-circle-fill"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- Botones de navegación -->
-    <div class="sede-actions">
-      <button class="btn btn-secondary" (click)="volverAPlanes()">
-        ← Volver a planes
-      </button>
-      
-      <button 
-        class="btn btn-primary" 
-        (click)="irAPago()"
-        [disabled]="!sedeSeleccionada()"
-      >
-        Continuar al pago →
-      </button>
-    </div>
-
   </div>
-</section>
-
-
-<!-- ===================== PASO 4 – PAGO ===================== -->
-<section *ngIf="paso() === 4" class="pago-step peritaje-paso3">
-  <div class="pago-wrap">
-    <div class="pago-grid">
-      
-      <!-- Columna izquierda -->
-      <div class="pago-card pago-left">
-        <h2 class="pago-title">Finaliza tu pago</h2>
-
-        <!-- Cupón -->
-        <div class="cupon-box">
-          <h4>Código Promocional</h4>
-          <p>¿Dispones de un código promocional? Introdúcelo aquí</p>
-
-          <div class="cupon-row">
-            <input
-              type="text"
-              [value]="cupon()"
-              (input)="cupon.set($any($event.target).value)"
-              placeholder="AUTOMAS10"
-              [disabled]="procesandoPago()"
-            />
-            <button 
-              class="btn btn-apply" 
-              (click)="aplicarCupon()"
-              [disabled]="procesandoPago()"
-            >
-              Aplicar Código
-            </button>
-          </div>
-          
-          <!-- ✅ Mensaje de cupón aplicado -->
-          <p class="cupon-success" *ngIf="descuento() > 0">
-            ✅ Cupón aplicado correctamente
-          </p>
-        </div>
-
-        <!-- Resumen -->
-        <div class="resumen">
-          <div class="resumen-head">
-            <h5>Resumen del pedido</h5>
-            <div class="resumen-fechas">
-              <small>Fecha de la transacción: {{ fechaFactura | date:'dd-MM-yyyy HH:mm' }}</small>
-            </div>
-          </div>
-
-          <div class="resumen-table">
-            <div class="row header">
-              <div>Nombre</div>
-              <div>Precio</div>
-              <div>Cantidad</div>
-            </div>
-
-            <div class="row">
-              <div>
-                1 x {{ nombrePlan }}<br>
-                <small>{{ tabActiva() === 'livianos' ? 'Vehículo Liviano' : tabActiva() === 'motos' ? 'Motocicleta' : 'Vehículo Pesado' }}</small>
-              </div>
-              <div>${{ precioPlan() | number }}</div>
-              <div>1</div>
-            </div>
-          </div>
-
-          <div class="total-line" *ngIf="descuento() > 0">
-            <span>Descuento aplicado</span>
-            <strong>- ${{ descuento() | number }}</strong>
-          </div>
-
-          <div class="total-line grand">
-            <span>Cantidad total (Iva Incluido):</span>
-            <strong>${{ totalConDescuento() | number }}</strong>
-          </div>
-
-          <!-- ✅ Checkbox de condiciones (vinculado con signal) -->
-          <label class="condiciones-final">
-            <input 
-              type="checkbox" 
-              [checked]="aceptaCondiciones()"
-              (change)="aceptaCondiciones.set($any($event.target).checked)"
-              [disabled]="procesandoPago()"
-            />
-            Entiendo qué incluye este combo y estoy de acuerdo con sus condiciones.
-          </label>
-
-          <!-- ✅ Mensaje de error si hay -->
-          <div class="error-pago" *ngIf="errorPago()">
-            <i class="bi bi-exclamation-circle"></i>
-            {{ errorPago() }}
-          </div>
-
-          <!-- ✅ Botón con estados de carga -->
-          <button 
-            class="btn btn-next" 
-            (click)="avanzarPago()"
-            [disabled]="!aceptaCondiciones() || procesandoPago()"
-            [class.loading]="procesandoPago()"
-          >
-            <span *ngIf="!procesandoPago()">Ir a pagar</span>
-            <span *ngIf="procesandoPago()">
-              <i class="spinner"></i> Procesando...
-            </span>
-          </button>
-
-          <p 
-            class="volver-plan" 
-            (click)="volverAPlanes()"
-            *ngIf="!procesandoPago()"
-          >
-            ← Volver a seleccionar plan
-          </p>
-        </div>
-      </div>
-
-      <!-- Columna derecha -->
-      <div class="pago-card pago-right">
-        <h4>Método de pago</h4>
-        <p>Elige la pasarela de pago:</p>
-
-        <button
-          class="pay-option"
-          [class.active]="medioPago() === 'mercado-pago'"
-          (click)="seleccionarMedioPago('mercado-pago')"
-          [disabled]="procesandoPago()"
-        >
-          <img src="/assets/mercadopago.png" alt="Mercado Pago" />
-          <span>Mercado Pago</span>
-        </button>
-
-        <!-- ✅ Resumen de datos del cliente -->
-        <div class="resumen-cliente" *ngIf="form.value.nombre">
-          <h5>Datos del cliente</h5>
-          <p><strong>Nombre:</strong> {{ form.value.nombre }}</p>
-          <p *ngIf="form.value.placa"><strong>Placa:</strong> {{ form.value.placa }}</p>
-          <p *ngIf="form.value.telefono"><strong>Teléfono:</strong> {{ form.value.telefono }}</p>
-        </div>
-
-        <div class="pago-car">
-          <img src="/assets/vehiculos.png" alt="Carro" />
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+</div>

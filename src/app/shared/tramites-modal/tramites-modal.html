@@ -1,148 +1,280 @@
-<div class="tramite-backdrop" *ngIf="open && step === 1">
-  <div class="tramite-modal">
+<!-- ✅ HTML CON STEP 3 ELIMINADO -->
+<div class="tramite-backdrop" *ngIf="open" (click)="cerrarModal()">
+  <div class="tramite-modal" (click)="$event.stopPropagation()">
     <button class="close-btn" (click)="cerrarModal()">✕</button>
 
-    <div class="tramite-container">
-      <h2 class="tramite-title">Elige tu trámite</h2>
+    <!-- ========================================= -->
+    <!-- STEP 1: Seleccionar Trámite -->
+    <!-- ========================================= -->
+    <div *ngIf="step === 1" class="tramite-container">
+      <h2 class="tramite-title">Elige tu trámite vehicular</h2>
       <p class="tramite-subtitle">
-        Selecciona el trámite que quieres hacer y empieza a agendar en segundos.
+        Selecciona el servicio que deseas realizar y continúa con el proceso
       </p>
 
-      <!-- Botón principal -->
-      <button class="tramite-main-btn" (click)="continuar()">
-        Elige sede y fecha <i class="bi bi-calendar-event"></i>
-      </button>
-
-      <!-- Mensaje de error -->
-      <p *ngIf="mostrarError" class="tramite-error">
-        *Selecciona el trámite que deseas realizar
-      </p>
-
-      <!-- Grid de trámites -->
       <div class="tramite-grid">
         <div
+          *ngFor="let tramite of tramites"
           class="tramite-card"
-          *ngFor="let item of tramites"
-          [class.active]="item === tramiteSeleccionado"
-          (click)="seleccionarTramite(item)"
+          [class.active]="tramiteSeleccionado?.title === tramite.title"
+          (click)="seleccionarTramite(tramite)"
         >
-          <img [src]="item.icon" [alt]="item.title" class="tramite-icon" />
-          <span class="tramite-label">{{ item.title }}</span>
+          <img [src]="tramite.icon" [alt]="tramite.title" class="tramite-icon" />
+          <span class="tramite-label">{{ tramite.title }}</span>
+        </div>
+      </div>
+
+      <p *ngIf="mostrarError" class="tramite-error">
+        ⚠️ Por favor selecciona un trámite para continuar
+      </p>
+
+      <div class="modal-actions" style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+        <button class="btn-outline" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-primary" (click)="continuarAStep2()">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- STEP 2: Fecha y Horario -->
+    <!-- ========================================= -->
+    <div *ngIf="step === 2" class="modal-backdrop">
+      <div class="modal-container modal-wide">
+        <button class="close-btn" (click)="volverStep()">✕</button>
+
+        <div class="tarifas-grid">
+          <div class="col-izquierda">
+            <div class="tarifas-header">
+              <h2>Elige dónde y cuándo<br><strong>hacer tu trámite</strong></h2>
+              <p>
+                Elegiste el trámite <strong>Preliquidación {{ tramiteSeleccionado?.title }}</strong>, 
+                ahora elige la fecha para continuar.
+              </p>
+            </div>
+
+            <div class="filtros">
+              <div class="campo">
+                <label for="tramite">Trámite</label>
+                <input
+                  id="tramite"
+                  type="text"
+                  [value]="'Preliquidación ' + (tramiteSeleccionado?.title || '')"
+                  readonly
+                  class="input-fecha"
+                  style="background: #f5f5f5; cursor: not-allowed;"
+                />
+              </div>
+
+              <div class="campo">
+                <label for="fecha">Fecha</label>
+                <input
+                  id="fecha"
+                  type="date"
+                  [(ngModel)]="fechaSeleccionada"
+                  (change)="onFechaChange()"
+                  [min]="fechaMinima"
+                  class="input-fecha"
+                />
+              </div>
+            </div>
+
+            <div class="campo" style="margin-top: 1rem;">
+              <label for="franja">Horario disponible</label>
+              <select
+                id="franja"
+                [(ngModel)]="franjaSeleccionada"
+                [disabled]="franjas.length === 0"
+                class="input-fecha"
+              >
+                <option value="">Selecciona un horario</option>
+                <option *ngFor="let franja of franjas" [value]="franja">{{ franja }}</option>
+              </select>
+            </div>
+
+            <p *ngIf="errorMessage" class="tramite-error">⚠️ {{ errorMessage }}</p>
+            <p *ngIf="loading" class="loading-text">
+              <i class="bi bi-hourglass-split"></i> Cargando...
+            </p>
+          </div>
+
+          <div class="col-derecha">
+            <div class="tarifa-card">
+              <h3>📋 Resumen</h3>
+              <p><strong>Trámite:</strong><br>Preliquidación {{ tramiteSeleccionado?.title }}</p>
+              <p *ngIf="fechaSeleccionada"><strong>Fecha:</strong><br>{{ fechaSeleccionada }}</p>
+              <p *ngIf="franjaSeleccionada"><strong>Horario:</strong><br>{{ franjaSeleccionada }}</p>
+              
+              <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e0e0e0;">
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">💰 Valor:</p>
+                <p style="font-size: 2rem; font-weight: 700; color: #00a0b6; margin: 0;">
+                  ${{ PRECIO_PRELIQUIDACION.toLocaleString('es-CO') }}
+                </p>
+                <p style="font-size: 0.75rem; color: #888; margin-top: 0.5rem;">
+                  <i class="bi bi-clock"></i> Tiempo estimado: 1 hora
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions" style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+          <button class="btn-outline" (click)="volverStep()">← Volver</button>
+          <button class="btn-primary" (click)="continuarAStep3()">Continuar →</button>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- PANTALLA 2 -->
-<div class="modal-backdrop" *ngIf="open && step === 2">
-  <div class="modal-container modal-wide">
-    <button class="close-btn" (click)="cerrarModal()">×</button>
+    <!-- ========================================= -->
+    <!-- STEP 3: Confirmación CON FORMULARIO EDITABLE -->
+    <!-- ========================================= -->
+    <div *ngIf="step === 3" class="modal-backdrop">
+      <div class="modal-container modal-wide">
+        <button class="close-btn" (click)="volverStep()">✕</button>
 
-    <div class="tarifas-grid">
-      <!-- 🟦 COLUMNA IZQUIERDA -->
-      <div class="col-izquierda">
-        <div class="tarifas-header">
-          <h2 class="titulo-tramite">
-            Elige dónde y cuándo <br />
-            <strong>hacer tu trámite</strong>
-          </h2>
-          <p>
-            Elegiste el trámite <strong>{{ tramiteSeleccionado?.title }}</strong>,
-            ahora elige la ciudad, la sede y la fecha para continuar con tu agendamiento.
-          </p>
-        </div>
+        <div class="tarifas-grid">
+          <!-- Columna izquierda -->
+          <div class="col-izquierda">
+            <div class="tarifas-header">
+              <h2>¡Confirma tu<br><strong>agendamiento!</strong></h2>
+              <p>
+                Has agendado el trámite <strong>Preliquidación {{ tramiteSeleccionado?.title }}</strong> 
+                para el <strong>{{ fechaSeleccionada }}</strong> en la sede 
+                <strong>{{ proveedorSeleccionado?.name || 'AutoMás Fontibón' }}</strong>.
+              </p>
+              <p style="margin-top: 1rem; font-weight: 600;">
+                Por favor, completa los siguientes datos para finalizar tu solicitud.
+              </p>
+            </div>
 
-        <!-- 🔽 Desplegables -->
-        <div class="filtros">
-          <!-- Tramite -->
-          <div class="campo">
-            <label for="tramite">Trámite</label>
-            <select id="tramite" [(ngModel)]="tramiteSeleccionado">
-              <option *ngFor="let t of tramites" [ngValue]="t">{{ t.title }}</option>
-            </select>
-          </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+              <div class="campo">
+                <label>Número de placa</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.placa"
+                  placeholder="Ej: ABC123"
+                  maxlength="6"
+                  class="input-fecha"
+                  style="text-transform: uppercase;"
+                />
+              </div>
 
-          <!-- Fecha -->
-          <div class="campo">
-            <label for="fecha">Fecha</label>
-            <input
-  id="fecha"
-  type="date"
-  [(ngModel)]="fechaSeleccionada"
-  [min]="fechaMinima"
-  class="input-fecha"
-            />
-          </div>
-        </div>
+              <div class="campo">
+                <label>Nombre completo del vendedor (propietario actual)</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.nombres"
+                  placeholder="Ej: Juan Pérez"
+                  class="input-fecha"
+                />
+              </div>
 
-        <!-- 🗺️ MAPA + LISTA DE SEDES -->
-        <div class="mapa-sedes">
-          <div class="mapa-mini">
-            <img src="assets/mapa.svg" alt="Mapa de sedes" />
-          </div>
+              <div class="campo">
+                <label>Teléfono</label>
+                <input
+                  type="tel"
+                  [(ngModel)]="formData.celular"
+                  placeholder="Ej: 3001234567"
+                  maxlength="10"
+                  class="input-fecha"
+                />
+              </div>
 
-          <div class="lista-sedes">
-            <div class="sede-item selected">
-              <div class="sede-info">
-                <div class="sede-left">
-                  <h4>AutoMás Fontibón</h4>
-                  <p>Cra 116 #17-20</p>
-                </div>
-                <div class="sede-right">
-                  <span class="dias">Lunes a Viernes</span>
-                  <span class="horario">7:00 a.m. – 6:00 p.m.</span>
-                </div>
+              <div class="campo">
+                <label>Correo electrónico</label>
+                <input
+                  type="email"
+                  [(ngModel)]="formData.correo"
+                  placeholder="Ej: correo@ejemplo.com"
+                  class="input-fecha"
+                />
+              </div>
+
+              <div class="campo">
+                <label>Selecciona el tipo de documento del vendedor (propietario actual)</label>
+                <select [(ngModel)]="formData.tipo_identificacion" class="input-fecha">
+                  <option value="Cedula de Ciudadania">Cédula de Ciudadanía</option>
+                  <option value="Cedula de Extranjeria">Cédula de Extranjería</option>
+                  <option value="Pasaporte">Pasaporte</option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label>Ingresa el número de documento del vendedor (propietario actual)</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.identificacion"
+                  placeholder="Ej: 1234567890"
+                  class="input-fecha"
+                />
+              </div>
+
+              <!-- ✅ NUEVOS CAMPOS DEL COMPRADOR -->
+              <div class="campo">
+                <label>Selecciona el tipo de documento del comprador</label>
+                <select [(ngModel)]="formData.tipo_identificacion_comprador" class="input-fecha">
+                  <option value="">Selecciona tipo</option>
+                  <option value="Cedula de Ciudadania">Cédula de Ciudadanía</option>
+                  <option value="Cedula de Extranjeria">Cédula de Extranjería</option>
+                  <option value="Pasaporte">Pasaporte</option>
+                  <option value="NIT">NIT</option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label>Ingresa el número de documento del comprador</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.identificacion_comprador"
+                  placeholder="Ej: 1234567890"
+                  class="input-fecha"
+                />
               </div>
             </div>
 
-            <div class="sede-item">
-              <div class="sede-info">
-                <div class="sede-left">
-                  <h4>Calle 13</h4>
-                  <p>Diag 13 #69-16</p>
-                </div>
-                <div class="sede-right">
-                  <span class="dias">Lunes a Viernes</span>
-                  <span class="horario">7:00 a.m. – 6:00 p.m.</span>
-                </div>
-              </div>
-            </div>
+            <p *ngIf="errorMessage" class="tramite-error" style="margin-top: 1rem;">
+              ⚠️ {{ errorMessage }}
+            </p>
+            <p *ngIf="loading" class="loading-text" style="margin-top: 1rem;">
+              <i class="bi bi-hourglass-split"></i> Confirmando agendamiento...
+            </p>
 
-            <div class="sede-item">
-              <div class="sede-info">
-                <div class="sede-left">
-                  <h4>AutoMás 134</h4>
-                  <p>Cra 47 #134-17</p>
-                </div>
-                <div class="sede-right">
-                  <span class="dias">Lunes a Viernes</span>
-                  <span class="horario">7:00 a.m. – 6:00 p.m.</span>
-                </div>
-              </div>
+            <div class="botones-navegacion" style="margin-top: 2rem;">
+              <button class="btn-outline" (click)="volverStep()">← Volver</button>
+              <button class="btn-primary btn-success" (click)="confirmarAgendamiento()" [disabled]="loading">
+                Confirmar Trámite
+              </button>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- 🟦 COLUMNA DERECHA -->
-      <div class="col-derecha">
-        <div class="ciudad-ubicacion">
-          <i class="bi bi-geo-alt"></i>
-          <span>Bogotá</span>
-        </div>
+          <!-- Columna derecha -->
+          <div class="col-derecha">
+            <div class="ciudad-ubicacion">
+              <i class="bi bi-geo-alt-fill"></i>
+              <span>{{ ciudadSeleccionada?.name || 'Bogotá' }} - {{ proveedorSeleccionado?.name || 'AutoMás Fontibón' }}</span>
+            </div>
 
-        <div class="tarifa-card">
-          <h3>Bogotá – AutoMás Fontibón</h3>
-          <p>{{ tramiteSeleccionado?.title }}</p>
+            <div class="tarifa-card">
+              <h3 style="font-size: 1rem; margin-bottom: 1rem; color: #111520;">
+                Trámite - {{ tramiteSeleccionado?.title }}
+              </h3>
 
-          <p class="valor">Costo: <strong>$190.000</strong></p>
-          <small>Por favor verifica todos los datos antes de agendar.</small>
+              <div style="text-align: center; padding: 1.5rem 0; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;">
+                <p style="font-size: 0.85rem; color: #666; margin: 0 0 0.5rem 0;">Costo de:</p>
+                <p style="font-size: 2.5rem; font-weight: 700; color: #00a0b6; margin: 0; line-height: 1;">
+                  ${{ (cotizacion?.price || PRECIO_PRELIQUIDACION).toLocaleString('es-CO') }}
+                </p>
+              </div>
 
-          <button class="btn-outline">Condiciones del Trámite</button>
-          <button class="btn-primary" (click)="agendarRevision()">
-            Agendar Ahora <i class="bi bi-calendar-event"></i>
-          </button>
+              <p style="font-size: 0.75rem; color: #888; margin-top: 1rem; text-align: center; line-height: 1.4;">
+                Por favor verifica todos los datos antes de agendar*
+              </p>
+
+              <button class="btn-outline" style="margin-top: 1rem; font-size: 0.9rem;" 
+                      (click)="verCondiciones()">
+                Condiciones del Trámite
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

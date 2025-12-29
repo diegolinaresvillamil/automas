@@ -14,7 +14,7 @@ export interface PaymentData {
   
   // Información del servicio
   servicio: {
-    tipo: 'rtm' | 'peritaje' | 'soat' | 'revision_gases' | 'otro';
+    tipo: 'rtm' | 'peritaje' | 'soat' | 'revision_gases' | 'tramites' | 'otro'; // ✅ AGREGADO 'tramites'
     nombre: string;
     descripcion: string;
   };
@@ -36,6 +36,7 @@ export interface PaymentData {
     direccion?: string;
     fecha: Date;
     horario: string;
+    codeBooking?: string; // ✅ AGREGADO para trámites
   };
   
   // Valores monetarios
@@ -212,9 +213,9 @@ export class PaymentModalService {
     medio_pago: string;
     servicio_label: string;
     valor: number;
-    placa_vehiculo: string;
-    sede: null;
-    servicio_tipovehiculo: null;
+    placa_vehiculo?: string;
+    sede?: string | null;
+    servicio_tipovehiculo?: string | null;
     urls: {
       success: string;
       failure: string;
@@ -227,14 +228,29 @@ export class PaymentModalService {
   }> {
     const url = `${this.baseUrl}/api/pagos/generar-link/`;
     
-    console.log('💳 Generando link de pago:', url);
-    console.log('💳 Payload:', payload);
+    // 🔥 CONSTRUIR PAYLOAD SEGÚN EJEMPLO DE RTM
+    const body = {
+      proyecto: payload.proyecto || 'pagina_web',
+      medio_pago: payload.medio_pago || 'mercadopago',
+      servicio_label: payload.servicio_label,
+      valor: payload.valor,
+      placa_vehiculo: payload.placa_vehiculo || 'SIN-PLACA',
+      sede: payload.sede !== undefined ? payload.sede : null,
+      servicio_tipovehiculo: payload.servicio_tipovehiculo !== undefined ? payload.servicio_tipovehiculo : null,
+      urls: payload.urls
+    };
     
-    return this.http.post<any>(url, payload, { 
+    console.log('💳 Generando link de pago:', url);
+    console.log('💳 Payload:', body);
+    console.log('💳 JSON para Postman:', JSON.stringify(body, null, 2));
+    
+    return this.http.post<any>(url, body, { 
       headers: this.getHeaders() 
     }).pipe(
       catchError(err => {
         console.error('❌ Error al generar link de pago:', err);
+        console.error('❌ Detalle:', err.error);
+        console.error('❌ Status:', err.status);
         throw err;
       })
     );
@@ -284,7 +300,9 @@ export class PaymentModalService {
   /**
    * Genera el label completo del servicio según especificaciones del backend
    * Formato: PLACA, Descripción del servicio, Modelo, Reserva, Sede
-   * Ejemplo: "GPS826, Revisión Técnico Mecánica vehículo liviano Particular, Modelo Anterior 2008 particular (Reserva número 080836p3jq), CDA AutoMás Revisión Técnico Mecánica Cll 134"
+   * Ejemplo RTM: "GPS826, Revisión Técnico Mecánica vehículo liviano Particular, Modelo Anterior 2008 particular (Reserva número 080836p3jq), CDA AutoMás Revisión Técnico Mecánica Cll 134"
+   * Ejemplo Peritaje: "GPS826, Combo Oro Para Vehículo Livianos, Modelo 2020 (Reserva número 08084oa10h), AutoMás Peritaje 134"
+   * Ejemplo Trámites: "GPS826, Preliquidación Trámite Vehicular, (Reserva número 080529abc), Preliquidación Trámites Vehiculares"
    */
   generarLabelServicio(data: PaymentData): string {
     const { cliente, servicio, reserva, metadata } = data;
@@ -292,32 +310,40 @@ export class PaymentModalService {
     // Construir partes del label
     const partes: string[] = [];
     
-    // 1. Placa
+    // 1. Placa (sin espacios extras)
     if (cliente.placa) {
-      partes.push(cliente.placa);
+      partes.push(cliente.placa.trim());
     }
     
-    // 2. Descripción del servicio (ej: "Revisión Técnico Mecánica vehículo liviano Particular")
+    // 2. Descripción del servicio
     if (servicio.descripcion) {
-      partes.push(servicio.descripcion);
+      partes.push(servicio.descripcion.trim());
     }
     
-    // 3. Modelo (si está disponible)
+    // 3. Modelo + Reserva en UNA SOLA parte
+    const modeloReserva: string[] = [];
     if (metadata?.['modelo']) {
-      partes.push(`Modelo ${metadata['modelo']}`);
+      modeloReserva.push(`Modelo ${metadata['modelo']}`);
+    }
+    // ✅ Usar codeBooking de metadata (RTM/Peritaje) O de reserva (Trámites)
+    const codeBooking = metadata?.['codeBooking'] || reserva.codeBooking;
+    if (codeBooking) {
+      modeloReserva.push(`(Reserva número ${codeBooking})`);
+    }
+    if (modeloReserva.length > 0) {
+      partes.push(modeloReserva.join(' '));
     }
     
-    // 4. Número de reserva (si está disponible)
-    if (metadata?.['codeBooking']) {
-      partes.push(`(Reserva número ${metadata['codeBooking']})`);
-    }
-    
-    // 5. Sede
+    // 4. Sede (al final)
     if (reserva.sede) {
-      partes.push(reserva.sede);
+      partes.push(reserva.sede.trim());
     }
     
-    // Unir con comas y espacios
-    return partes.join(', ');
+    // Unir con ", " (coma + espacio)
+    const label = partes.join(', ');
+    
+    console.log('🏷️ Label generado:', label);
+    
+    return label;
   }
 }

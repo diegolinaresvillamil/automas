@@ -2060,3 +2060,9 @@ select option:checked {
     transform: rotate(360deg);
   }
 }
+
+
+
+p.descripcion-ayuda {
+    color: #000;
+}

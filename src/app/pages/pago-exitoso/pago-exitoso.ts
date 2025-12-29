@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentModalService } from '../../shared/payment-modal/payment-modal.service';
 import { RtmModalService } from '../../shared/rtm-modal/rtm-modal.service';
+import { TramitesApiService } from '../../core/services/tramites-api.service';
 
 @Component({
   selector: 'app-pago-exitoso',
@@ -15,13 +16,14 @@ export class PagoExitoso implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private paymentSvc = inject(PaymentModalService);
-  private rtmSvc = inject(RtmModalService); // ✅ Agregar servicio RTM
+  private rtmSvc = inject(RtmModalService);
+  private tramitesApi = inject(TramitesApiService);
 
   // Datos del pago
   facturaNumero: string = '';
   fechaFactura: Date = new Date();
   fechaVencimiento: Date = new Date();
-  codigoReserva: string = ''; // ✅ ID del agendamiento
+  codigoReserva: string = '';
   
   // Datos del servicio
   nombreServicio: string = 'Revisión Técnico Mecánica';
@@ -33,10 +35,10 @@ export class PagoExitoso implements OnInit {
   impuesto: number = 0;
   descuentoTotal: number = 0;
   cantidadTotal: number = 0;
-  cantidad: number = 1; // ✅ Siempre 1 (un agendamiento)
+  cantidad: number = 1;
   
   // Control de redirección
-  segundosRestantes: number = 40; // ← Cambiado de 3 a 40 segundos
+  segundosRestantes: number = 40;
   private intervalo: any;
 
   ngOnInit(): void {
@@ -44,11 +46,10 @@ export class PagoExitoso implements OnInit {
     this.route.queryParams.subscribe(params => {
       console.log('📦 Query params recibidos:', params);
       
-      // Mercado Pago puede enviar cualquiera de estos:
-      const pagoId = params['payment_id'] ||           // ID del pago
-                     params['pago_id'] ||              // Alternativo
-                     params['external_reference'] ||   // Referencia externa (nuestro UUID)
-                     params['collection_id'];          // ID de la colección
+      const pagoId = params['payment_id'] ||
+                     params['pago_id'] ||
+                     params['external_reference'] ||
+                     params['collection_id'];
       
       console.log('✅ Pago exitoso - ID:', pagoId);
       
@@ -59,15 +60,11 @@ export class PagoExitoso implements OnInit {
       }
     });
 
-    // Cargar datos de la reserva del localStorage
     this.cargarDatosReserva();
-    
-    // Iniciar contador de redirección
     this.iniciarContador();
   }
 
   private cargarDatosPago(pagoId: string): void {
-    // ✅ USAR DATOS DEL LOCALSTORAGE en lugar del endpoint que da error
     try {
       const reservaStr = localStorage.getItem('ultima_reserva');
       if (reservaStr) {
@@ -75,61 +72,143 @@ export class PagoExitoso implements OnInit {
         
         console.log('📄 Datos de la reserva desde localStorage:', reserva);
         
-        // Extraer datos de la reserva
-        this.precioServicio = reserva.monto || 0;
-        this.impuesto = this.precioServicio * 0.19; // 19% IVA (no se muestra)
-        this.cantidadTotal = this.precioServicio;
-        this.cantidad = 1; // ✅ Siempre 1 agendamiento
+        // 🔥 DETECTAR TIPO DE SERVICIO
+        const tipo = reserva.tipo || 'rtm'; // Por defecto RTM
         
-        // ✅ Extraer código de reserva (codeBooking)
+        // Extraer datos comunes
+        this.precioServicio = reserva.monto || 0;
+        this.cantidadTotal = this.precioServicio;
+        this.cantidad = 1;
         this.codigoReserva = reserva.codeBooking || pagoId.substring(0, 10).toUpperCase();
         
-        // Generar número de factura basado en el pagoId
+        // 🎯 NOMBRE DEL SERVICIO según tipo
+        if (tipo === 'peritaje') {
+          this.nombreServicio = reserva.nombreServicio || 'Peritaje Vehicular';
+        } else if (tipo === 'tramites') {
+          this.nombreServicio = reserva.nombreServicio || 'Trámite Vehicular';
+        } else {
+          this.nombreServicio = reserva.nombreServicio || 'Revisión Técnico Mecánica';
+        }
+        
+        // Generar número de factura
         this.facturaNumero = `F-${pagoId.substring(0, 8).toUpperCase()}`;
         this.fechaFactura = new Date();
         
-        // Calcular fecha de vencimiento (30 días después)
+        // Calcular fecha de vencimiento (30 días)
         this.fechaVencimiento = new Date(this.fechaFactura);
         this.fechaVencimiento.setDate(this.fechaVencimiento.getDate() + 30);
         
         console.log('✅ Datos del pago cargados:', {
+          tipo: tipo,
+          nombreServicio: this.nombreServicio,
           precio: this.precioServicio,
           cantidad: this.cantidad,
           total: this.cantidadTotal,
           codigoReserva: this.codigoReserva
         });
 
-        // ✅ REGISTRAR EL PAGO EN EL BACKEND
-        // Extraer invoice_id de la reserva
-        const invoiceId = reserva.invoiceId || null;
-        if (invoiceId) {
-          this.registrarPagoEnBackend(invoiceId);
+        // ✅ FLUJO SEGÚN TIPO DE SERVICIO
+        if (tipo === 'tramites') {
+          console.log('🎯 Flujo TRÁMITES detectado');
+          this.procesarTramite(pagoId);
         } else {
-          console.warn('⚠️ No se encontró invoice_id para registrar el pago');
+          // RTM/Peritaje: registrar pago con invoice_id existente
+          const invoiceId = reserva.invoiceId || null;
+          if (invoiceId) {
+            this.registrarPagoEnBackend(invoiceId);
+          } else {
+            console.warn('⚠️ No se encontró invoice_id para registrar el pago (RTM/Peritaje)');
+          }
         }
       } else {
         console.warn('⚠️ No hay datos de reserva en localStorage');
-        // Valores por defecto si no hay datos
-        this.precioServicio = 0;
-        this.impuesto = 0;
-        this.cantidadTotal = 0;
-        this.cantidad = 1;
-        this.codigoReserva = pagoId.substring(0, 10).toUpperCase();
+        this.valoresPorDefecto(pagoId);
       }
     } catch (error) {
       console.error('❌ Error al cargar datos del localStorage:', error);
-      this.precioServicio = 0;
-      this.impuesto = 0;
-      this.cantidadTotal = 0;
-      this.cantidad = 1;
-      this.codigoReserva = '';
+      this.valoresPorDefecto(pagoId);
     }
   }
 
   /**
-   * 💳 REGISTRAR PAGO EN EL BACKEND
-   * Notifica al backend que el pago fue exitoso
+   * ✅ NUEVO: Procesar trámite después del pago
    */
+  private procesarTramite(pagoId: string): void {
+    try {
+      const datosAgendarStr = localStorage.getItem('datos_agendar_tramite');
+      
+      if (!datosAgendarStr) {
+        console.error('❌ No se encontraron datos para agendar el trámite');
+        return;
+      }
+
+      const datosAgendar = JSON.parse(datosAgendarStr);
+      console.log('📋 Datos recuperados para agendar:', datosAgendar);
+
+      // ✅ Mantener campo 'servicio' porque el backend lo requiere
+      console.log('📤 Payload completo con servicio:', datosAgendar);
+
+      // Llamar al endpoint /agendar
+      this.tramitesApi.agendar(datosAgendar).subscribe({
+        next: (response) => {
+          console.log('✅ Trámite agendado exitosamente:', response);
+          
+          // Actualizar código de reserva si viene en la respuesta
+          if (response.codeBooking) {
+            this.codigoReserva = response.codeBooking;
+          }
+
+          // ✅ REGISTRAR PAGO si viene invoice_id
+          const invoiceId = response.invoice_id;
+          if (invoiceId) {
+            console.log('💳 Invoice ID obtenido, registrando pago:', invoiceId);
+            this.registrarPagoTramite(invoiceId);
+          } else {
+            console.warn('⚠️ No se recibió invoice_id del agendamiento');
+          }
+
+          // Limpiar localStorage
+          localStorage.removeItem('datos_agendar_tramite');
+        },
+        error: (err) => {
+          console.error('❌ Error al agendar trámite:', err);
+          console.error('❌ Detalle del error:', err.error);
+          
+          // Mostrar mensaje al usuario pero no bloquear la página
+          alert('El pago se procesó correctamente, pero hubo un error al registrar el agendamiento. Por favor contacta a soporte.');
+        }
+      });
+    } catch (error) {
+      console.error('❌ Error al procesar trámite:', error);
+    }
+  }
+
+  /**
+   * ✅ NUEVO: Registrar pago de trámite
+   */
+  private registrarPagoTramite(invoiceId: number): void {
+    console.log('💳 Registrando pago para trámite (invoice_id):', invoiceId);
+    
+    this.tramitesApi.registrarPago(invoiceId).subscribe({
+      next: (response) => {
+        console.log('✅ Pago de trámite registrado exitosamente:', response);
+      },
+      error: (err) => {
+        console.error('❌ Error al registrar pago del trámite:', err);
+        // No bloquear el flujo, el pago ya se procesó
+      }
+    });
+  }
+
+  private valoresPorDefecto(pagoId: string): void {
+    this.precioServicio = 0;
+    this.impuesto = 0;
+    this.cantidadTotal = 0;
+    this.cantidad = 1;
+    this.codigoReserva = pagoId.substring(0, 10).toUpperCase();
+    this.nombreServicio = 'Servicio';
+  }
+
   private registrarPagoEnBackend(invoiceId: number): void {
     console.log('💳 Registrando pago para invoice_id:', invoiceId);
     
@@ -139,7 +218,6 @@ export class PagoExitoso implements OnInit {
       },
       error: (err) => {
         console.error('❌ Error al registrar pago:', err);
-        // No mostramos error al usuario, solo lo logueamos
       }
     });
   }

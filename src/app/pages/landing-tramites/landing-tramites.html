@@ -21,16 +21,10 @@
           </li>
         </ul>
 
-<button class="agenda-btn" (click)="abrirModal()">
-  <span>Agenda Ahora</span>
-  <i class="bi bi-calendar-event"></i>
-</button>
-
-<app-tramites-modal
-  [open]="modalAbierta()"
-  [tramiteSeleccionado]="selectedTramite()"
-  (cerrar)="cerrarModal()">
-</app-tramites-modal>
+        <button class="agenda-btn" (click)="abrirModal()">
+          <span>Agenda Ahora</span>
+          <i class="bi bi-calendar-event"></i>
+        </button>
       </div>
 
       <!-- Columna Derecha -->
@@ -41,9 +35,7 @@
   </div>
 </section>
 
-
 <!--Sección Agenda-->
-
 <section class="agenda-section">
   <h2>¿Por qué agendar con nosotros?</h2>
 
@@ -64,11 +56,11 @@
       <h3 [innerHTML]="item.title"></h3>
     </div>
   </div>
-<br> <br>
+  <br> <br>
   <button class="agenda-btn" (click)="abrirModal()">
-  <span>Agenda Ahora</span>
-  <i class="bi bi-calendar-event"></i>
-</button>
+    <span>Agenda Ahora</span>
+    <i class="bi bi-calendar-event"></i>
+  </button>
 </section>
 
 <!--Sección Tramites-->
@@ -94,19 +86,11 @@
     </div>
   </div>
   <br> <br>
-    <button class="agenda-btn" (click)="abrirModal()">
-  <span>Agenda Ahora</span>
-  <i class="bi bi-calendar-event"></i>
-</button>
+  <button class="agenda-btn" (click)="abrirModal()">
+    <span>Agenda Ahora</span>
+    <i class="bi bi-calendar-event"></i>
+  </button>
 </section>
-
-<!-- Modal -->
-<app-tramites-modal
-  [open]="modalAbierta()"
-  [tramiteSeleccionado]="selectedTramite()"
-  (cerrar)="cerrarModal()">
-</app-tramites-modal>
-
 
 <!-- SECCIÓN NUESTRA EXPERIENCIA -->
 <section class="experiencia-section py-5">
@@ -159,13 +143,12 @@
       </div>
     </div>
   </div>
-    <br> <br>
-    <button class="agenda-btn" (click)="abrirModal()">
-  <span>Agenda Ahora</span>
-  <i class="bi bi-calendar-event"></i>
-</button>
+  <br> <br>
+  <button class="agenda-btn" (click)="abrirModal()">
+    <span>Agenda Ahora</span>
+    <i class="bi bi-calendar-event"></i>
+  </button>
 </section>
-
 
 <!-- 🌟 TESTIMONIOS -->
 <section class="clientes-section">
@@ -179,7 +162,7 @@
       <div class="avatar">
         <img src="/assets/testimonio2.jpg" alt="Laura Ortiz">
       </div>
-      <p class="comentario">“Estoy muy satisfecha con el servicio de tecnomecánica de AutoMás. Todo fue rápido y sin complicaciones.”</p>
+      <p class="comentario">"Estoy muy satisfecha con el servicio de tecnomecánica de AutoMás. Todo fue rápido y sin complicaciones."</p>
       <h4>Laura Ortiz</h4>
       <span class="cargo">Cliente frecuente</span>
     </div>
@@ -188,7 +171,7 @@
       <div class="avatar">
         <img src="/assets/testimonio1.jpg" alt="Camilo Gutiérrez">
       </div>
-      <p class="comentario">“La revisión fue ágil, el personal amable y las instalaciones impecables.”</p>
+      <p class="comentario">"La revisión fue ágil, el personal amable y las instalaciones impecables."</p>
       <h4>Camilo Gutiérrez</h4>
       <span class="cargo">Conductor profesional</span>
     </div>
@@ -197,33 +180,36 @@
       <div class="avatar">
         <img src="/assets/testimonio3.jpg" alt="Andrea Bermúdez">
       </div>
-      <p class="comentario">“Excelente atención y puntualidad. Definitivamente volveré a realizar mi revisión aquí.”</p>
+      <p class="comentario">"Excelente atención y puntualidad. Definitivamente volveré a realizar mi revisión aquí."</p>
       <h4>Andrea Bermúdez</h4>
       <span class="cargo">Propietaria de vehículo</span>
     </div>
-        <div class="cliente-card">
+    
+    <div class="cliente-card">
       <div class="avatar">
         <img src="/assets/testimonio1.jpg" alt="Andrea Bermúdez">
       </div>
-      <p class="comentario">“Excelente atención y puntualidad. Definitivamente volveré a realizar mi revisión aquí.”</p>
+      <p class="comentario">"Excelente atención y puntualidad. Definitivamente volveré a realizar mi revisión aquí."</p>
       <h4>Daniela Rodríguez</h4>
       <span class="cargo">Propietaria de vehículo</span>
     </div>
   </div>
 </section>
 
-
 <!--Sección FAQ-->
 <section class="tramites-page">
-<app-faq
-  [title]="'Preguntas Frecuentes para Trámites'"
-  [items]="faqItems"
-  [multiple]="false">
-</app-faq>
-
+  <app-faq
+    [title]="'Preguntas Frecuentes para Trámites'"
+    [items]="faqItems"
+    [multiple]="false">
+  </app-faq>
 </section>
 
-
-
-
 <app-contacto-popup></app-contacto-popup>
+
+<!-- 
+  ✅ MODAL DE TRÁMITES - UNA SOLA INSTANCIA AL FINAL
+  El modal se controla completamente a través del servicio TramitesModalService
+  NO necesita bindings [open] ni [tramiteSeleccionado]
+-->
+<app-tramites-modal (cerrar)="cerrarModal()"></app-tramites-modal>

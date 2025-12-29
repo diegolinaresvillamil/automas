@@ -35,7 +35,7 @@ export class PaymentModalComponent implements OnInit, OnDestroy {
   isProcessingPayment = false;
   
   // =============================
-  // 🏷️ CUPONES (Para tu HTML existente)
+  // 🏷️ CUPONES 
   // =============================
   codigoCupon = '';
   cuponAplicado: CuponDescuento | null = null;
@@ -78,7 +78,7 @@ export class PaymentModalComponent implements OnInit, OnDestroy {
   }
   
   // =============================
-  // 📋 DATOS DEL FORMULARIO (Para tu HTML existente)
+  // 📋 DATOS DEL FORMULARIO 
   // =============================
   get agendaForm() {
     const data = this.paymentData();
@@ -230,8 +230,8 @@ export class PaymentModalComponent implements OnInit, OnDestroy {
       console.log('💳 Iniciando proceso de pago...');
       console.log('📦 Datos completos:', data);
       
-      // ✅ NUEVO FORMATO según especificaciones del backend
-      const baseUrl = window.location.origin; // https://diegol160.sg-host.com
+      // ✅ SEGÚN RTM: Enviar urls obligatorias
+      const baseUrl = window.location.origin;
       
       const payload = {
         proyecto: 'pagina_web',
@@ -239,8 +239,8 @@ export class PaymentModalComponent implements OnInit, OnDestroy {
         servicio_label: this.paymentSvc.generarLabelServicio(data),
         valor: this.totalAPagar,
         placa_vehiculo: data.cliente.placa || 'SIN-PLACA',
-        sede: null, // ✅ Debe ser null
-        servicio_tipovehiculo: null, // ✅ Debe ser null
+        sede: null,
+        servicio_tipovehiculo: null,
         urls: {
           success: `${baseUrl}/pago-exitoso`,
           failure: `${baseUrl}/pago-fallido`,
@@ -249,6 +249,7 @@ export class PaymentModalComponent implements OnInit, OnDestroy {
       };
       
       console.log('📤 Enviando payload:', payload);
+      console.log('📤 JSON para Postman:', JSON.stringify(payload, null, 2));
       
       this.paymentSvc.generarLinkPago(payload).subscribe({
         next: (response) => {
@@ -256,22 +257,66 @@ export class PaymentModalComponent implements OnInit, OnDestroy {
           
           const { pago_id, payment_link } = response;
           
+          // 💾 GUARDAR DATOS EN LOCALSTORAGE ANTES DE REDIRIGIR
+          const datosParaExito = {
+            tipo: data.servicio.tipo, // ✅ 'rtm', 'peritaje', 'tramites', o 'otro'
+            sede: data.reserva.sede,
+            fecha: `${data.reserva.fecha.toLocaleDateString()} - ${data.reserva.horario}`,
+            monto: data.valores.total,
+            placa: data.cliente.placa,
+            nombre: data.cliente.nombre,
+            codeBooking: data.metadata?.['codeBooking'] || data.reserva.codeBooking || '', // ✅ Priorizar metadata
+            invoiceId: data.invoiceId || null, // ✅ FIXED: Incluir invoiceId (null para trámites)
+            nombreServicio: data.servicio.nombre,
+            ciudad: data.reserva.ciudad
+          };
+          
+          localStorage.setItem('ultima_reserva', JSON.stringify(datosParaExito));
+          console.log('💾 Datos guardados en localStorage (ultima_reserva):', datosParaExito);
+          
           if (payment_link) {
+            // ✅ CASO 1: Link disponible inmediatamente
             if (data) {
               data.pagoUuid = pago_id;
             }
             
             console.log('🔗 Redirigiendo a:', payment_link);
             window.location.href = payment_link;
+          } else if (pago_id) {
+            // 🔄 CASO 2: Link no disponible, consultar estado
+            console.log('⏳ Link no disponible, consultando estado del pago...');
+            
+            this.paymentSvc.verificarEstadoPago(pago_id).subscribe({
+              next: (estadoPago) => {
+                console.log('📦 Estado del pago:', estadoPago);
+                
+                const initPoint = estadoPago.detalles_gateway?.init_point;
+                
+                if (initPoint) {
+                  console.log('✅ Link obtenido desde detalles_gateway:', initPoint);
+                  window.location.href = initPoint;
+                } else {
+                  throw new Error('No se pudo obtener el link de pago del gateway');
+                }
+              },
+              error: (err) => {
+                console.error('❌ Error al verificar estado:', err);
+                this.isProcessingPayment = false;
+                alert('❌ No se pudo obtener el link de pago. Por favor intenta nuevamente.');
+              }
+            });
           } else {
-            throw new Error('No se recibió el enlace de pago');
+            throw new Error('No se recibió ni payment_link ni pago_id');
           }
         },
         error: (error) => {
           console.error('❌ Error al generar link de pago:', error);
+          console.error('❌ Detalle completo:', error.error);
           this.isProcessingPayment = false;
           
-          alert('❌ Error al procesar el pago. Por favor intenta nuevamente.');
+          // Mensaje más específico del error
+          const errorMsg = error.error?.detail || error.error?.message || 'Error desconocido';
+          alert(`❌ Error al procesar el pago: ${errorMsg}`);
         }
       });
       
